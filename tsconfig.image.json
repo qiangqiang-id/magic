@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "types": [],
+    "esModuleInterop": true
+  },
+  "include": ["src/assets/images/**/data.ts"],
+  "exclude": ["node_modules", "lib"]
+}

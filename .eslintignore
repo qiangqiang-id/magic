@@ -1,0 +1,8 @@
+.eslintcache
+.stylelintcache
+.vscode
+dist
+node_modules
+package-lock.json
+scripts
+src/utils/*.js
