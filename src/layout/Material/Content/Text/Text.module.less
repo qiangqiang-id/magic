@@ -1,0 +1,22 @@
+.text {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.text_item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  color: #000a38;
+  font-weight: bold;
+  font-size: 28px;
+  background: #eff0f5;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    border: 1px solid rgba(204, 206, 215, 1);
+  }
+}

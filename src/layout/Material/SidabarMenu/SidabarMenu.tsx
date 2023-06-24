@@ -41,7 +41,7 @@ function SidabarMenu(props: MenuProps) {
       showOptions.map(item => ({
         key: item.name,
         label: (
-          <div>
+          <div className={Style.menu_content}>
             <i className={`iconfont icon ${item.icon}`} />
             {item.label}
           </div>

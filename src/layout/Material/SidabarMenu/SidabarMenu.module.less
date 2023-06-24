@@ -4,21 +4,44 @@
 }
 
 .menu {
-  width: 80px;
   height: 100%;
+  border-right: 1px solid #d9d9d9;
 
   :global {
+    .ant-tabs {
+      width: 68px;
+    }
+
     .ant-tabs-tab {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       box-sizing: border-box;
-      width: 54px;
-      height: 56px;
-      margin: 7px;
+      width: 68px;
       margin-top: 14px;
+      padding: 8px 0 !important;
       cursor: pointer;
     }
+
+    .ant-tabs-ink-bar {
+      display: none;
+    }
+
+    .ant-tabs-content-holder {
+      border: 0;
+    }
   }
+}
+
+.menu_content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
 }
