@@ -1,0 +1,34 @@
+/* 单行文本省略，配合 width 或 max-width 使用 */
+.single-line-omit {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 多行文本省略，配合 width 或 max-width
+ * 加上 css 变量 --line 使用，默认是 2 行。
+ * --line 使用方式： <div style='--line: 3'>...</div> 
+ */
+.multiple-line-omit {
+  display: box !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: var(--line, 2);
+  -webkit-box-orient: vertical;
+}
+
+
+/** 马赛克背景 */
+.mosaic-background {
+  background-image: linear-gradient(
+      45deg,
+      #ecf0f5 25%,
+      transparent 25%,
+      transparent 75%,
+      #ecf0f5 75%,
+      #ecf0f5 100%
+    ),
+    linear-gradient(45deg, #ecf0f5 25%, white 25%, white 75%, #ecf0f5 75%, #ecf0f5 100%);
+  background-position: 0 0, 8px 8px;
+  background-size: 16px 16px;
+}
