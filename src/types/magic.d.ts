@@ -15,20 +15,18 @@ interface Aspect {
 /** 锚点 */
 interface Anchor extends Position {}
 /** 缩放 */
-interface Scalar extends Position {}
-/** 翻转 */
-interface Flip extends Position {}
-
-/** 图层类型 */
-declare type LayerType =
-  | 'Background'
-  | 'Text'
-  | 'Image'
-  | 'Group'
-  | 'Shape'
-  | 'Unknown';
+interface Scale extends Position {}
 
 declare namespace LayerModel {
+  /** 图层类型 */
+  type LayerType =
+    | 'Background'
+    | 'Text'
+    | 'Image'
+    | 'Group'
+    | 'Shape'
+    | 'Unknown';
+
   /** 文字填充信息 */
   interface TextFill {
     /** 文字颜色 */
@@ -68,20 +66,18 @@ declare namespace LayerModel {
 
   interface Base {
     id: string;
-    name: string;
-    type: LayerType;
+    name?: string;
+    type: LayerModel.LayerType;
     /** 锚点 */
-    anchor: Anchor;
+    anchor?: Anchor;
     /** 缩放 */
-    scalar: Scalar;
-    /** 翻转 */
-    flip: Flip;
-    width: number;
-    height: number;
-    x: number;
-    y: number;
-    rotate: number;
-    actived: boolean;
+    scale?: Scale;
+    width?: number;
+    height?: number;
+    x?: number;
+    y?: number;
+    rotate?: number;
+    actived?: boolean;
     /** 是否可见 */
     visible?: boolean;
     /** 是否锁定 */
@@ -90,48 +86,55 @@ declare namespace LayerModel {
     disabled?: boolean;
     /** 加载状态 */
     loading?: boolean;
-    parent: null;
+    parent?: null;
   }
 
   /** 文字 */
   interface Text extends LayerModel.Base {
     /** 内容 */
-    content: string;
+    content?: string;
     /** 局部编辑属性 */
     charAttrs?: Record<string, any>[];
     /** 最大行数 */
     maxLines?: number;
     /** 是否可编辑 */
     isEdit?: boolean;
-    fontFamily: string;
+    fontFamily?: string;
 
     // todo: 数据结构需要改动
     /** 填充信息 */
     fill?: LayerModel.TextFill;
-    fontSize: number;
-    lineHeight: number;
+    fontSize?: number;
+    lineHeight?: number;
   }
 
   /** 图片 */
   interface Image extends LayerModel.Base {
     /** 图片url地址 */
-    url: string;
+    url?: string;
     /** 原始宽度 */
-    originalWidth?: number | null;
+    originalWidth?: number;
     /** 原始高度 */
-    originalHeight?: number | null;
+    originalHeight?: number;
+  }
+
+  /** 背景 */
+  interface Background extends LayerModel.Base {
+    /** 背景填充类型 */
+    fillType?: 'Color' | 'Image';
+    /** 图片地址 */
+    url?: string;
+    /** 颜色 */
+    color?: string;
   }
 
   // todo 完善
-  /** 背景 */
-  interface Background extends LayerModel.Base {}
-
   /** 图形 */
   interface Shape extends LayerModel.Base {}
 
   /** 组合 */
   interface Group extends LayerModel.Base {
-    layers: LayerModel.Layer[];
+    layers?: LayerModel.Layer[];
   }
 
   type Layer =

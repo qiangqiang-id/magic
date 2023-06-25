@@ -1,5 +1,5 @@
 export default class MagicStruc {
   constructor() {
-    console.log('AppStruc');
+    console.log('MagicStruc');
   }
 }
