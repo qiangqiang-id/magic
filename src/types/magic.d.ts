@@ -154,7 +154,7 @@ declare interface MagicModel {
   /** 封面 */
   cover?: string;
   /** 模板比例 */
-  aspect;
+  aspect?: Aspect;
   /** 画布宽 */
   width?: number;
   /** 画布高 */

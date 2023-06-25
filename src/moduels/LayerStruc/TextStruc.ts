@@ -2,21 +2,21 @@ import { makeObservable, observable } from 'mobx';
 import LayerStruc from './LayerStruc';
 
 export default class TextStruc extends LayerStruc implements LayerModel.Text {
-  content!: string;
+  content?: string;
 
-  charAttrs?: Record<string, any>[] | undefined;
+  charAttrs?: Record<string, any>[];
 
-  maxLines?: number | undefined;
+  maxLines?: number;
 
-  isEdit?: boolean | undefined;
+  isEdit?: boolean;
 
-  fontFamily!: string;
+  fontFamily?: string;
 
-  fill?: LayerModel.TextFill | undefined;
+  fill?: LayerModel.TextFill;
 
-  fontSize!: number;
+  fontSize?: number;
 
-  lineHeight!: number;
+  lineHeight?: number;
 
   constructor(data?: Partial<LayerModel.Text>) {
     super(data);

@@ -23,13 +23,13 @@ export default class LayerStruc implements LayerModel.Base {
 
   actived?: boolean;
 
-  visible?: boolean | undefined;
+  visible?: boolean;
 
-  isLock?: boolean | undefined;
+  isLock?: boolean;
 
-  disabled?: boolean | undefined;
+  disabled?: boolean;
 
-  loading?: boolean | undefined;
+  loading?: boolean;
 
   parent?: null;
 

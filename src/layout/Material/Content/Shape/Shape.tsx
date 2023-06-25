@@ -1,10 +1,11 @@
-import { SHAPE_LIST } from '@/constants/Shape';
+import { SHAPE_LIST } from '@/config/Shape';
 import Style from './Shape.module.less';
 
 export default function Shape() {
   const addShape = () => {
     console.log('addShape');
   };
+
   return (
     <div className={Style.shape}>
       {SHAPE_LIST.map((shape, index) => (
