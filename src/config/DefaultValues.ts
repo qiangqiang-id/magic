@@ -43,6 +43,7 @@ export const LayerDefaultValues: LayerModel.Base = {
   visible: true,
   isLock: false,
   disabled: false,
+  alpha: 1,
 };
 
 export const ImageDefaultValues: LayerModel.Image = {

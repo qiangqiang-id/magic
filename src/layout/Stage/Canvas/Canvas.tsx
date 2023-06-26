@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { observer } from 'mobx-react';
-import Renderer from '../Renderer';
-import Editor from '../Editor';
+import Renderer from '@/components/Renderer';
+import Editor from '@/components/Editor';
 import { CANVAS_REF } from '@/constants/Refs';
 import { useStores } from '@/store';
 import Style from './Canvas.module.less';

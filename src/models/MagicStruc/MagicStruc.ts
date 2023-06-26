@@ -11,7 +11,7 @@ export default class MagicStruc implements MagicModel {
   scenes: SceneStruc[] = [];
 
   /** 激活的场景 */
-  activedScene!: SceneStruc;
+  activedScene: SceneStruc | null = null;
 
   /** 当前被激活的图层 */
   activedLayers: Layer[] = [];

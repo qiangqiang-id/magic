@@ -2,6 +2,7 @@ import { makeObservable, observable } from 'mobx';
 import { Layer } from '@/types/model';
 import { SceneDefaultValues } from '@/config/DefaultValues';
 import { deepMerge } from '@/utils/mergeData';
+import CreateLayerStruc from '../FactoryStruc/LayerFactory';
 
 export default class SceneStruc implements SceneModel {
   id!: string;
@@ -35,6 +36,10 @@ export default class SceneStruc implements SceneModel {
         this[k] = createData[k];
       }
     }
+
+    this.layers = (data?.layers || [])
+      .filter(layer => !!layer.type)
+      .map(layer => CreateLayerStruc(layer.type, layer, this));
   }
 
   model(): SceneModel {

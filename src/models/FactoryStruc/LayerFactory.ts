@@ -8,7 +8,7 @@ import LayerStruc, {
 } from '../LayerStruc';
 import SceneStruc from '../SceneStruc';
 
-const LayerTypeMapStruc: Record<LayerType, typeof LayerStruc> = {
+const LayerTypeMapStruc: Record<LayerModel.LayerType, typeof LayerStruc> = {
   [LayerType.TEXT]: TextStruc,
   [LayerType.BACKGROUND]: BackgroundStruc,
   [LayerType.IMAGE]: ImageStruc,
@@ -17,9 +17,7 @@ const LayerTypeMapStruc: Record<LayerType, typeof LayerStruc> = {
   [LayerType.UNKNOWN]: TextStruc,
 };
 
-export default function CreateCmpStruc<
-  T extends keyof typeof LayerTypeMapStruc
->(
+export default function CreateLayerStruc<T extends LayerModel.LayerType>(
   type: T,
   data?: Partial<LayerModel.Layer>,
   parent?: SceneStruc | GroupStruc | null
