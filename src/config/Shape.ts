@@ -1,4 +1,4 @@
-export const SHAPE_LIST = [
+export const ShapeList = [
   {
     type: 'shape',
     name: 'round-rect',

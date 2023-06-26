@@ -1,15 +1,32 @@
 import { LayerType } from '@/constants/LayerTypeEnum';
+import { randomString } from '@/utils/random';
 /** 默认缩放值 */
 export const ScaleDefault = { x: 1, y: 1 };
 
 /** 默认锚点值 */
 export const AnchorDefault = { x: 0.5, y: 0.5 };
 
+export const CreateMagicDefaultValues: MagicModel = {
+  id: randomString(),
+  name: '',
+  scenes: [],
+};
+
+export const SceneDefaultValues: SceneModel = {
+  id: randomString(),
+  name: '',
+  layers: [],
+  cover: '',
+  width: 1280,
+  height: 720,
+  actived: false,
+};
+
 /**
  * 基础图层默认数据
  */
 export const LayerDefaultValues: LayerModel.Base = {
-  id: '',
+  id: randomString(),
   name: '',
   type: LayerType.UNKNOWN,
   x: 0,
@@ -26,7 +43,6 @@ export const LayerDefaultValues: LayerModel.Base = {
   visible: true,
   isLock: false,
   disabled: false,
-  parent: null,
 };
 
 export const ImageDefaultValues: LayerModel.Image = {

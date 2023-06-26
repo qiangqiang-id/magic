@@ -80,7 +80,8 @@ declare namespace LayerModel {
     disabled?: boolean;
     /** 加载状态 */
     loading?: boolean;
-    parent?: null;
+    /** 透明度 */
+    alpha?: number;
   }
 
   /** 文字 */

@@ -87,4 +87,18 @@ export default class LayerStruc implements LayerModel.Base {
       scene: this.scene,
     };
   }
+
+  /**
+   * 激活/选中组件
+   */
+  active() {
+    this.actived = true;
+  }
+
+  /**
+   * 取消选中
+   */
+  inactive() {
+    this.actived = false;
+  }
 }

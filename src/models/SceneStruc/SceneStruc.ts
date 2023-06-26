@@ -1,5 +1,7 @@
 import { makeObservable, observable } from 'mobx';
 import { Layer } from '@/types/model';
+import { SceneDefaultValues } from '@/config/DefaultValues';
+import { deepMerge } from '@/utils/mergeData';
 
 export default class SceneStruc implements SceneModel {
   id!: string;
@@ -26,9 +28,11 @@ export default class SceneStruc implements SceneModel {
       actived: observable,
     });
 
-    for (const k in data) {
+    const createData = deepMerge(SceneDefaultValues, data || {});
+
+    for (const k in createData) {
       if (k in this) {
-        this[k] = data[k];
+        this[k] = createData[k];
       }
     }
   }

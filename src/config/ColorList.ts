@@ -1,5 +1,5 @@
 /** 背景预设颜色 */
-export const BACK_COLOR_LIST = [
+export const BackColorList = [
   'rgb(232,221,203)',
   'rgb(205,179,128)',
   'rgb(3,101,100)',

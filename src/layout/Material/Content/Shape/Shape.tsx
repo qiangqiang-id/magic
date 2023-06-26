@@ -1,4 +1,4 @@
-import { SHAPE_LIST } from '@/config/Shape';
+import { ShapeList } from '@/config/Shape';
 import Style from './Shape.module.less';
 
 export default function Shape() {
@@ -8,7 +8,7 @@ export default function Shape() {
 
   return (
     <div className={Style.shape}>
-      {SHAPE_LIST.map((shape, index) => (
+      {ShapeList.map((shape, index) => (
         <div
           onClick={addShape}
           className={Style.shape_item}

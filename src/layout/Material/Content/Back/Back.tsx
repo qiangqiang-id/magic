@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import UploadBtn from '@/components/UploadBtn';
-import { BACK_COLOR_LIST } from '@/constants/ColorList';
+import { BackColorList } from '@/config/ColorList';
 import Style from './Back.module.less';
 
 interface BackContentProps {
@@ -33,7 +33,7 @@ export default function Back() {
     <div>
       <BackContent title="预设颜色">
         <ul className={Style.color_wrapper}>
-          {BACK_COLOR_LIST.map(color => (
+          {BackColorList.map(color => (
             <li
               className={Style.color_item}
               key={color}
