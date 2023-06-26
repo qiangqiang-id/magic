@@ -6,12 +6,6 @@ interface Position {
   y: number;
 }
 
-/* 画布比例 如 9:16 */
-interface Aspect {
-  num: number;
-  den: number;
-}
-
 /** 锚点 */
 interface Anchor extends Position {}
 /** 缩放 */
@@ -144,19 +138,26 @@ declare namespace LayerModel {
     | LayerModel.Text;
 }
 
+declare interface SceneModel {
+  id: string;
+  name: string;
+  /** 图层 */
+  layers?: LayerModel.Layer[];
+  /** 封面 */
+  cover?: string;
+  /** 画布宽 */
+  width?: number;
+  /** 画布高 */
+  height?: number;
+  /** 是否选中 */
+  actived?: boolean | null;
+}
+
 declare interface MagicModel {
   /** 作品id */
   id: string | null;
   /** 作品名称 */
   name: string | null;
-  /** 图层 */
-  layers: LayerModel.Layer[];
-  /** 封面 */
-  cover?: string;
-  /** 模板比例 */
-  aspect?: Aspect;
-  /** 画布宽 */
-  width?: number;
-  /** 画布高 */
-  height?: number;
+  /** 场景 */
+  scenes: SceneModel[];
 }

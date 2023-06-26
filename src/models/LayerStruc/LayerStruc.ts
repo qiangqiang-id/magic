@@ -1,4 +1,6 @@
 import { makeObservable, observable } from 'mobx';
+import GroupStruc from './GroupStruc';
+import SceneStruc from '../SceneStruc';
 
 export default class LayerStruc implements LayerModel.Base {
   id!: string;
@@ -31,7 +33,11 @@ export default class LayerStruc implements LayerModel.Base {
 
   loading?: boolean;
 
-  parent?: null;
+  /** 所在的组合 */
+  group?: GroupStruc | null = null;
+
+  /** 所在的场景 */
+  scene?: SceneStruc | null = null;
 
   constructor(data?: Partial<LayerModel.Base> & Record<string, any>) {
     makeObservable(this, {
@@ -48,7 +54,6 @@ export default class LayerStruc implements LayerModel.Base {
       isLock: observable,
       loading: observable,
       disabled: observable,
-      parent: observable,
     });
 
     for (const k in data) {
@@ -78,7 +83,8 @@ export default class LayerStruc implements LayerModel.Base {
       isLock: this.isLock,
       loading: this.loading,
       disabled: this.disabled,
-      parent: this.parent,
+      group: this.group,
+      scene: this.scene,
     };
   }
 }
