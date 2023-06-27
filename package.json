@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://qiangqiang-id.github.io/magic",
   "scripts": {
     "commit": "git-cz",
     "prepare": "node -r @babel/register scripts/prepare.js",
