@@ -9,7 +9,7 @@ jobs:
 
       - name: Install and Build 🔧 
         run: |
-          npm install
+          npm install --force
           npm run build
 
       - name: Deploy 🚀
@@ -17,7 +17,7 @@ jobs:
         with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages
-          FOLDER: build
+          FOLDER: dist
 
 # 整个流程在master分支发生push事件时触发。
 # 只有一个job，运行在虚拟机环境ubuntu-latest。
