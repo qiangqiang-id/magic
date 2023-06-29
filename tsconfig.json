@@ -51,6 +51,7 @@
     "types": ["@types/node", "vite/client"]
   },
   "include": [
+    "packages",
     "src",
     "vite.config.ts",
     "lib.d.ts",

@@ -14,7 +14,8 @@ interface CanvasProps {
 function Canvas(props: CanvasProps) {
   const { canvasWidth, canvasHeight } = props;
 
-  const { OS } = useStores();
+  const { OS, magic } = useStores();
+  const { activedScene } = magic;
   const zoomLevel = OS.zoomLevel;
 
   const canvasStyle = useMemo(
@@ -25,9 +26,11 @@ function Canvas(props: CanvasProps) {
     [zoomLevel]
   );
 
+  if (!activedScene || !activedScene?.layers) return null;
+
   return (
     <section ref={CANVAS_REF} className={Style.canvas} style={canvasStyle}>
-      <Renderer />
+      <Renderer zoomLevel={zoomLevel} layers={activedScene.layers} />
       <Editor />
     </section>
   );

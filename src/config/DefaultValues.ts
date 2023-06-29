@@ -34,7 +34,6 @@ export const LayerDefaultValues: LayerModel.Base = {
   width: 0,
   height: 0,
   // mask: { x: 0, y: 0, width: 0, height: 0 },
-  // alpha: 1,
   rotate: 0,
   scale: ScaleDefault,
   anchor: AnchorDefault,
@@ -43,7 +42,7 @@ export const LayerDefaultValues: LayerModel.Base = {
   visible: true,
   isLock: false,
   disabled: false,
-  alpha: 1,
+  opacity: 1,
 };
 
 export const ImageDefaultValues: LayerModel.Image = {

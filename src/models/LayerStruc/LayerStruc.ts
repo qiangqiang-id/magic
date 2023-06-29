@@ -23,6 +23,8 @@ export default class LayerStruc implements LayerModel.Base {
 
   rotate?: number;
 
+  opacity?: number;
+
   actived?: boolean;
 
   visible?: boolean;
@@ -54,6 +56,7 @@ export default class LayerStruc implements LayerModel.Base {
       isLock: observable,
       loading: observable,
       disabled: observable,
+      opacity: observable,
     });
 
     for (const k in data) {
@@ -74,6 +77,7 @@ export default class LayerStruc implements LayerModel.Base {
       anchor: this.anchor,
       width: this.width,
       height: this.height,
+      opacity: this.opacity,
       x: this.x,
       y: this.y,
       scale: this.scale,

@@ -1,6 +1,6 @@
 import { makeObservable, observable } from 'mobx';
 import SceneStruc from '../SceneStruc';
-import { Layer } from '@/types/model';
+import { LayerStrucType } from '@/types/model';
 
 export default class MagicStruc implements MagicModel {
   id!: string | null;
@@ -14,7 +14,7 @@ export default class MagicStruc implements MagicModel {
   activedScene: SceneStruc | null = null;
 
   /** 当前被激活的图层 */
-  activedLayers: Layer[] = [];
+  activedLayers: LayerStrucType[] = [];
 
   constructor() {
     makeObservable(this, {

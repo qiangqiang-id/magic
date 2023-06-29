@@ -6,7 +6,7 @@ import {
   GroupStruc,
 } from '@/models/LayerStruc';
 
-export type Layer =
+export type LayerStrucType =
   | TextStruc
   | ImageStruc
   | BackgroundStruc

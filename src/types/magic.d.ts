@@ -26,7 +26,7 @@ declare namespace LayerModel {
     /** 文字颜色 */
     color?: string;
     /** 透明度 0-100 */
-    alpha?: number;
+    opacity?: number;
     /** 描边颜色 */
     strokeColor?: string;
     /** 描边宽度 */
@@ -81,7 +81,7 @@ declare namespace LayerModel {
     /** 加载状态 */
     loading?: boolean;
     /** 透明度 */
-    alpha?: number;
+    opacity?: number;
   }
 
   /** 文字 */

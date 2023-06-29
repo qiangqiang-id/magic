@@ -7,5 +7,5 @@ interface EditorProps {
 export default function Editor(props: EditorProps) {
   console.log(props);
 
-  return <div className={Style.editor}>Editor</div>;
+  return <div className={Style.editor} />;
 }
