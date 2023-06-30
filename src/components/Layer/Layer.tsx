@@ -7,6 +7,7 @@ import Group from './Group';
 import Back from './Back';
 import Shape from './Shape';
 import Style from './Layer.module.less';
+import { useStores } from '@/store';
 import { getLayerOuterStyles } from '@/helpers/Styles';
 
 const LayerCmpMap = {
@@ -27,7 +28,7 @@ export interface LayerProps<M> {
 
 export default function Layer<M extends LayerStrucType>(props: LayerProps<M>) {
   const { model, zoomLevel } = props;
-
+  const { magic } = useStores();
   const LayerCmp = LayerCmpMap[model.type] as ComponentType<
     LayerProps<LayerStrucType>
   >;
@@ -35,9 +36,19 @@ export default function Layer<M extends LayerStrucType>(props: LayerProps<M>) {
   if (!LayerCmp || !model.visible) return null;
   const outerStyle = getLayerOuterStyles(model, zoomLevel);
 
+  /**
+   * 鼠标按下时触发
+   */
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (e.button !== 0 || model.actived) return;
+    magic.activeLayer(model, e.shiftKey);
+  };
+
   return (
     <div
       className={Style.layer}
+      onMouseDown={handleMouseDown}
       style={{
         ...outerStyle,
       }}

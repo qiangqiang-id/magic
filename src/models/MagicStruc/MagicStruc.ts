@@ -1,4 +1,4 @@
-import { makeObservable, observable } from 'mobx';
+import { makeObservable, observable, computed } from 'mobx';
 import SceneStruc from '../SceneStruc';
 import { LayerStrucType } from '@/types/model';
 
@@ -22,6 +22,7 @@ export default class MagicStruc implements MagicModel {
       scenes: observable,
       activedScene: observable,
       activedLayers: observable,
+      isMultiple: computed,
     });
   }
 
@@ -38,9 +39,29 @@ export default class MagicStruc implements MagicModel {
   /**
    * 释放所有活动组件
    */
-  releaseAllCmps() {
+  releaseAllLayers() {
     this.activedLayers.forEach(layer => layer.inactive());
     this.activedLayers = [];
+  }
+
+  /**
+   * 激活组件
+   * @param layer 被选中的图层，有可能是多个
+   * @param isMulti 是否是多选
+   */
+  activeLayer(layer: LayerStrucType | LayerStrucType[], isMulti?: boolean) {
+    let layers = Array.isArray(layer) ? layer : [layer];
+    layers = layers.filter(item => item.visible);
+
+    if (layers.every(item => item.actived)) return;
+
+    if (isMulti) {
+      this.activedLayers = this.activedLayers.concat(layers);
+    } else {
+      this.activedLayers.forEach(item => item.inactive());
+      this.activedLayers = layers;
+    }
+    this.activedLayers.forEach(item => item.active());
   }
 
   /**
@@ -56,7 +77,7 @@ export default class MagicStruc implements MagicModel {
     scene.actived = true;
     this.activedScene = scene;
 
-    this.releaseAllCmps();
+    this.releaseAllLayers();
   }
 
   /**
@@ -73,5 +94,10 @@ export default class MagicStruc implements MagicModel {
    */
   getSceneIndex(scene: SceneStruc): number {
     return this.scenes.findIndex(sc => sc.id === scene.id);
+  }
+
+  /** 是否多选 */
+  get isMultiple() {
+    return this.activedLayers.length > 1;
   }
 }

@@ -16,6 +16,11 @@ const onContainerKeys = [
 ];
 
 /**
+ * 在图层上的样式
+ */
+const onLayerKeys = [];
+
+/**
  * 获取图层容器上的样式
  * @param model 组件数据
  * @param zoomLevel 缩放比例

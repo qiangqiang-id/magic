@@ -1,5 +1,40 @@
+import { observer } from 'mobx-react';
+import { LayerType } from '@/constants/LayerTypeEnum';
+import TextSetting from './Text';
+import ImageSetting from './Image';
+import BackSetting from './Back';
+import ShapeSetting from './Shape';
+import GroupSetting from './Group';
+import { useStores } from '@/store';
 import Style from './Setting.module.less';
 
-export default function Setting() {
-  return <div className={Style.setting}>Setting</div>;
+const SettingMap = {
+  [LayerType.BACKGROUND]: BackSetting,
+  [LayerType.IMAGE]: ImageSetting,
+  [LayerType.TEXT]: TextSetting,
+  [LayerType.SHAPE]: ShapeSetting,
+  [LayerType.GROUP]: GroupSetting,
+};
+
+function Setting() {
+  const { magic } = useStores();
+  const { activedLayers, isMultiple } = magic;
+
+  const getSetingRender = () => {
+    if (activedLayers.length === 0) return <BackSetting />;
+
+    /** 选中多个图层 */
+    if (isMultiple) {
+      return <div>选择多个组件</div>;
+    }
+    const layer = activedLayers[0];
+    const LayerSetting = SettingMap[layer.type];
+    if (!LayerSetting) return null;
+
+    return <LayerSetting />;
+  };
+
+  return <div className={Style.setting}>{getSetingRender()}</div>;
 }
+
+export default observer(Setting);
