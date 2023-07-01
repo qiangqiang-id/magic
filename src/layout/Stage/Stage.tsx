@@ -8,7 +8,9 @@ import { useStores } from '@/store';
 import Style from './Stage.module.less';
 
 function Stage() {
-  const { OS } = useStores();
+  const { OS, magic } = useStores();
+
+  const { activedLayers } = magic;
 
   const [entry] = useResizeObserver(STAGE_REF);
 
@@ -29,12 +31,21 @@ function Stage() {
     OS.setZoomLevel(Math.min(rateH, rateW));
   };
 
+  const handleStageMousedown = (e: React.MouseEvent) => {
+    if (e.button !== 0 || !activedLayers.length) return;
+    magic.releaseAllLayers();
+  };
+
   useEffect(() => {
     entry && adaptZoomLevel(entry);
   }, [entry, TEMPLATE_HEIGHT, TEMPLATE_WIDTH]);
 
   return (
-    <div ref={STAGE_REF} className={Style.stage}>
+    <div
+      ref={STAGE_REF}
+      className={Style.stage}
+      onMouseDown={handleStageMousedown}
+    >
       <div className={Style.canvas_wrapper}>
         <Canvas canvasWidth={canvasWidth} canvasHeight={canvasHeight} />
       </div>
