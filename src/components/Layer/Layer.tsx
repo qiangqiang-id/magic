@@ -47,6 +47,8 @@ export default function Layer<M extends LayerStrucType>(props: LayerProps<M>) {
 
   return (
     <div
+      data-type={model.type}
+      data-id={model.id}
       className={Style.layer}
       onMouseDown={handleMouseDown}
       style={{

@@ -1,5 +1,5 @@
 import { LayerType } from '@/constants/LayerTypeEnum';
-import { randomString } from '@/utils/random';
+
 /** 默认缩放值 */
 export const ScaleDefault = { x: 1, y: 1 };
 
@@ -7,13 +7,13 @@ export const ScaleDefault = { x: 1, y: 1 };
 export const AnchorDefault = { x: 0.5, y: 0.5 };
 
 export const CreateMagicDefaultValues: MagicModel = {
-  id: randomString(),
+  id: '',
   name: '',
   scenes: [],
 };
 
 export const SceneDefaultValues: SceneModel = {
-  id: randomString(),
+  id: '',
   name: '',
   layers: [],
   cover: '',
@@ -26,7 +26,7 @@ export const SceneDefaultValues: SceneModel = {
  * 基础图层默认数据
  */
 export const LayerDefaultValues: LayerModel.Base = {
-  id: randomString(),
+  id: '',
   name: '',
   type: LayerType.UNKNOWN,
   x: 0,

@@ -29,7 +29,12 @@ function Canvas(props: CanvasProps) {
   if (!activedScene || !activedScene?.layers) return null;
 
   return (
-    <section ref={CANVAS_REF} className={Style.canvas} style={canvasStyle}>
+    <section
+      ref={CANVAS_REF}
+      data-renderer-id={activedScene.id}
+      className={Style.canvas}
+      style={canvasStyle}
+    >
       <Renderer zoomLevel={zoomLevel} layers={activedScene.layers} />
       <Editor />
     </section>

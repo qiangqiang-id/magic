@@ -36,4 +36,12 @@ export default class BackgroundStruc
       color: this.color,
     };
   }
+
+  get isColorFill() {
+    return this.fillType === 'Color';
+  }
+
+  get isImageFill() {
+    return this.fillType === 'Image';
+  }
 }

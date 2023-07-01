@@ -1,7 +1,5 @@
 import { makeObservable, observable } from 'mobx';
 import LayerStruc from './LayerStruc';
-import { LayerDefaultValues } from '@/config/DefaultValues';
-import { deepMerge } from '@/utils/mergeData';
 
 export default class ImageStruc extends LayerStruc implements LayerModel.Image {
   url?: string;
@@ -11,17 +9,16 @@ export default class ImageStruc extends LayerStruc implements LayerModel.Image {
   originalHeight?: number;
 
   constructor(data: LayerModel.Image) {
-    const createData = deepMerge(LayerDefaultValues, data || {});
-    super(createData);
+    super(data);
     makeObservable(this, {
       url: observable,
       originalWidth: observable,
       originalHeight: observable,
     });
 
-    this.url = createData.url;
-    this.originalWidth = createData.originalWidth;
-    this.originalHeight = createData.originalHeight;
+    this.url = data.url;
+    this.originalWidth = data.originalWidth;
+    this.originalHeight = data.originalHeight;
   }
 
   model(): LayerModel.Image {
