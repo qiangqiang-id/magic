@@ -1,5 +1,5 @@
 import { RectData, Coordinate } from '../types/Editor';
-import {  getMaskInCanvasRectData } from '../helper/math';
+import { getMaskInCanvasRectData } from '../helper/math';
 import ScaleHandler from './ScaleHandler';
 import type { ScaleHandlerOptions } from './ScaleHandler';
 import { POINT_TYPE } from '../enum/point-type';
@@ -10,7 +10,6 @@ export default class MaskContainScaleHandler {
 
   /** 拉伸函数实例 */
   private scaleHandler: ScaleHandler;
-
 
   constructor(
     rectData: RectData,

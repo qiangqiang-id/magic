@@ -8,8 +8,10 @@ import {
 export default class RotateHandler {
   /** 旋转角度 */
   private readonly startRotate: number;
+
   /** 矩形数据 */
   private readonly rectCenterData: Coordinate;
+
   /** 鼠标在画布中开始坐标 */
   private readonly mouseStartData: Coordinate;
 

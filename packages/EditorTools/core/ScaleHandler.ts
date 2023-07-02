@@ -141,7 +141,6 @@ export default class ScaleHandler {
       -this.angle
     );
 
-
     let newWidth = newTopRightPoint.x - newBottomLeftPoint.x;
     let newHeight = newBottomLeftPoint.y - newTopRightPoint.y;
 
@@ -322,8 +321,8 @@ export default class ScaleHandler {
     );
 
     const newHeight = Math.sqrt(
-      Math.pow(rotatedMiddlePoint.x - symmetryPoint.x, 2) +
-        Math.pow(rotatedMiddlePoint.y - symmetryPoint.y, 2)
+      (rotatedMiddlePoint.x - symmetryPoint.x) ** 2 +
+        (rotatedMiddlePoint.y - symmetryPoint.y) ** 2
     );
 
     const newCenter = {
@@ -361,8 +360,8 @@ export default class ScaleHandler {
     );
 
     const newWidth = Math.sqrt(
-      Math.pow(rotatedMiddlePoint.x - symmetryPoint.x, 2) +
-        Math.pow(rotatedMiddlePoint.y - symmetryPoint.y, 2)
+      (rotatedMiddlePoint.x - symmetryPoint.x) ** 2 +
+        (rotatedMiddlePoint.y - symmetryPoint.y) ** 2
     );
 
     const newCenter = {
@@ -400,7 +399,11 @@ export default class ScaleHandler {
       mousePosition,
       keyVariable
     );
-    return this.checkBoundar({...this.rectData,...data}, handlePoint, symmetryPoint);
+    return this.checkBoundar(
+      { ...this.rectData, ...data },
+      handlePoint,
+      symmetryPoint
+    );
   }
 
   /**
@@ -445,25 +448,25 @@ export default class ScaleHandler {
     switch (this.pointType) {
       case POINT_TYPE.LEFT_TOP:
         handlePoint = {
-          x: x,
-          y: y,
+          x,
+          y,
         };
         break;
       case POINT_TYPE.TOP_CENTER:
         handlePoint = {
           x: x + width / 2,
-          y: y,
+          y,
         };
         break;
       case POINT_TYPE.RIGHT_TOP:
         handlePoint = {
           x: x + width,
-          y: y,
+          y,
         };
         break;
       case POINT_TYPE.LEFT_BOTTOM:
         handlePoint = {
-          x: x,
+          x,
           y: y + height,
         };
         break;
@@ -481,7 +484,7 @@ export default class ScaleHandler {
         break;
       case POINT_TYPE.LEFT_CENTER:
         handlePoint = {
-          x: x,
+          x,
           y: y + height / 2,
         };
         break;
@@ -490,6 +493,8 @@ export default class ScaleHandler {
           x: x + width,
           y: center.y,
         };
+        break;
+      default:
         break;
     }
     return calcRotatedPoint(handlePoint, center, this.angle);
@@ -666,6 +671,8 @@ export default class ScaleHandler {
           };
           break;
         }
+        default:
+          break;
       }
     }
 

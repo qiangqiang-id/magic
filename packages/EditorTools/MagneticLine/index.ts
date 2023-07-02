@@ -1,1 +1,1 @@
-export {default} from './MagneticLine'
+export { default } from './MagneticLine';

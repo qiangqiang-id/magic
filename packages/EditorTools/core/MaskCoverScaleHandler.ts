@@ -1,10 +1,7 @@
 import { POINT_TYPE } from '../enum/point-type';
 import type { ScaleHandlerOptions } from './ScaleHandler';
 import { BaseRectData, RectData, Coordinate } from '../types/Editor';
-import {
-  calcRotatedPoint,
-  getMaskInCanvasRectData,
-} from '../helper/math';
+import { calcRotatedPoint, getMaskInCanvasRectData } from '../helper/math';
 import { isCenterPoint, keepDecimal } from '../helper/utils';
 import ScaleHandler from './ScaleHandler';
 
@@ -170,6 +167,7 @@ export default class MaskScale {
       };
 
       if (flipX < 0) {
+        // eslint-disable-next-line default-case
         switch (this.pointType) {
           case POINT_TYPE.RIGHT_CENTER: {
             /** 计算mask x轴 扩大的长度 */
@@ -186,6 +184,7 @@ export default class MaskScale {
         }
       }
       if (flipY < 0) {
+        // eslint-disable-next-line default-case
         switch (this.pointType) {
           case POINT_TYPE.BOTTOM_CENTER: {
             result.y +=
