@@ -1,4 +1,4 @@
-import { makeObservable, observable, computed } from 'mobx';
+import { makeObservable, observable, computed, action } from 'mobx';
 import SceneStruc from '../SceneStruc';
 import { LayerStrucType } from '@/types/model';
 
@@ -23,6 +23,10 @@ export default class MagicStruc implements MagicModel {
       activedScene: observable,
       activedLayers: observable,
       isMultiple: computed,
+      update: action,
+      releaseAllLayers: action,
+      activeLayer: action,
+      activeScene: action,
     });
   }
 
