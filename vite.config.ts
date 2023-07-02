@@ -12,7 +12,10 @@ export default defineConfig(({ mode }) => ({
     },
   },
   resolve: {
-    alias: { '@': path.resolve(__dirname, 'src') },
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+      '@p': path.resolve(__dirname, 'packages'),
+    },
   },
   server: {
     open: true,

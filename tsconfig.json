@@ -36,7 +36,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@p/*": ["./packages/*"]
     },
     "pretty": true,
     "resolveJsonModule": true,
