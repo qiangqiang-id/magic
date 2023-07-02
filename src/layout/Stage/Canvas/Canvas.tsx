@@ -15,8 +15,8 @@ function Canvas(props: CanvasProps) {
   const { canvasWidth, canvasHeight } = props;
 
   const { OS, magic } = useStores();
-  const { activedScene } = magic;
-  const zoomLevel = OS.zoomLevel;
+  const { activedScene, activedLayers, isMultiple } = magic;
+  const { zoomLevel, magneticLines } = OS;
 
   const canvasStyle = useMemo(
     () => ({
@@ -36,7 +36,12 @@ function Canvas(props: CanvasProps) {
       style={canvasStyle}
     >
       <Renderer zoomLevel={zoomLevel} layers={activedScene.layers} />
-      <Editor />
+      <Editor
+        zoomLevel={zoomLevel}
+        isMultiple={isMultiple}
+        activedLayers={activedLayers}
+        magneticLines={magneticLines}
+      />
     </section>
   );
 }

@@ -1,4 +1,5 @@
 import { makeAutoObservable } from 'mobx';
+import { MagneticLineType } from '@p/EditorTools';
 import LocalCache from '@/core/Manager/LocalCache';
 import { CANVAS_ZOOM_LEVEL } from '@/constants/CacheKeys';
 import {
@@ -9,6 +10,18 @@ import {
 export default class OSStore {
   /** 画布缩放等级 */
   zoomLevel = LocalCache.get(CANVAS_ZOOM_LEVEL, 'number') ?? 1;
+
+  /** 是否在移动中 */
+  isMoveing = false;
+
+  /** 是否旋转中 */
+  isRotateing = false;
+
+  /** 是否拉伸中 */
+  isScaleing = false;
+
+  /** 磁力线集合 */
+  magneticLines: MagneticLineType[] | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -82,5 +95,43 @@ export default class OSStore {
       Math.min(CANVAS_MAX_ZOOM_LEVEL, level)
     );
     LocalCache.set(CANVAS_ZOOM_LEVEL, this.zoomLevel);
+  }
+
+  /**
+   * 设置移动状态
+   * @memberof OSStore
+   */
+  setMoveState(isMoveing: boolean) {
+    this.isMoveing = isMoveing;
+  }
+
+  /**
+   * 设置旋转状态
+   * @memberof OSStore
+   */
+  setRotateState(isRotateing: boolean) {
+    this.isRotateing = isRotateing;
+  }
+
+  /**
+   * 设置移动状态
+   * @memberof OSStore
+   */
+  setScaleState(isScaleing: boolean) {
+    this.isScaleing = isScaleing;
+  }
+
+  /**
+   * 设置磁力线
+   */
+  setMagneticLine(lines: MagneticLineType[]) {
+    this.magneticLines = lines;
+  }
+
+  /**
+   * 清除磁力线
+   */
+  clearMagneticLines() {
+    this.magneticLines = null;
   }
 }

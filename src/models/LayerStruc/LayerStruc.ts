@@ -1,4 +1,4 @@
-import { makeObservable, observable, computed } from 'mobx';
+import { makeObservable, observable, computed, action } from 'mobx';
 import GroupStruc from './GroupStruc';
 import SceneStruc from '../SceneStruc';
 import { LayerType } from '@/constants/LayerTypeEnum';
@@ -44,7 +44,7 @@ export default class LayerStruc implements LayerModel.Base {
   scene?: SceneStruc | null = null;
 
   constructor(data?: Partial<LayerModel.Base> & Record<string, any>) {
-    makeObservable(this, {
+    makeObservable<this, 'handleUpdate'>(this, {
       name: observable,
       type: observable,
       scale: observable,
@@ -64,6 +64,7 @@ export default class LayerStruc implements LayerModel.Base {
       isShape: computed,
       isText: computed,
       isGroup: computed,
+      handleUpdate: action,
     });
 
     for (const k in data) {

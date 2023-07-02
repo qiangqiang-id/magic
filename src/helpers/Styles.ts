@@ -1,4 +1,5 @@
 import { CSSProperties } from 'react';
+import { pointToTopLeft } from '@p/EditorTools';
 import { LayerStrucType } from '@/types/model';
 
 /**
@@ -63,13 +64,23 @@ export function getLayerRectStyles<M extends LayerStrucType = LayerStrucType>(
   model: M,
   zoomLevel = 1
 ): CSSProperties {
-  const { x = 0, y = 0, rotate = 0, width = 0, height = 0 } = model;
+  const {
+    x = 0,
+    y = 0,
+    rotate = 0,
+    width = 0,
+    height = 0,
+    anchor = { x: 0, y: 0 },
+  } = model;
+
+  const rectData = pointToTopLeft({ x, y, width, height, anchor });
 
   return {
     width: width * zoomLevel,
     height: height * zoomLevel,
-    transform: `translate(${x * zoomLevel}px,${
-      y * zoomLevel
+    transform: `translate(${rectData.x * zoomLevel}px,${
+      rectData.y * zoomLevel
     }px) rotate(${rotate}deg)`,
+    transformOrigin: `${anchor.x * 100}% ${anchor.y * 100}%`,
   };
 }

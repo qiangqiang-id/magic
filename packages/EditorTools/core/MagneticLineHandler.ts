@@ -7,7 +7,7 @@ import {
 } from '../helper/math';
 
 import { Coordinate, RectData } from '../types/Editor';
-import { LineData, MagneticLine } from '../types/MagneticLine';
+import { LineData, MagneticLineType } from '../types/MagneticLine';
 import { getRectMagneticLines, uniqAlignLines } from '../helper/magneticLine';
 import { AxleDirection } from '../constants/AxleDirection';
 import { DISTANCE, ZOOM_LEVEL } from '../constants/Magnetic';
@@ -50,7 +50,7 @@ export default class MagneticLineHandler {
 
   /** 转换数据 */
   private transformRectData(data: RectData): RectData {
-    let { x, y, width, height } = getMaskInCanvasRectData({
+    const { x, y, width, height } = getMaskInCanvasRectData({
       ...data,
       ...pointToTopLeft(data),
     });
@@ -101,11 +101,11 @@ export default class MagneticLineHandler {
   }
 
   public calcAlignmentLine(moveDistance: Coordinate): {
-    magneticLines: MagneticLine[];
+    magneticLines: MagneticLineType[];
     x: number;
     y: number;
   } {
-    const magneticLines: MagneticLine[] = [];
+    const magneticLines: MagneticLineType[] = [];
     const { width, height, rotate, x, y, anchor, mask } =
       this.transformRectData(this.targetRect);
 
@@ -221,7 +221,6 @@ export default class MagneticLineHandler {
       x: targetLeft / this.zoomLevel,
       y: targetTop / this.zoomLevel,
     });
-
 
     return {
       magneticLines,

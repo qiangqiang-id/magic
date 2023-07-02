@@ -1,4 +1,5 @@
 import { ComponentType } from 'react';
+import { observer } from 'mobx-react';
 import { LayerType } from '@/constants/LayerTypeEnum';
 import { LayerStrucType } from '@/types/model';
 import Image from './Image';
@@ -9,6 +10,7 @@ import Shape from './Shape';
 import Style from './Layer.module.less';
 import { useStores } from '@/store';
 import { getLayerOuterStyles } from '@/helpers/Styles';
+import { moveHandle } from '@/utils/move';
 
 const LayerCmpMap = {
   [LayerType.BACKGROUND]: Back,
@@ -26,10 +28,10 @@ export interface LayerProps<M> {
   zoomLevel?: number;
 }
 
-export default function Layer<M extends LayerStrucType = LayerStrucType>(
+function Layer<M extends LayerStrucType = LayerStrucType>(
   props: LayerProps<M>
 ) {
-  const { model, zoomLevel } = props;
+  const { model, zoomLevel = 1 } = props;
   const { magic } = useStores();
   const LayerCmp = LayerCmpMap[model.type] as ComponentType<
     LayerProps<LayerStrucType>
@@ -45,6 +47,7 @@ export default function Layer<M extends LayerStrucType = LayerStrucType>(
     e.stopPropagation();
     if (e.button !== 0 || model.actived) return;
     magic.activeLayer(model, e.shiftKey);
+    moveHandle(e.nativeEvent, model, zoomLevel);
   };
 
   return (
@@ -61,3 +64,5 @@ export default function Layer<M extends LayerStrucType = LayerStrucType>(
     </div>
   );
 }
+
+export default observer(Layer);
