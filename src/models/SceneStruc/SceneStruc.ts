@@ -1,4 +1,4 @@
-import { makeObservable, observable } from 'mobx';
+import { makeObservable, observable, action } from 'mobx';
 import { LayerStrucType } from '@/types/model';
 import { SceneDefaultValues } from '@/config/DefaultValues';
 import { deepMerge } from '@/utils/mergeData';
@@ -27,6 +27,8 @@ export default class SceneStruc implements SceneModel {
       width: observable,
       height: observable,
       actived: observable,
+
+      setSceneBack: action,
     });
 
     const createData = deepMerge(SceneDefaultValues, data || {});
@@ -52,5 +54,10 @@ export default class SceneStruc implements SceneModel {
       height: this.height,
       actived: this.actived,
     };
+  }
+
+  setSceneBack(data: Partial<LayerModel.Background>) {
+    const backModel = this.layers?.find(layer => layer.isBack);
+    backModel?.update<Partial<LayerModel.Background>>(data);
   }
 }

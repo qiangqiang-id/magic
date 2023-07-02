@@ -1,6 +1,9 @@
 import { ReactNode } from 'react';
+import { observer } from 'mobx-react';
 import UploadBtn from '@/components/UploadBtn';
 import { BackColorList } from '@/config/ColorList';
+import { fileToBase64 } from '@/utils/file';
+import { useStores } from '@/store';
 import Style from './Back.module.less';
 
 interface BackContentProps {
@@ -20,13 +23,20 @@ function BackContent(props: BackContentProps) {
   );
 }
 
-export default function Back() {
-  const addBackImage = (files: File[]) => {
-    console.log(files);
+function Back() {
+  const { magic } = useStores();
+
+  const { activedScene } = magic;
+
+  const addBackImage = async (files: File[]) => {
+    const file = files[0];
+    if (!file) return;
+    const dataUrl = await fileToBase64(file);
+    activedScene?.setSceneBack({ fillType: 'Image', url: dataUrl });
   };
 
   const addBackColor = (color: string) => {
-    console.log(color);
+    activedScene?.setSceneBack({ fillType: 'Color', color });
   };
 
   return (
@@ -52,3 +62,5 @@ export default function Back() {
     </div>
   );
 }
+
+export default observer(Back);

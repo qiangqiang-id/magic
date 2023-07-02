@@ -1,10 +1,11 @@
+import { observer } from 'mobx-react';
 import { BackgroundStruc } from '@/models/LayerStruc';
 import { LayerProps } from '../Layer';
 import Style from './Back.module.less';
 
 interface BackProps extends LayerProps<BackgroundStruc> {}
 
-export default function Back(props: BackProps) {
+function Back(props: BackProps) {
   const { model } = props;
   const { url, color, isColorFill, isImageFill } = model;
 
@@ -19,3 +20,5 @@ export default function Back(props: BackProps) {
     </div>
   );
 }
+
+export default observer(Back);

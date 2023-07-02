@@ -1,6 +1,8 @@
-import { makeObservable, observable } from 'mobx';
+import { makeObservable, observable, computed } from 'mobx';
 import GroupStruc from './GroupStruc';
 import SceneStruc from '../SceneStruc';
+import { LayerType } from '@/constants/LayerTypeEnum';
+import { filterSameData } from '@/utils/filterData';
 
 export default class LayerStruc implements LayerModel.Base {
   id!: string;
@@ -57,6 +59,11 @@ export default class LayerStruc implements LayerModel.Base {
       loading: observable,
       disabled: observable,
       opacity: observable,
+      isBack: computed,
+      isImage: computed,
+      isShape: computed,
+      isText: computed,
+      isGroup: computed,
     });
 
     for (const k in data) {
@@ -92,6 +99,12 @@ export default class LayerStruc implements LayerModel.Base {
     };
   }
 
+  update<T extends Partial<LayerModel.Base> = Partial<LayerModel.Base>>(
+    data: T
+  ) {
+    this.handleUpdate(data);
+  }
+
   /**
    * 激活/选中组件
    */
@@ -104,5 +117,40 @@ export default class LayerStruc implements LayerModel.Base {
    */
   inactive() {
     this.actived = false;
+  }
+
+  /**
+   * 更新组件数据
+   * @param data 组件当前数据
+   */
+  protected handleUpdate<
+    T extends Partial<LayerModel.Base> = Partial<LayerModel.Base>
+  >(data: T) {
+    const updateData = filterSameData(this.model(), data);
+    if (Object.keys(updateData).length === 0) return;
+
+    Object.keys(updateData).forEach(key => {
+      this[key] = updateData[key];
+    });
+  }
+
+  get isBack() {
+    return this.type === LayerType.BACKGROUND;
+  }
+
+  get isImage() {
+    return this.type === LayerType.IMAGE;
+  }
+
+  get isShape() {
+    return this.type === LayerType.SHAPE;
+  }
+
+  get isText() {
+    return this.type === LayerType.TEXT;
+  }
+
+  get isGroup() {
+    return this.type === LayerType.GROUP;
   }
 }

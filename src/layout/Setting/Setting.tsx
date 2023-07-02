@@ -6,6 +6,7 @@ import BackSetting from './Back';
 import ShapeSetting from './Shape';
 import GroupSetting from './Group';
 import { useStores } from '@/store';
+import { LayerStrucType } from '@/types/model';
 import Style from './Setting.module.less';
 
 const SettingMap = {
@@ -15,6 +16,10 @@ const SettingMap = {
   [LayerType.SHAPE]: ShapeSetting,
   [LayerType.GROUP]: GroupSetting,
 };
+
+export interface SettingProps<M extends LayerStrucType = LayerStrucType> {
+  model: M;
+}
 
 function Setting() {
   const { magic } = useStores();

@@ -26,7 +26,9 @@ export interface LayerProps<M> {
   zoomLevel?: number;
 }
 
-export default function Layer<M extends LayerStrucType>(props: LayerProps<M>) {
+export default function Layer<M extends LayerStrucType = LayerStrucType>(
+  props: LayerProps<M>
+) {
   const { model, zoomLevel } = props;
   const { magic } = useStores();
   const LayerCmp = LayerCmpMap[model.type] as ComponentType<
