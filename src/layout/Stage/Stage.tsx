@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { observer } from 'mobx-react';
 import Canvas from './Canvas';
+import Scenes from './Scenes/Scenes';
 import useResizeObserver from '@/hooks/useResizeObserver';
 import { STAGE_REF } from '@/constants/Refs';
 import { TEMPLATE_HEIGHT, TEMPLATE_WIDTH } from '@/constants/TemplateSize';
@@ -49,6 +50,8 @@ function Stage() {
       <div className={Style.canvas_wrapper}>
         <Canvas canvasWidth={canvasWidth} canvasHeight={canvasHeight} />
       </div>
+
+      <Scenes />
     </div>
   );
 }

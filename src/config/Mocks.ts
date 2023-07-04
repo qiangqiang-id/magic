@@ -46,6 +46,8 @@ const scene1: SceneModel = {
   id: randomString(),
   name: '第一个页面',
   layers: [backLayer, layer1, layer2],
+  width: TEMPLATE_WIDTH,
+  height: TEMPLATE_HEIGHT,
 };
 
 export const product1: MagicModel = {

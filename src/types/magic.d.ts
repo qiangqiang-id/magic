@@ -111,6 +111,8 @@ declare namespace LayerModel {
     originalWidth?: number;
     /** 原始高度 */
     originalHeight?: number;
+    /** 图片类型 */
+    fileType?: string;
   }
 
   /** 背景 */

@@ -9,7 +9,6 @@ export default function KeyboardManager() {
    * 执行快捷键命令
    */
   const pressHotKey = (hotKey: HotKey) => {
-    console.log('hotKey', hotKey);
     CmdManager.execute(hotKey.name);
   };
 
@@ -18,7 +17,6 @@ export default function KeyboardManager() {
    */
   const handleKeyDown = (e: KeyboardEvent) => {
     const keyCode = e.keyCode || e.which;
-    console.log('keyCode', keyCode);
     const { shiftKey, ctrlKey, altKey, metaKey } = e;
 
     // 兼容win和mac

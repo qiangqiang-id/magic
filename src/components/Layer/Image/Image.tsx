@@ -1,9 +1,10 @@
+import { observer } from 'mobx-react';
 import { ImageStruc } from '@/models/LayerStruc';
 import { LayerProps } from '../Layer';
 import Style from './Image.module.less';
 
 interface ImageProps extends LayerProps<ImageStruc> {}
-export default function Image(props: ImageProps) {
+function Image(props: ImageProps) {
   const { model } = props;
   const { url } = model;
   return (
@@ -12,3 +13,5 @@ export default function Image(props: ImageProps) {
     </div>
   );
 }
+
+export default observer(Image);

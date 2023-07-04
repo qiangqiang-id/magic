@@ -1,4 +1,4 @@
-import { makeObservable, observable } from 'mobx';
+import { computed, makeObservable, observable } from 'mobx';
 import LayerStruc from './LayerStruc';
 
 export default class BackgroundStruc
@@ -20,6 +20,8 @@ export default class BackgroundStruc
       fillType: observable,
       url: observable,
       color: observable,
+      isColorFill: computed,
+      isImageFill: computed,
     });
 
     this.fillType = data.fillType || 'Color';

@@ -1,4 +1,3 @@
-/* eslint-disable */
 /**
  * 链路节点
  */

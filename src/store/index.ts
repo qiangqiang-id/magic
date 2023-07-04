@@ -14,8 +14,6 @@ export const material = new MaterialStore();
 export const OS = new OSStore();
 export const magic = new MagicStore();
 
-console.log('magic', magic);
-
 const storeContext = createContext<Store>({
   material,
   OS,
