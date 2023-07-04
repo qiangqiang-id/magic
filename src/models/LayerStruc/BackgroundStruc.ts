@@ -39,10 +39,20 @@ export default class BackgroundStruc
     };
   }
 
+  /**
+   * 是否是颜色填充
+   * @readonly
+   * @memberof BackgroundStruc
+   */
   get isColorFill() {
     return this.fillType === 'Color';
   }
 
+  /**
+   * 是否是图片填充
+   * @readonly
+   * @memberof BackgroundStruc
+   */
   get isImageFill() {
     return this.fillType === 'Image';
   }

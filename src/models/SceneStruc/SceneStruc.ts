@@ -73,18 +73,40 @@ export default class SceneStruc implements SceneModel {
   }
 
   /**
-   *  设置背景
+   * 获取背景
+   * @return {Back} 背景图层
+   * @memberof SceneStruc
+   */
+  getBackLayer() {
+    return this.layers?.find(layer => layer.isBack);
+  }
+
+  /**
+   * 设置背景
+   * @param {Partial<LayerModel.Background>} data
+   * @memberof SceneStruc
    */
   public setSceneBack(data: Partial<LayerModel.Background>) {
-    const backModel = this.layers?.find(layer => layer.isBack);
+    const backModel = this.getBackLayer();
     backModel?.update<Partial<LayerModel.Background>>(data);
   }
 
+  /**
+   * 添加图片
+   * @param {ImageResource} resource
+   * @memberof SceneStruc
+   */
   public addImage(resource: ImageResource) {
     const imageData = createImageData(resource, this);
     this.addLayerStruc(imageData);
   }
 
+  /**
+   * 添加图层
+   * @protected
+   * @param {LayerModel.Layer} model
+   * @memberof SceneStruc
+   */
   protected addLayerStruc(model: LayerModel.Layer) {
     const layer = CreateLayerStruc(model.type, model, this);
     this.addCmp(layer);
@@ -95,7 +117,5 @@ export default class SceneStruc implements SceneModel {
     index !== undefined
       ? this.layers?.splice(index, 0, layer)
       : this.layers?.push(layer);
-
-    console.log(magic);
   }
 }

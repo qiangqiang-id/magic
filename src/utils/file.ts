@@ -6,8 +6,8 @@
 export const fileToBase64 = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
     const fileReader = new FileReader();
-    fileReader.onload = (e: Record<string, any>) => {
-      resolve(e.target.result);
+    fileReader.onload = (e: ProgressEvent<FileReader>) => {
+      resolve((e.target?.result || '') as string);
     };
     fileReader.readAsDataURL(file);
     fileReader.onerror = () => {

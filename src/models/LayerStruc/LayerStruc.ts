@@ -135,22 +135,47 @@ export default class LayerStruc implements LayerModel.Base {
     });
   }
 
+  /**
+   * 是否是背景
+   * @readonly
+   * @memberof LayerStruc
+   */
   get isBack() {
     return this.type === LayerType.BACKGROUND;
   }
 
+  /**
+   * 是否是图片
+   * @readonly
+   * @memberof LayerStruc
+   */
   get isImage() {
     return this.type === LayerType.IMAGE;
   }
 
+  /**
+   * 是否是形状
+   * @readonly
+   * @memberof LayerStruc
+   */
   get isShape() {
     return this.type === LayerType.SHAPE;
   }
 
+  /**
+   * 是否是文字
+   * @readonly
+   * @memberof LayerStruc
+   */
   get isText() {
     return this.type === LayerType.TEXT;
   }
 
+  /**
+   * 是否是组合
+   * @readonly
+   * @memberof LayerStruc
+   */
   get isGroup() {
     return this.type === LayerType.GROUP;
   }

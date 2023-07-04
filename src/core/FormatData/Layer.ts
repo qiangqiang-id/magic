@@ -22,15 +22,17 @@ export function createImageData(
   if (isVerticalTemplate) {
     layerWidth = templateWidth * ADD_IMAGE_TO_CANVAS_RATE;
     const rate = layerWidth / width;
-    layerHeight /= rate;
+    layerHeight *= rate;
   } else {
     layerHeight = templateHeight * ADD_IMAGE_TO_CANVAS_RATE;
     const rate = layerHeight / height;
-    layerWidth /= rate;
+    layerWidth *= rate;
   }
 
+  /** 将图片定位到画布中间的位置 */
   const x = (templateWidth - layerWidth) / 2 + AnchorDefault.x * layerWidth;
   const y = (templateHeight - layerHeight) / 2 + AnchorDefault.y * layerHeight;
+
   return {
     ...ImageDefaultValues,
     id: randomString(),
