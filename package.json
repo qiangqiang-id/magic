@@ -13,7 +13,9 @@
     "lint": "npm run lint:es && npm run lint:style && npm run lint:prettier || exit 1",
     "lint:es": "eslint --ext .js,.ts,.jsx,.tsx ./ --cache",
     "lint:style": "stylelint \"**/*.{css,less}\" --cache",
+    "lint-staged": "lint-staged",
     "lint:prettier": "prettier --list-different \"**/*.{ts,tsx,js,jsx,css,less,json,yml,yaml,md,mdx}\"",
+    "commitlint": "commitlint --config commitlint.config.cjs -e -V",
     "fix": "npm run fix:es && npm run fix:style && npm run fix:prettier || exit 1",
     "fix:es": "eslint --ext .js,.ts,.jsx,.tsx ./ --cache --fix",
     "fix:style": "stylelint \"**/*.{css,less}\" --cache --fix",
@@ -83,7 +85,8 @@
     "vite-plugin-externals": "^0.5.1",
     "vite-plugin-html": "^3.2.0",
     "vite-plugin-raw": "^1.0.3",
-    "vite-remark-html": "^1.1.1"
+    "vite-remark-html": "^1.1.1",
+    "lint-staged": "^13.1.2"
   },
   "config": {
     "unsafe-perm": true,
