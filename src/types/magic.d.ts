@@ -11,6 +11,15 @@ interface Anchor extends Position {}
 /** 缩放 */
 interface Scale extends Position {}
 
+interface Stroke {
+  /** 描边颜色 */
+  strokeColor?: string;
+  /** 描边宽度 */
+  strokeWidth?: number;
+  /** 描边透明度 0-100 */
+  strokeAlpha?: number;
+}
+
 declare namespace LayerModel {
   /** 图层类型 */
   type LayerType =
@@ -20,43 +29,6 @@ declare namespace LayerModel {
     | 'Group'
     | 'Shape'
     | 'Unknown';
-
-  /** 文字填充信息 */
-  interface TextFill {
-    /** 文字颜色 */
-    color?: string;
-    /** 透明度 0-100 */
-    opacity?: number;
-    /** 描边颜色 */
-    strokeColor?: string;
-    /** 描边宽度 */
-    strokeWidth?: number;
-    /** 描边透明度 0-100 */
-    strokeAlpha?: number;
-    /** 背景颜色 */
-    backgroundColor?: string;
-    /** 背景透明度 0-100 */
-    backgroundAlpha?: number;
-    /** 背景图片宽 */
-    imageWidth?: number;
-    /** 背景图片高 */
-    imageHeight?: number;
-    /** 背景图片名 */
-    imageName?: string;
-    /** 图片地址 */
-    imageUrl?: string;
-    /** 图片拉伸信息 */
-    imageNinePath?: {
-      /** 起始x位置 */
-      x: number;
-      /** 起始y位置 */
-      y: number;
-      /** 可拉伸宽 */
-      w: number;
-      /** 可拉伸高 */
-      h: number;
-    };
-  }
 
   interface Base {
     id: string;
@@ -90,17 +62,44 @@ declare namespace LayerModel {
     content?: string;
     /** 局部编辑属性 */
     charAttrs?: Record<string, any>[];
-    /** 最大行数 */
-    maxLines?: number;
-    /** 是否可编辑 */
-    isEdit?: boolean;
+    /** 是否可编辑中 */
+    isEditing?: boolean;
     fontFamily?: string;
-
-    // todo: 数据结构需要改动
-    /** 填充信息 */
-    fill?: LayerModel.TextFill;
+    /** 文字颜色 */
+    color?: string;
+    /** 描边 */
+    strokes?: Stroke[];
+    /** 字体大小 */
     fontSize?: number;
+    /** 行高 */
     lineHeight?: number;
+    /** 字间距 */
+    letterSpacing?: number;
+    /** 字体粗细 */
+    fontWeight?: number;
+    /** 背景颜色 */
+    backgroundColor?: string;
+    /** 背景透明度 0-100 */
+    backgroundAlpha?: number;
+    /** 背景图片宽 */
+    // imageWidth?: number;
+    // /** 背景图片高 */
+    // imageHeight?: number;
+    // /** 背景图片名 */
+    // imageName?: string;
+    // /** 图片地址 */
+    // imageUrl?: string;
+    // /** 图片拉伸信息 */
+    // imageNinePath?: {
+    //   /** 起始x位置 */
+    //   x: number;
+    //   /** 起始y位置 */
+    //   y: number;
+    //   /** 可拉伸宽 */
+    //   w: number;
+    //   /** 可拉伸高 */
+    //   h: number;
+    // };
   }
 
   /** 图片 */

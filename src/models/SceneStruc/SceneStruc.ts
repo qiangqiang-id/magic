@@ -1,11 +1,11 @@
-import { makeObservable, observable, action } from 'mobx';
+import { makeObservable, observable, action, computed } from 'mobx';
 import { LayerStrucType } from '@/types/model';
 import { SceneDefaultValues } from '@/config/DefaultValues';
 import { deepMerge } from '@/utils/mergeData';
 import CreateLayerStruc from '../FactoryStruc/LayerFactory';
 import { ImageResource } from '@/types/resource';
 import { magic } from '@/store';
-import { createImageData } from '@/core/FormatData/Layer';
+import { createImageData, createTextData } from '@/core/FormatData/Layer';
 
 export default class SceneStruc implements SceneModel {
   id!: string;
@@ -30,6 +30,8 @@ export default class SceneStruc implements SceneModel {
       width: observable,
       height: observable,
       actived: observable,
+
+      isVerticalTemplate: computed,
 
       setSceneBack: action,
       addCmp: action,
@@ -77,7 +79,7 @@ export default class SceneStruc implements SceneModel {
    * @return {Back} 背景图层
    * @memberof SceneStruc
    */
-  getBackLayer() {
+  public getBackLayer() {
     return this.layers?.find(layer => layer.isBack);
   }
 
@@ -89,6 +91,11 @@ export default class SceneStruc implements SceneModel {
   public setSceneBack(data: Partial<LayerModel.Background>) {
     const backModel = this.getBackLayer();
     backModel?.update<Partial<LayerModel.Background>>(data);
+  }
+
+  public addText(data: Partial<LayerModel.Text> = {}) {
+    const textData = createTextData(data, this);
+    this.addLayerStruc(textData);
   }
 
   /**
@@ -117,5 +124,15 @@ export default class SceneStruc implements SceneModel {
     index !== undefined
       ? this.layers?.splice(index, 0, layer)
       : this.layers?.push(layer);
+  }
+
+  /**
+   * 是否竖板
+   * @readonly
+   * @memberof SceneStruc
+   */
+  get isVerticalTemplate() {
+    const { width = 0, height = 0 } = this;
+    return height > width;
   }
 }

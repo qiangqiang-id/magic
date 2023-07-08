@@ -21,11 +21,7 @@ function Scenes() {
       height,
       transform: `scale(${rate})`,
     };
-    return (
-      <div className={Style.scene} style={sceneStyle}>
-        <Renderer key={scene.id} layers={scene.layers || []} />;
-      </div>
-    );
+    return <Renderer key={scene.id} style={sceneStyle} scene={scene} />;
   };
 
   return (

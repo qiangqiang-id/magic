@@ -1,21 +1,32 @@
+import { CSSProperties } from 'react';
 import cls from 'classnames';
 import { observer } from 'mobx-react';
-import { LayerStrucType } from '@/types/model';
+import SceneStruc from '@/models/SceneStruc';
 import Layer from '../Layer';
 import Style from './Renderer.module.less';
 
 interface RendererProps {
   zoomLevel?: number;
 
-  layers: LayerStrucType[];
+  scene: SceneStruc;
+
+  editable?: boolean;
+
+  style?: CSSProperties;
 }
 
 function Renderer(props: RendererProps) {
-  const { layers, zoomLevel = 1 } = props;
+  const { scene, zoomLevel = 1, editable, style } = props;
+  const { layers } = scene;
 
   return (
-    <div className={cls('mosaic-background', Style.renderer)}>
-      {layers.map(layer => (
+    <div
+      style={style}
+      className={cls('mosaic-background', Style.renderer, {
+        [Style.editable]: editable,
+      })}
+    >
+      {layers?.map(layer => (
         <Layer key={layer.id} model={layer} zoomLevel={zoomLevel} />
       ))}
     </div>

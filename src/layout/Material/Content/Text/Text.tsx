@@ -1,22 +1,22 @@
+import { Button } from 'antd';
+import { magic } from '@/store';
 import Style from './Text.module.less';
 
 export default function Text() {
-  const addTitle = () => {
-    console.log('添加标题');
-  };
-
-  const addText = () => {
-    console.log('添加正文');
-  };
+  const { activedScene } = magic;
 
   return (
     <div className={Style.text}>
-      <div className={Style.text_item} onClick={addTitle}>
-        标题
-      </div>
-      <div className={Style.text_item} onClick={addText}>
-        正文
-      </div>
+      <Button
+        type="primary"
+        block
+        style={{
+          height: 40,
+        }}
+        onClick={() => activedScene?.addText()}
+      >
+        添加文字
+      </Button>
     </div>
   );
 }

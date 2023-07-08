@@ -14,12 +14,21 @@ const onContainerKeys = [
   'paddingBottom',
   'padding',
   'lineHeight',
+  'opacity',
 ];
 
 /**
  * 在图层上的样式
  */
-// const onLayerKeys = [];
+const onLayerKeys = [
+  'fontFamily',
+  'color',
+  'fontSize',
+  'lineHeight',
+  'letterSpacing',
+  'fontWeight',
+  'backgroundColor',
+];
 
 /**
  * 获取图层容器上的样式
@@ -83,4 +92,18 @@ export function getLayerRectStyles<M extends LayerStrucType = LayerStrucType>(
     }px) rotate(${rotate}deg)`,
     transformOrigin: `${anchor.x * 100}% ${anchor.y * 100}%`,
   };
+}
+
+export function getLayerInnerStyles<M extends LayerStrucType = LayerStrucType>(
+  model: M
+) {
+  return onLayerKeys.reduce((styles, key) => {
+    if (Reflect.has(model, key)) {
+      return {
+        ...styles,
+        [key]: model[key],
+      };
+    }
+    return styles;
+  }, {});
 }

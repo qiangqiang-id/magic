@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import Canvas from './Canvas';
 import Scenes from './Scenes/Scenes';
@@ -11,24 +11,17 @@ import Style from './Stage.module.less';
 function Stage() {
   const { OS, magic } = useStores();
 
-  const { activedLayers } = magic;
+  const { activedLayers, activedScene } = magic;
 
   const [entry] = useResizeObserver(STAGE_REF);
 
-  const canvasWidth = useMemo(
-    () => TEMPLATE_WIDTH * OS.zoomLevel,
-    [TEMPLATE_WIDTH, OS.zoomLevel]
-  );
-
-  const canvasHeight = useMemo(
-    () => TEMPLATE_HEIGHT * OS.zoomLevel,
-    [TEMPLATE_HEIGHT, OS.zoomLevel]
-  );
+  const templateWidth = activedScene?.width || 0;
+  const templateHeight = activedScene?.height || 0;
 
   const adaptZoomLevel = (entry: ResizeObserverEntry) => {
     const { width, height } = entry.contentRect;
-    const rateW = width / TEMPLATE_WIDTH;
-    const rateH = height / TEMPLATE_HEIGHT;
+    const rateW = width / templateWidth;
+    const rateH = height / templateHeight;
     OS.setZoomLevel(Math.min(rateH, rateW));
   };
 
@@ -41,6 +34,8 @@ function Stage() {
     entry && adaptZoomLevel(entry);
   }, [entry, TEMPLATE_HEIGHT, TEMPLATE_WIDTH]);
 
+  if (!activedScene) return null;
+
   return (
     <div
       ref={STAGE_REF}
@@ -48,7 +43,7 @@ function Stage() {
       onMouseDown={handleStageMousedown}
     >
       <div className={Style.canvas_wrapper}>
-        <Canvas canvasWidth={canvasWidth} canvasHeight={canvasHeight} />
+        <Canvas canvasWidth={templateWidth} canvasHeight={templateHeight} />
       </div>
 
       <Scenes />

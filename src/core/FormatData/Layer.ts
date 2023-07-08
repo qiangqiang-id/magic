@@ -1,21 +1,28 @@
 import { ImageResource } from '@/types/resource';
 import SceneStruc from '@/models/SceneStruc';
 import { randomString } from '@/utils/random';
-import { LayerType } from '@/constants/LayerTypeEnum';
-import { ImageDefaultValues, AnchorDefault } from '@/config/DefaultValues';
+import { ImageDefaultValues, TextDefaultValues } from '@/config/DefaultValues';
 
+/** 图片加入画布比例 */
 const ADD_IMAGE_TO_CANVAS_RATE = 0.7;
+
+/** 图片加入画布比例 */
+const ADD_TEXT_TO_CANVAS_RATE = 0.05;
 
 /**
  * 创建图片数据
  */
 export function createImageData(
   resource: ImageResource,
-  templateInfo: SceneStruc
+  scene: SceneStruc
 ): LayerModel.Image {
   const { width = 0, height = 0, url, name } = resource;
-  const { width: templateWidth = 0, height: templateHeight = 0 } = templateInfo;
-  const isVerticalTemplate = templateHeight > templateWidth;
+  const {
+    width: templateWidth = 0,
+    height: templateHeight = 0,
+    isVerticalTemplate,
+  } = scene;
+
   let layerWidth = width;
   let layerHeight = height;
 
@@ -29,14 +36,15 @@ export function createImageData(
     layerWidth *= rate;
   }
 
+  const { anchor = { x: 0, y: 0 } } = ImageDefaultValues;
+
   /** 将图片定位到画布中间的位置 */
-  const x = (templateWidth - layerWidth) / 2 + AnchorDefault.x * layerWidth;
-  const y = (templateHeight - layerHeight) / 2 + AnchorDefault.y * layerHeight;
+  const x = (templateWidth - layerWidth) / 2 + anchor.x * layerWidth;
+  const y = (templateHeight - layerHeight) / 2 + anchor.y * layerHeight;
 
   return {
     ...ImageDefaultValues,
     id: randomString(),
-    type: LayerType.IMAGE,
     url,
     name,
     originalWidth: width,
@@ -46,4 +54,53 @@ export function createImageData(
     width: layerWidth,
     height: layerHeight,
   };
+}
+
+export function createTextData(
+  data: Partial<LayerModel.Text>,
+  scene: SceneStruc
+): LayerModel.Text {
+  const {
+    width: templateWidth = 0,
+    height: templateHeight = 0,
+    isVerticalTemplate,
+  } = scene;
+
+  const result = { ...TextDefaultValues, ...data };
+
+  const { letterSpacing = 0, content, anchor = { x: 0, y: 0 } } = result;
+
+  let fontSize = data.fontSize || 0;
+
+  const fontNum = content?.length || 0;
+
+  let width = data.width;
+  let height = data.height;
+  let x = data.x;
+  let y = data.y;
+
+  if (!fontSize) {
+    fontSize = isVerticalTemplate
+      ? templateWidth * ADD_TEXT_TO_CANVAS_RATE
+      : templateHeight * ADD_TEXT_TO_CANVAS_RATE;
+  }
+
+  if (!width) {
+    width = fontSize * fontNum + (fontNum - 1) * letterSpacing;
+  }
+
+  if (!height) {
+    height = fontSize;
+  }
+
+  /** 将图片定位到画布中间的位置 */
+  if (typeof x !== 'number') {
+    x = (templateWidth - width) / 2 + anchor.x * width;
+  }
+  if (typeof y !== 'number') {
+    y = (templateHeight - height) / 2 + anchor.y * height;
+  }
+
+  console.log('result', result);
+  return { ...result, fontSize, width, height, x, y };
 }

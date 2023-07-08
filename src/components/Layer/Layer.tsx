@@ -1,4 +1,4 @@
-import { ComponentType } from 'react';
+import { ComponentType, CSSProperties } from 'react';
 import { observer } from 'mobx-react';
 import { LayerType } from '@/constants/LayerTypeEnum';
 import { LayerStrucType } from '@/types/model';
@@ -9,7 +9,7 @@ import Back from './Back';
 import Shape from './Shape';
 import Style from './Layer.module.less';
 import { useStores } from '@/store';
-import { getLayerOuterStyles } from '@/helpers/Styles';
+import { getLayerOuterStyles, getLayerInnerStyles } from '@/helpers/Styles';
 import { moveHandle } from '@/utils/move';
 
 const LayerCmpMap = {
@@ -26,6 +26,8 @@ export interface LayerProps<M> {
    * 画布缩放级别
    */
   zoomLevel?: number;
+
+  style?: CSSProperties;
 }
 
 function Layer<M extends LayerStrucType = LayerStrucType>(
@@ -38,7 +40,8 @@ function Layer<M extends LayerStrucType = LayerStrucType>(
   >;
 
   if (!LayerCmp || !model.visible) return null;
-  const outerStyle = getLayerOuterStyles(model, zoomLevel);
+  const outerStyle = getLayerOuterStyles(model);
+  const innerStyle = getLayerInnerStyles(model);
 
   /**
    * 鼠标按下时触发
@@ -60,7 +63,7 @@ function Layer<M extends LayerStrucType = LayerStrucType>(
         ...outerStyle,
       }}
     >
-      <LayerCmp {...props} />
+      <LayerCmp {...props} style={innerStyle} />
     </div>
   );
 }

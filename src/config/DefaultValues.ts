@@ -47,7 +47,26 @@ export const LayerDefaultValues: LayerModel.Base = {
 
 export const ImageDefaultValues: LayerModel.Image = {
   ...LayerDefaultValues,
+  type: LayerType.IMAGE,
   url: '',
   originalHeight: 0,
   originalWidth: 0,
+};
+
+export const TextDefaultValues: LayerModel.Text = {
+  ...LayerDefaultValues,
+  type: LayerType.TEXT,
+  content: '双击编辑文字',
+  charAttrs: [],
+  isEditing: false,
+  fontFamily: '',
+  color: 'black',
+  opacity: 100,
+  strokes: [],
+  fontSize: 45,
+  lineHeight: 1.2,
+  letterSpacing: 0,
+  fontWeight: 400,
+  backgroundColor: 'transparent',
+  backgroundAlpha: 100,
 };
