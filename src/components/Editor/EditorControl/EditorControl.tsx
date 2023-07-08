@@ -2,6 +2,7 @@ import { observer } from 'mobx-react';
 import { EditorBox, RectData } from '@p/EditorTools';
 import { LayerStrucType } from '@/types/model';
 import { moveHandle } from '@/utils/move';
+import { useStores } from '@/store';
 
 export interface EditorControlProps {
   zoomLevel?: number;
@@ -10,7 +11,7 @@ export interface EditorControlProps {
 
 function EditorControl(props: EditorControlProps) {
   const { model, zoomLevel = 1 } = props;
-
+  const { OS } = useStores();
   /**
    * 获取矩形的信息
    */
@@ -64,11 +65,14 @@ function EditorControl(props: EditorControlProps) {
   return (
     <EditorBox
       scaleType="default"
+      isShowPoint={!OS.isMoveing && !model.isLock}
       rectInfo={getRectInfo()}
       zoomLevel={zoomLevel}
       onScale={onScale}
       onRotate={onRotate}
       onMouseDown={onMouseDown}
+      minHeight={10}
+      minWidth={10}
     />
   );
 }

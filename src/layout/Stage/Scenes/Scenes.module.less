@@ -4,10 +4,38 @@
   left: 0;
   width: 100%;
   height: 150px;
+  overflow: auto;
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.08), 0 4px 12px 0 rgba(0, 0, 0, 0.04);
 }
 
-.scenes_wrapper {
+.scenes_content {
+  display: inline-flex;
+  align-items: center;
   height: 100%;
   padding: 0 20px;
+}
+
+.scene_item {
+  margin-right: 10px;
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+.add_item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 130px;
+  background: #f3f3f3;
+  border-radius: 3px;
+  cursor: pointer;
+
+  &:hover {
+    background: #e4e7e8;
+  }
+}
+
+.actived {
+  border-color: #fd6b11;
 }
