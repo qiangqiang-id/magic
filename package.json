@@ -84,5 +84,14 @@
     "vite-plugin-html": "^3.2.0",
     "vite-plugin-raw": "^1.0.3",
     "vite-remark-html": "^1.1.1"
+  },
+  "config": {
+    "unsafe-perm": true,
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "engines": {
+    "node": ">=16.9.0"
   }
 }
