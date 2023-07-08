@@ -1,7 +1,11 @@
 import { ImageResource } from '@/types/resource';
 import SceneStruc from '@/models/SceneStruc';
 import { randomString } from '@/utils/random';
-import { ImageDefaultValues, TextDefaultValues } from '@/config/DefaultValues';
+import {
+  ImageDefaultValues,
+  TextDefaultValues,
+  BackDefaultValues,
+} from '@/config/DefaultValues';
 
 /** 图片加入画布比例 */
 const ADD_IMAGE_TO_CANVAS_RATE = 0.7;
@@ -101,6 +105,28 @@ export function createTextData(
     y = (templateHeight - height) / 2 + anchor.y * height;
   }
 
-  console.log('result', result);
   return { ...result, fontSize, width, height, x, y };
+}
+
+/**
+ * 创建背景数据
+ * @param data
+ */
+export function createBackData(
+  data: Partial<LayerModel.Background> | null,
+  scene: SceneModel
+) {
+  const { width: templateWidth = 0, height: templateHeight = 0 } = scene;
+  const { anchor = { x: 0, y: 0 } } = BackDefaultValues;
+  const y = templateHeight * anchor.y;
+  const x = templateHeight * anchor.x;
+
+  return {
+    ...BackDefaultValues,
+    ...data,
+    width: templateWidth,
+    height: templateHeight,
+    x,
+    y,
+  };
 }

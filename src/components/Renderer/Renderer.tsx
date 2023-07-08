@@ -13,16 +13,18 @@ interface RendererProps {
   editable?: boolean;
 
   style?: CSSProperties;
+
+  className?: string;
 }
 
 function Renderer(props: RendererProps) {
-  const { scene, zoomLevel = 1, editable, style } = props;
+  const { scene, zoomLevel = 1, editable, style, className } = props;
   const { layers } = scene;
 
   return (
     <div
       style={style}
-      className={cls('mosaic-background', Style.renderer, {
+      className={cls('mosaic-background', Style.renderer, className, {
         [Style.editable]: editable,
       })}
     >

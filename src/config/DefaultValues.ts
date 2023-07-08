@@ -53,6 +53,15 @@ export const ImageDefaultValues: LayerModel.Image = {
   originalWidth: 0,
 };
 
+export const BackDefaultValues: LayerModel.Background = {
+  ...LayerDefaultValues,
+  type: LayerType.BACKGROUND,
+  fillType: 'Color',
+  url: '',
+  color: '#fff',
+  anchor: { x: 0, y: 0 },
+};
+
 export const TextDefaultValues: LayerModel.Text = {
   ...LayerDefaultValues,
   type: LayerType.TEXT,

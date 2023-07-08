@@ -28,11 +28,14 @@ function Scenes() {
 
     return (
       <div
+        onClick={() => magic.activeScene(scene)}
         key={scene.id}
         className={cls(Style.scene_item, actived && Style.actived)}
         style={{ width: width * rate, height: height * rate }}
       >
-        <Renderer style={sceneStyle} scene={scene} />
+        <div className={cls(Style.scene_renderer_item)}>
+          <Renderer style={sceneStyle} scene={scene} />
+        </div>
       </div>
     );
   };
@@ -42,9 +45,7 @@ function Scenes() {
       <div className={Style.scenes_content}>
         {scenes.map(scene => renderScene(scene))}
 
-        {scenes.map(scene => renderScene(scene))}
-
-        <div className={Style.add_item}>
+        <div className={Style.add_item} onClick={() => magic.addScene()}>
           <PlusOutlined
             style={{
               fontSize: 25,

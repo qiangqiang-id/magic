@@ -1,6 +1,8 @@
 import { makeObservable, observable, computed, action } from 'mobx';
 import SceneStruc from '../SceneStruc';
 import { LayerStrucType } from '@/types/model';
+import { createEmptySceneData } from '@/core/FormatData/Scene';
+import { createScene } from '../FactoryStruc/SceneFactory';
 
 export default class MagicStruc implements MagicModel {
   id!: string | null;
@@ -17,20 +19,23 @@ export default class MagicStruc implements MagicModel {
   activedLayers: LayerStrucType[] = [];
 
   constructor() {
-    makeObservable(this, {
+    makeObservable<this, 'handleAddScene'>(this, {
       name: observable,
       scenes: observable,
       activedScene: observable,
       activedLayers: observable,
+
       isMultiple: computed,
+
       update: action,
       releaseAllLayers: action,
       activeLayer: action,
       activeScene: action,
+      handleAddScene: action,
     });
   }
 
-  update(data: Partial<MagicModel>) {
+  public update(data: Partial<MagicModel>) {
     this.handleUpdate(data);
   }
 
@@ -43,7 +48,7 @@ export default class MagicStruc implements MagicModel {
   /**
    * 释放所有活动组件
    */
-  releaseAllLayers() {
+  public releaseAllLayers() {
     this.activedLayers.forEach(layer => layer.inactive());
     this.activedLayers = [];
   }
@@ -53,7 +58,10 @@ export default class MagicStruc implements MagicModel {
    * @param layer 被选中的图层，有可能是多个
    * @param isMulti 是否是多选
    */
-  activeLayer(layer: LayerStrucType | LayerStrucType[], isMulti?: boolean) {
+  public activeLayer(
+    layer: LayerStrucType | LayerStrucType[],
+    isMulti?: boolean
+  ) {
     let layers = Array.isArray(layer) ? layer : [layer];
     layers = layers.filter(item => item.visible);
 
@@ -72,7 +80,7 @@ export default class MagicStruc implements MagicModel {
    * 激活场景
    * @param scene 当前场景
    */
-  activeScene(scene: SceneStruc) {
+  public activeScene(scene: SceneStruc) {
     if (!this.hasScene(scene)) return;
     this.scenes = this.scenes.map(item => {
       item.actived = false;
@@ -88,7 +96,7 @@ export default class MagicStruc implements MagicModel {
    * 检测场景是否存在
    * @param scene 选中的场景
    */
-  hasScene(scene: SceneStruc) {
+  public hasScene(scene: SceneStruc) {
     return this.getSceneIndex(scene) >= 0;
   }
 
@@ -96,8 +104,22 @@ export default class MagicStruc implements MagicModel {
    * 返回场景位置
    * @param scene 选中的场景
    */
-  getSceneIndex(scene: SceneStruc): number {
+  public getSceneIndex(scene: SceneStruc): number {
     return this.scenes.findIndex(sc => sc.id === scene.id);
+  }
+
+  public addScene(data?: Partial<SceneModel>) {
+    if (!data) {
+      const sceneData = createEmptySceneData();
+      const scene = createScene(sceneData);
+      this.handleAddScene(scene);
+    }
+  }
+
+  protected handleAddScene(scene: SceneStruc, index?: number) {
+    typeof index === 'number'
+      ? this.scenes.splice(index, 0, scene)
+      : this.scenes.push(scene);
   }
 
   /** 是否多选 */

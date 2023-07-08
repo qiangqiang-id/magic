@@ -1,3 +1,3 @@
 export default function Text() {
-  return <div>Image</div>;
+  return <div>Text</div>;
 }

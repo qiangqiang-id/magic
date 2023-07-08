@@ -1,18 +1,14 @@
-import { LayerDefaultValues, ImageDefaultValues } from './DefaultValues';
+import { BackDefaultValues, ImageDefaultValues } from './DefaultValues';
 import { LayerType } from '@/constants/LayerTypeEnum';
 import { TEMPLATE_HEIGHT, TEMPLATE_WIDTH } from '@/constants/TemplateSize';
 import { randomString } from '@/utils/random';
 
 const backLayer: LayerModel.Background = {
-  ...LayerDefaultValues,
+  ...BackDefaultValues,
   id: randomString(),
   name: '第一张图片',
-  type: LayerType.BACKGROUND,
-  color: 'orange',
-  fillType: 'Color',
   width: TEMPLATE_WIDTH,
   height: TEMPLATE_HEIGHT,
-  anchor: { x: 0, y: 0 },
   isLock: true,
   url: 'https://img.miaotui.com//common/mtv/2022/04/11/09/b3f91154c7c43ff71c8afbb27b93bc42.webp',
 };

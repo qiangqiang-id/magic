@@ -16,9 +16,15 @@
 }
 
 .scene_item {
+  position: relative;
   margin-right: 10px;
+}
+
+.scene_renderer_item {
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
 .add_item {
@@ -37,5 +43,16 @@
 }
 
 .actived {
-  border-color: #fd6b11;
+  &::before {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    box-sizing: content-box;
+    width: 100%;
+    height: 100%;
+    padding: 2px;
+    border: 2px solid #fd6b11;
+    border-radius: 4px;
+    content: '';
+  }
 }
