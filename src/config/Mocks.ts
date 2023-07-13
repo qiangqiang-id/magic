@@ -1,10 +1,10 @@
-import { BackDefaultValues, ImageDefaultValues } from './DefaultValues';
+import { getBackDefaultValues, getImageDefaultValues } from './DefaultValues';
 import { LayerType } from '@/constants/LayerTypeEnum';
 import { TEMPLATE_HEIGHT, TEMPLATE_WIDTH } from '@/constants/TemplateSize';
 import { randomString } from '@/utils/random';
 
 const backLayer: LayerModel.Background = {
-  ...BackDefaultValues,
+  ...getBackDefaultValues(),
   id: randomString(),
   name: '第一张图片',
   width: TEMPLATE_WIDTH,
@@ -14,7 +14,7 @@ const backLayer: LayerModel.Background = {
 };
 
 const layer1: LayerModel.Image = {
-  ...ImageDefaultValues,
+  ...getImageDefaultValues(),
   id: randomString(),
   name: '第一张图片',
   type: LayerType.IMAGE,
@@ -27,7 +27,7 @@ const layer1: LayerModel.Image = {
 };
 
 const layer2: LayerModel.Image = {
-  ...ImageDefaultValues,
+  ...getImageDefaultValues(),
   id: randomString(),
   name: '第二张图片',
   type: LayerType.IMAGE,

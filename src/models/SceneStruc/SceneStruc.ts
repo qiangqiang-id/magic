@@ -1,6 +1,6 @@
 import { makeObservable, observable, action, computed } from 'mobx';
 import { LayerStrucType } from '@/types/model';
-import { SceneDefaultValues } from '@/config/DefaultValues';
+import { getSceneDefaultValues } from '@/config/DefaultValues';
 import { deepMerge } from '@/utils/mergeData';
 import CreateLayerStruc from '../FactoryStruc/LayerFactory';
 import { ImageResource } from '@/types/resource';
@@ -39,7 +39,7 @@ export default class SceneStruc implements SceneModel {
       handleUpdate: action,
     });
 
-    const createData = deepMerge(SceneDefaultValues, data || {});
+    const createData = deepMerge(getSceneDefaultValues(), data || {});
 
     for (const k in createData) {
       if (k in this) {

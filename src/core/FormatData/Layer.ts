@@ -2,9 +2,9 @@ import { ImageResource } from '@/types/resource';
 import SceneStruc from '@/models/SceneStruc';
 import { randomString } from '@/utils/random';
 import {
-  ImageDefaultValues,
-  TextDefaultValues,
-  BackDefaultValues,
+  getImageDefaultValues,
+  getTextDefaultValues,
+  getBackDefaultValues,
 } from '@/config/DefaultValues';
 
 /** 图片加入画布比例 */
@@ -40,14 +40,14 @@ export function createImageData(
     layerWidth *= rate;
   }
 
-  const { anchor = { x: 0, y: 0 } } = ImageDefaultValues;
+  const { anchor = { x: 0, y: 0 } } = getImageDefaultValues();
 
   /** 将图片定位到画布中间的位置 */
   const x = (templateWidth - layerWidth) / 2 + anchor.x * layerWidth;
   const y = (templateHeight - layerHeight) / 2 + anchor.y * layerHeight;
 
   return {
-    ...ImageDefaultValues,
+    ...getImageDefaultValues(),
     id: randomString(),
     url,
     name,
@@ -70,7 +70,7 @@ export function createTextData(
     isVerticalTemplate,
   } = scene;
 
-  const result = { ...TextDefaultValues, ...data };
+  const result = { ...getTextDefaultValues(), ...data };
 
   const { letterSpacing = 0, content, anchor = { x: 0, y: 0 } } = result;
 
@@ -117,12 +117,13 @@ export function createBackData(
   scene: SceneModel
 ) {
   const { width: templateWidth = 0, height: templateHeight = 0 } = scene;
-  const { anchor = { x: 0, y: 0 } } = BackDefaultValues;
+  const backDefaultValues = getBackDefaultValues();
+  const { anchor = { x: 0, y: 0 } } = backDefaultValues;
   const y = templateHeight * anchor.y;
   const x = templateHeight * anchor.x;
 
   return {
-    ...BackDefaultValues,
+    ...backDefaultValues,
     ...data,
     width: templateWidth,
     height: templateHeight,
