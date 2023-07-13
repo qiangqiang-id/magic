@@ -1,4 +1,5 @@
 import { LayerType } from '@/constants/LayerTypeEnum';
+import { TEMPLATE_HEIGHT, TEMPLATE_WIDTH } from '@/constants/TemplateSize';
 
 /** 默认缩放值 */
 export const ScaleDefault = { x: 1, y: 1 };
@@ -20,8 +21,8 @@ export function getSceneDefaultValues(): Required<SceneModel> {
     name: '',
     layers: [],
     cover: '',
-    width: 1280,
-    height: 720,
+    width: TEMPLATE_WIDTH,
+    height: TEMPLATE_HEIGHT,
     actived: false,
   };
 }
@@ -40,8 +41,8 @@ export function getLayerDefaultValues(): Required<LayerModel.Base> {
     height: 0,
     // mask: { x: 0, y: 0, width: 0, height: 0 },
     rotate: 0,
-    scale: ScaleDefault,
-    anchor: AnchorDefault,
+    scale: { ...ScaleDefault },
+    anchor: { ...AnchorDefault },
     // tileBlurSize: 0,
     actived: false,
     visible: true,
@@ -67,6 +68,7 @@ export function getBackDefaultValues(): Required<LayerModel.Background> {
   return {
     ...getLayerDefaultValues(),
     type: LayerType.BACKGROUND,
+    isLock: true,
     fillType: 'Color',
     url: '',
     color: '#fff',

@@ -50,6 +50,8 @@ function Layer<M extends LayerStrucType = LayerStrucType>(
     e.stopPropagation();
     if (e.button !== 0 || model.actived) return;
     magic.activeLayer(model, e.shiftKey);
+
+    if (model.isLock) return;
     moveHandle(e.nativeEvent, model, zoomLevel);
   };
 
