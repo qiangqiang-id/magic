@@ -57,7 +57,7 @@ export interface EditorBoxProps
   onStartScale?: (
     point: POINT_TYPE,
     e: MouseEvent
-  ) => ScaleHandlerOptions | undefined;
+  ) => ScaleHandlerOptions | void;
   /** 拉伸中
    * @param point 当前拉伸的点
    * @param result 拉伸计算的结果

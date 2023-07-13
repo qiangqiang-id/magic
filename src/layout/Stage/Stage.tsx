@@ -3,17 +3,18 @@ import { observer } from 'mobx-react';
 import Canvas from './Canvas';
 import Scenes from './Scenes/Scenes';
 import useResizeObserver from '@/hooks/useResizeObserver';
-import { STAGE_REF } from '@/constants/Refs';
+import { CANVAS_WRAPPER } from '@/constants/Refs';
 import { TEMPLATE_HEIGHT, TEMPLATE_WIDTH } from '@/constants/TemplateSize';
 import { useStores } from '@/store';
 import Style from './Stage.module.less';
+import { NodeNameplate } from '@/constants/NodeNamePlate';
 
 function Stage() {
   const { OS, magic } = useStores();
 
   const { activedLayers, activedScene } = magic;
 
-  const [entry] = useResizeObserver(STAGE_REF);
+  const [entry] = useResizeObserver(CANVAS_WRAPPER);
 
   const templateWidth = activedScene?.width || 0;
   const templateHeight = activedScene?.height || 0;
@@ -38,11 +39,11 @@ function Stage() {
 
   return (
     <div
-      ref={STAGE_REF}
+      data-nameplate={NodeNameplate.CANVAS_WRAP}
       className={Style.stage}
       onMouseDown={handleStageMousedown}
     >
-      <div className={Style.canvas_wrapper}>
+      <div className={Style.canvas_wrapper} ref={CANVAS_WRAPPER}>
         <Canvas canvasWidth={templateWidth} canvasHeight={templateHeight} />
       </div>
 

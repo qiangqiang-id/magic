@@ -134,4 +134,13 @@ export default class OSStore {
   clearMagneticLines() {
     this.magneticLines = null;
   }
+
+  /**
+   * 是否在编辑中
+   * @readonly
+   * @memberof OSStore
+   */
+  get isEditing() {
+    return this.isMoveing || this.isRotateing || this.isScaleing;
+  }
 }

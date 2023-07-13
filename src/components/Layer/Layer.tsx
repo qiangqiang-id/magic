@@ -11,6 +11,7 @@ import Style from './Layer.module.less';
 import { useStores } from '@/store';
 import { getLayerOuterStyles, getLayerInnerStyles } from '@/helpers/Styles';
 import { moveHandle } from '@/utils/move';
+import { NodeNameplate } from '@/constants/NodeNamePlate';
 
 const LayerCmpMap = {
   [LayerType.BACKGROUND]: Back,
@@ -57,6 +58,7 @@ function Layer<M extends LayerStrucType = LayerStrucType>(
 
   return (
     <div
+      data-nameplate={NodeNameplate.LAYER}
       data-type={model.type}
       data-id={model.id}
       className={Style.layer}
