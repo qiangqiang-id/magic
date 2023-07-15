@@ -1,1 +1,1 @@
-console.log('Screenshot');
+export { default } from './Screenshot';
