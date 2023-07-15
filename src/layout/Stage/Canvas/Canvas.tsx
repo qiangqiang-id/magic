@@ -36,7 +36,7 @@ function Canvas(props: CanvasProps) {
   };
 
   return (
-    <section ref={CANVAS_REF} className={Style.canvas} style={canvasStyle}>
+    <section className={Style.canvas} style={canvasStyle}>
       <div
         className={Style.renderer_wrapper}
         ref={CANVAS_REF}
