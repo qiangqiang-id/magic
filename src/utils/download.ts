@@ -1,4 +1,4 @@
-import { fetchBlob } from '@p/Screenshot/fetch';
+import { fetchBlob } from '@p/Screenshot/Fetch';
 import FileSaver from 'file-saver';
 
 /**

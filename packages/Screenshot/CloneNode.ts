@@ -6,7 +6,7 @@ import {
   isImageElement,
   isDataUrl,
 } from './Document';
-import { fetchDataUrl } from './fetch';
+import { fetchDataUrl } from './Fetch';
 import type { Context } from './CreateContext';
 
 /**
