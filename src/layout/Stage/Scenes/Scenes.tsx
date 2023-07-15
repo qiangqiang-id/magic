@@ -1,49 +1,119 @@
+import { useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react';
-import cls from 'classnames';
-import { useStores } from '@/store';
+import {
+  DndContext,
+  useSensor,
+  useSensors,
+  MouseSensor,
+  TouchSensor,
+  DragOverlay,
+  DragStartEvent,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  horizontalListSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { magic } from '@/store';
 import SceneStruc from '@/models/SceneStruc';
-import Renderer from '@/components/Renderer';
+import Scene from './Scene/Scene';
+
 import Style from './Scenes.module.less';
 
-/**
- * 预览场景大小
- */
-const SIZE = 130;
+interface SceneProps {
+  scene: SceneStruc;
+  actived: boolean;
+}
+
+function SortbleScene(props: SceneProps) {
+  const { scene } = props;
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: scene.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <Scene
+      ref={setNodeRef}
+      style={style}
+      {...props}
+      {...attributes}
+      {...listeners}
+    />
+  );
+}
 
 function Scenes() {
-  const { magic } = useStores();
   const { scenes, activedScene } = magic;
+  const [dragScene, setDragScene] = useState<SceneStruc | null>(null);
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        /** 移动距离超过 5px 才算是 move，否则是 click */
+        distance: 5,
+      },
+    }),
+    useSensor(TouchSensor)
+  );
 
-  const renderScene = (scene: SceneStruc) => {
-    const { width = 0, height = 0 } = scene;
-    const rate = SIZE / Math.max(width, height);
-    const sceneStyle = {
-      width,
-      height,
-      transform: `scale(${rate})`,
-    };
+  const handleDragStart = (event: DragStartEvent) => {
+    const scene = scenes.find(({ id }) => id === event.active.id);
+    scene && setDragScene(scene);
+  };
 
-    const actived = activedScene?.id === scene.id;
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over) return;
+    if (active.id !== over?.id) {
+      const oldIndex = magic.getSceneIndex(active.id as string);
+      const newIndex = magic.getSceneIndex(over.id as string);
+      const newScenes = arrayMove(scenes, oldIndex, newIndex);
+      magic.setScenes(newScenes);
+    }
+  };
 
-    return (
-      <div
-        onClick={() => magic.activeScene(scene)}
-        key={scene.id}
-        className={cls(Style.scene_item, actived && Style.actived)}
-        style={{ width: width * rate, height: height * rate }}
-      >
-        <div className={cls(Style.scene_renderer_item)}>
-          <Renderer style={sceneStyle} scene={scene} />
-        </div>
-      </div>
-    );
+  const handleDragCancel = () => {
+    setDragScene(null);
   };
 
   return (
     <div className={Style.scenes}>
       <div className={Style.scenes_content}>
-        {scenes.map(scene => renderScene(scene))}
+        <DndContext
+          sensors={sensors}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          onDragCancel={handleDragCancel}
+        >
+          <SortableContext
+            items={scenes.map(scene => scene.id)}
+            strategy={horizontalListSortingStrategy}
+          >
+            {scenes.map(scene => (
+              <SortbleScene
+                key={scene.id}
+                scene={scene}
+                actived={activedScene?.id === scene.id}
+              />
+            ))}
+          </SortableContext>
+
+          <DragOverlay adjustScale>
+            {!!dragScene && (
+              <Scene
+                scene={dragScene}
+                actived={dragScene.id === activedScene?.id}
+              />
+            )}
+          </DragOverlay>
+        </DndContext>
 
         <div className={Style.add_item} onClick={() => magic.addScene()}>
           <PlusOutlined

@@ -94,18 +94,19 @@ export default class MagicStruc implements MagicModel {
 
   /**
    * 检测场景是否存在
-   * @param scene 选中的场景
+   * @param identify 选中的场景 或者 场景id
    */
-  public hasScene(scene: SceneStruc) {
-    return this.getSceneIndex(scene) >= 0;
+  public hasScene(identify: SceneStruc | string) {
+    return this.getSceneIndex(identify) >= 0;
   }
 
   /**
    * 返回场景位置
-   * @param scene 选中的场景
+   * @param identify 选中的场景 或者 场景id
    */
-  public getSceneIndex(scene: SceneStruc): number {
-    return this.scenes.findIndex(sc => sc.id === scene.id);
+  public getSceneIndex(identify: SceneStruc | string): number {
+    const id = typeof identify === 'string' ? identify : identify.id;
+    return this.scenes.findIndex(sc => sc.id === id);
   }
 
   public addScene(data?: Partial<SceneModel>) {
@@ -120,6 +121,12 @@ export default class MagicStruc implements MagicModel {
     typeof index === 'number'
       ? this.scenes.splice(index, 0, scene)
       : this.scenes.push(scene);
+  }
+
+  public setScenes(scenes: SceneStruc[]) {
+    this.update({
+      scenes,
+    });
   }
 
   /** 是否多选 */
