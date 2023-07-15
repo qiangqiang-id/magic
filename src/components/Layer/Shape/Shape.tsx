@@ -1,7 +1,8 @@
 import { ShapeStruc } from '@/models/LayerStruc';
 import { LayerProps } from '../Layer';
 
-interface ShapeProps extends LayerProps<ShapeStruc | LayerModel.Shape> {}
+interface ShapeProps
+  extends LayerProps<ShapeStruc | Partial<LayerModel.Shape>> {}
 
 export default function Shape(props: ShapeProps) {
   const { model } = props;

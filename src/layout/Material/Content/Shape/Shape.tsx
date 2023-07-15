@@ -19,7 +19,7 @@ export default function Shape() {
           className={Style.shape_item}
           key={`${shape.name}-${index}`}
         >
-          <ShapeLayer model={shape as LayerModel.Shape} />
+          <ShapeLayer model={shape} />
         </div>
       ))}
     </div>
