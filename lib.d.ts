@@ -38,16 +38,6 @@ declare interface Size {
   height: number;
 }
 
-declare interface RelativeSize {
-  width: number | string;
-  height: number | string;
-}
-
-declare interface CmpPosition {
-  left: number;
-  top: number;
-}
-
 declare interface Point {
   x: number;
   y: number;
@@ -56,10 +46,8 @@ declare interface Point {
 declare interface Rect {
   width: number;
   height: number;
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
+  x: number;
+  y: number;
 }
 
 declare interface Element {
@@ -76,13 +64,4 @@ declare interface Document {
   webkitCancelFullScreen(): Promise<void>;
   mozCancelFullScreen(): Promise<void>;
   msExitFullscreen(): Promise<void>;
-}
-
-declare interface Window {
-  MTV_CONFIG?: {
-    appVersion?: string;
-    name?: string;
-    env: string;
-    lang: string;
-  };
 }

@@ -124,9 +124,21 @@ declare namespace LayerModel {
     color?: string;
   }
 
-  // todo 完善
   /** 图形 */
-  interface Shape extends LayerModel.Base {}
+  interface Shape extends LayerModel.Base {
+    shapeType: 'rect';
+    rx?: number;
+    ry?: number;
+    fill?: string;
+    strokeColor?: string;
+    strokeWidth?: number;
+    /** 描边类型 */
+    strokeType?: 'solid' | 'dashed' | 'dotted';
+    /** 描边间隙，strokeType 不为 solid 生效 */
+    strokeSpacing?: number;
+    /** 描边每一节的长度，strokeType 不为 solid 生效 */
+    strokeLength?: number;
+  }
 
   /** 组合 */
   interface Group extends LayerModel.Base {

@@ -3,9 +3,12 @@ import { LayerStrucType } from '@/types/model';
 import { getSceneDefaultValues } from '@/config/DefaultValues';
 import { deepMerge } from '@/utils/mergeData';
 import CreateLayerStruc from '../FactoryStruc/LayerFactory';
-import { ImageResource } from '@/types/resource';
 import { magic } from '@/store';
-import { createImageData, createTextData } from '@/core/FormatData/Layer';
+import {
+  createImageData,
+  createTextData,
+  createShapeData,
+} from '@/core/FormatData/Layer';
 
 export default class SceneStruc implements SceneModel {
   id!: string;
@@ -23,7 +26,7 @@ export default class SceneStruc implements SceneModel {
   actived?: boolean | null;
 
   constructor(data?: Partial<SceneModel> | null) {
-    makeObservable<this, 'addCmp' | 'addLayerStruc' | 'handleUpdate'>(this, {
+    makeObservable<this, 'addLayer' | 'addLayerStruc' | 'handleUpdate'>(this, {
       name: observable,
       layers: observable,
       cover: observable,
@@ -34,7 +37,7 @@ export default class SceneStruc implements SceneModel {
       isVerticalTemplate: computed,
 
       setSceneBack: action,
-      addCmp: action,
+      addLayer: action,
       addLayerStruc: action,
       handleUpdate: action,
     });
@@ -93,34 +96,49 @@ export default class SceneStruc implements SceneModel {
     backModel?.update<Partial<LayerModel.Background>>(data);
   }
 
-  public addText(data: Partial<LayerModel.Text> = {}) {
-    const textData = createTextData(data, this);
+  /**
+   * 添加文字
+   * @param {Partial<LayerModel.Text>} data
+   * @memberof SceneStruc
+   */
+  public addText(data?: Partial<LayerModel.Text>) {
+    const textData = createTextData(this, data);
     this.addLayerStruc(textData);
   }
 
   /**
    * 添加图片
-   * @param {ImageResource} resource
+   * @param {Partial<LayerModel.Image>} data
    * @memberof SceneStruc
    */
-  public addImage(resource: ImageResource) {
-    const imageData = createImageData(resource, this);
+  public addImage(data?: Partial<LayerModel.Image>) {
+    const imageData = createImageData(this, data);
     this.addLayerStruc(imageData);
   }
 
   /**
-   * 添加图层
+   * 添加形状
+   * @param {Partial<LayerModel.Shape>} data
+   * @memberof SceneStruc
+   */
+  public addShape(data?: Partial<LayerModel.Shape>) {
+    const shapeData = createShapeData(this, data);
+    this.addLayerStruc(shapeData);
+  }
+
+  /**
+   * 添加图层 构造
    * @protected
    * @param {LayerModel.Layer} model
    * @memberof SceneStruc
    */
   protected addLayerStruc(model: LayerModel.Layer) {
     const layer = CreateLayerStruc(model.type, model, this);
-    this.addCmp(layer);
+    this.addLayer(layer);
     magic.activeLayer(layer);
   }
 
-  protected addCmp(layer: LayerStrucType, index?: number) {
+  protected addLayer(layer: LayerStrucType, index?: number) {
     index !== undefined
       ? this.layers?.splice(index, 0, layer)
       : this.layers?.push(layer);

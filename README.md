@@ -3,7 +3,7 @@
 ## 介绍
 
 一个简易版的在线图片编辑器，其功能设计和样式参考了 “稿定设计” 和 “canva”，主要用于个人的学习与技术沉淀
-**在线体验地址：**https://qiangqiang-id.github.io/magic/
+**在线体验地址:** https://qiangqiang-id.github.io/magic/
 
 ### 技术栈
 

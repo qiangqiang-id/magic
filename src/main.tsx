@@ -4,7 +4,5 @@ import App from './App';
 import './assets/style/index.less';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <App />
 );

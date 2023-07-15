@@ -1,68 +1,93 @@
-import { ImageResource } from '@/types/resource';
 import SceneStruc from '@/models/SceneStruc';
-import { randomString } from '@/utils/random';
 import {
   getImageDefaultValues,
   getTextDefaultValues,
   getBackDefaultValues,
+  getShapeDefaultValues,
 } from '@/config/DefaultValues';
 
-/** 图片加入画布比例 */
+/** 矩形加入画布比例 */
 const ADD_IMAGE_TO_CANVAS_RATE = 0.7;
 
-/** 图片加入画布比例 */
+/** 文字大小加入画布比例 */
 const ADD_TEXT_TO_CANVAS_RATE = 0.05;
 
 /**
- * 创建图片数据
+ * 获取layer自适应画布的比例
+ * @param {Size} layerSize
+ * @param {SceneStruc} scene
+ * @return {*} ratio 比例
  */
-export function createImageData(
-  resource: ImageResource,
-  scene: SceneStruc
-): LayerModel.Image {
-  const { width = 0, height = 0, url, name } = resource;
+function getRatioCanvasWithLayer(layerSize: Size, scene: SceneStruc) {
+  const { width, height } = layerSize;
   const {
     width: templateWidth = 0,
     height: templateHeight = 0,
     isVerticalTemplate,
   } = scene;
 
-  let layerWidth = width;
-  let layerHeight = height;
-
   if (isVerticalTemplate) {
-    layerWidth = templateWidth * ADD_IMAGE_TO_CANVAS_RATE;
-    const rate = layerWidth / width;
-    layerHeight *= rate;
-  } else {
-    layerHeight = templateHeight * ADD_IMAGE_TO_CANVAS_RATE;
-    const rate = layerHeight / height;
-    layerWidth *= rate;
+    return (templateWidth * ADD_IMAGE_TO_CANVAS_RATE) / width;
   }
+  return (templateHeight * ADD_IMAGE_TO_CANVAS_RATE) / height;
+}
 
-  const { anchor = { x: 0, y: 0 } } = getImageDefaultValues();
+/**
+ * 获取自适应画布的rect 数据，将元素同比例缩放，居中显示
+ * @param {LayerModel.Layer} layer
+ * @param {SceneStruc} scene
+ * @return {*} RectData 矩形数据
+ */
+function getAdaptRectData(layer: LayerModel.Layer, scene: SceneStruc) {
+  const { width = 0, height = 0, anchor = { x: 0, y: 0 } } = layer;
+  const { width: templateWidth = 0, height: templateHeight = 0 } = scene;
+  const ratio = getRatioCanvasWithLayer({ width, height }, scene);
 
-  /** 将图片定位到画布中间的位置 */
+  const layerWidth = width * ratio;
+  const layerHeight = height * ratio;
+
+  /** 将矩形定位到画布中间的位置 */
   const x = (templateWidth - layerWidth) / 2 + anchor.x * layerWidth;
   const y = (templateHeight - layerHeight) / 2 + anchor.y * layerHeight;
 
   return {
-    ...getImageDefaultValues(),
-    id: randomString(),
-    url,
-    name,
-    originalWidth: width,
-    originalHeight: height,
-    x,
-    y,
     width: layerWidth,
     height: layerHeight,
+    x,
+    y,
   };
 }
 
+/**
+ * 创建图片数据
+ * @param {SceneStruc} scene
+ * @param {Partial<LayerModel.Image>} [data]
+ * @return {*}  {LayerModel.Image}
+ */
+export function createImageData(
+  scene: SceneStruc,
+  data?: Partial<LayerModel.Image>
+): LayerModel.Image {
+  const imageData = { ...getImageDefaultValues(), ...data };
+  const rectData = getAdaptRectData(imageData, scene);
+
+  return {
+    ...imageData,
+    ...rectData,
+    originalWidth: imageData.width,
+    originalHeight: imageData.height,
+  };
+}
+
+/**
+ * 创建文字数据
+ * @param {SceneStruc} scene
+ * @param {Partial<LayerModel.Text>} [data]
+ * @return {*}  {LayerModel.Text}
+ */
 export function createTextData(
-  data: Partial<LayerModel.Text>,
-  scene: SceneStruc
+  scene: SceneStruc,
+  data?: Partial<LayerModel.Text>
 ): LayerModel.Text {
   const {
     width: templateWidth = 0,
@@ -70,64 +95,69 @@ export function createTextData(
     isVerticalTemplate,
   } = scene;
 
-  const result = { ...getTextDefaultValues(), ...data };
+  const textData = { ...getTextDefaultValues(), ...data };
 
-  const { letterSpacing = 0, content, anchor = { x: 0, y: 0 } } = result;
+  const { letterSpacing, content, anchor } = textData;
 
-  let fontSize = data.fontSize || 0;
+  const fontSize = isVerticalTemplate
+    ? templateWidth * ADD_TEXT_TO_CANVAS_RATE
+    : templateHeight * ADD_TEXT_TO_CANVAS_RATE;
 
   const fontNum = content?.length || 0;
 
-  let width = data.width;
-  let height = data.height;
-  let x = data.x;
-  let y = data.y;
+  const width = fontSize * fontNum + (fontNum - 1) * letterSpacing;
+  const height = fontSize;
 
-  if (!fontSize) {
-    fontSize = isVerticalTemplate
-      ? templateWidth * ADD_TEXT_TO_CANVAS_RATE
-      : templateHeight * ADD_TEXT_TO_CANVAS_RATE;
-  }
+  const x = (templateWidth - width) / 2 + anchor.x * width;
+  const y = (templateHeight - height) / 2 + anchor.y * height;
 
-  if (!width) {
-    width = fontSize * fontNum + (fontNum - 1) * letterSpacing;
-  }
-
-  if (!height) {
-    height = fontSize;
-  }
-
-  /** 将图片定位到画布中间的位置 */
-  if (typeof x !== 'number') {
-    x = (templateWidth - width) / 2 + anchor.x * width;
-  }
-  if (typeof y !== 'number') {
-    y = (templateHeight - height) / 2 + anchor.y * height;
-  }
-
-  return { ...result, fontSize, width, height, x, y };
+  return { ...textData, fontSize, width, height, x, y };
 }
 
 /**
  * 创建背景数据
- * @param data
+ * @param {SceneModel} scene
+ * @param {Partial<LayerModel.Background>} [data]
+ * @return {*}  {LayerModel.Background}
  */
 export function createBackData(
-  data: Partial<LayerModel.Background> | null,
-  scene: SceneModel
-) {
+  scene: SceneModel,
+  data?: Partial<LayerModel.Background>
+): LayerModel.Background {
   const { width: templateWidth = 0, height: templateHeight = 0 } = scene;
-  const backDefaultValues = getBackDefaultValues();
-  const { anchor = { x: 0, y: 0 } } = backDefaultValues;
+  const backData = { ...getBackDefaultValues(), ...data };
+  const { anchor } = backData;
   const y = templateHeight * anchor.y;
   const x = templateHeight * anchor.x;
 
   return {
-    ...backDefaultValues,
-    ...data,
+    ...backData,
     width: templateWidth,
     height: templateHeight,
     x,
     y,
+  };
+}
+
+/**
+ * 创建图形数据
+ * @param {SceneStruc} scene
+ * @param {Partial<LayerModel.Shape>} [data]
+ * @return {*}  {LayerModel.Shape}
+ */
+export function createShapeData(
+  scene: SceneStruc,
+  data?: Partial<LayerModel.Shape>
+): LayerModel.Shape {
+  const shapeData = { ...getShapeDefaultValues(), ...data };
+  const { width, height, rx, ry } = shapeData;
+  const ratio = getRatioCanvasWithLayer({ width, height }, scene);
+  const rectData = getAdaptRectData(shapeData, scene);
+
+  return {
+    ...shapeData,
+    ...rectData,
+    rx: rx * ratio,
+    ry: ry * ratio,
   };
 }

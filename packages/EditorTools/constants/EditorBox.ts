@@ -47,7 +47,7 @@ export const MIN_SPACING = 24;
 export const VERTICAL_AXIS_WIDTH = 8;
 export const HORIZONTAL_AXIS_WIDTH = 18;
 
-export const prefixCls = 'editor-box';
+export const prefixCls = 'magic-editor-box';
 
 /**
  * 拉伸类型

@@ -1,5 +1,6 @@
 import { LayerType } from '@/constants/LayerTypeEnum';
 import { TEMPLATE_HEIGHT, TEMPLATE_WIDTH } from '@/constants/TemplateSize';
+import { randomString } from '@/utils/random';
 
 /** 默认缩放值 */
 export const ScaleDefault = { x: 1, y: 1 };
@@ -32,7 +33,7 @@ export function getSceneDefaultValues(): Required<SceneModel> {
  */
 export function getLayerDefaultValues(): Required<LayerModel.Base> {
   return {
-    id: '',
+    id: randomString(),
     name: '',
     type: LayerType.UNKNOWN,
     x: 0,
@@ -93,5 +94,21 @@ export function getTextDefaultValues(): Required<LayerModel.Text> {
     fontWeight: 400,
     backgroundColor: 'transparent',
     backgroundAlpha: 100,
+  };
+}
+
+export function getShapeDefaultValues(): Required<LayerModel.Shape> {
+  return {
+    ...getLayerDefaultValues(),
+    type: LayerType.SHAPE,
+    shapeType: 'rect',
+    rx: 0,
+    ry: 0,
+    fill: 'rgb(0,0,0)',
+    strokeColor: '',
+    strokeWidth: 0,
+    strokeType: 'solid',
+    strokeSpacing: 0,
+    strokeLength: 0,
   };
 }

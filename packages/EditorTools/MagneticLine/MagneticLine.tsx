@@ -5,7 +5,7 @@ import { MagneticLineProps } from './props';
 import { AxleDirection } from '../constants/AxleDirection';
 import './MagneticLine.less';
 
-export const prefixCls = 'magnetic-line';
+export const prefixCls = 'magic-magnetic-line';
 
 const getLineStyle = (length: number, direction: 'x' | 'y') => {
   if (direction === AxleDirection.x) {
