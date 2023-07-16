@@ -18,12 +18,16 @@ export default class MagicStruc implements MagicModel {
   /** 当前被激活的图层 */
   activedLayers: LayerStrucType[] = [];
 
+  /** 当前鼠标悬浮图层  */
+  hoveredLayer: LayerStrucType | null = null;
+
   constructor() {
     makeObservable<this, 'handleAddScene'>(this, {
       name: observable,
       scenes: observable,
       activedScene: observable,
       activedLayers: observable,
+      hoveredLayer: observable,
 
       isMultiple: computed,
 
@@ -126,6 +130,13 @@ export default class MagicStruc implements MagicModel {
     this.update({
       scenes,
     });
+  }
+
+  /**
+   * 高亮组件
+   */
+  hoverLayer(layer: LayerStrucType | null) {
+    this.hoveredLayer = layer;
   }
 
   /** 是否多选 */

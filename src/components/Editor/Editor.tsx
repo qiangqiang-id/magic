@@ -3,6 +3,7 @@ import { MagneticLine, MagneticLineType } from '@p/EditorTools';
 import EditorControl from './EditorControl';
 import { LayerStrucType } from '@/types/model';
 import Style from './Editor.module.less';
+import Hover from './Hover';
 
 interface EditorProps {
   isMultiple?: boolean;
@@ -31,8 +32,13 @@ function Editor(props: EditorProps) {
         e.stopPropagation();
       }}
     >
+      {/* 编辑框 */}
       {getEditorControl()}
 
+      {/* hover 框 */}
+      <Hover />
+
+      {/* 磁力线 */}
       <MagneticLine lines={magneticLines} />
     </div>
   );

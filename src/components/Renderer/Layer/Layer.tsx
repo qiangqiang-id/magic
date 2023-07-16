@@ -35,7 +35,7 @@ function Layer<M extends LayerStrucType = LayerStrucType>(
   props: LayerProps<M>
 ) {
   const { model, zoomLevel = 1 } = props;
-  const { magic } = useStores();
+  const { magic, OS } = useStores();
   const LayerCmp = LayerCmpMap[model.type] as ComponentType<
     LayerProps<LayerStrucType>
   >;
@@ -56,6 +56,22 @@ function Layer<M extends LayerStrucType = LayerStrucType>(
     moveHandle(e.nativeEvent, model, zoomLevel);
   };
 
+  /**
+   *  鼠标进入时触发
+   */
+  const handleMouseEnter = () => {
+    if (OS.isEditing || model.isBack) return;
+    magic.hoverLayer(model);
+  };
+
+  /**
+   * 鼠标离开时触发
+   */
+  const handleMouseLeave = () => {
+    if (OS.isEditing || model.isBack) return;
+    magic.hoverLayer(null);
+  };
+
   return (
     <div
       data-nameplate={NodeNameplate.LAYER}
@@ -63,6 +79,8 @@ function Layer<M extends LayerStrucType = LayerStrucType>(
       data-id={model.id}
       className={Style.layer}
       onMouseDown={handleMouseDown}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       style={{
         ...outerStyle,
       }}
