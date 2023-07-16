@@ -32,6 +32,8 @@ export default class TextStruc extends LayerStruc implements LayerModel.Text {
 
   padding?: { top: number; left: number; bottom: number; right: number };
 
+  verticalAlign?: string;
+
   constructor(data?: Partial<LayerModel.Text>) {
     super(data);
     makeObservable(this, {
@@ -46,6 +48,7 @@ export default class TextStruc extends LayerStruc implements LayerModel.Text {
       letterSpacing: observable,
       fontWeight: observable,
       backgroundColor: observable,
+      verticalAlign: observable,
     });
 
     this.content = data?.content;
@@ -61,6 +64,7 @@ export default class TextStruc extends LayerStruc implements LayerModel.Text {
     this.backgroundColor = data?.backgroundColor;
     this.backgroundAlpha = data?.backgroundAlpha;
     this.padding = data?.padding;
+    this.verticalAlign = data?.verticalAlign;
   }
 
   model(): LayerModel.Text {
@@ -81,6 +85,7 @@ export default class TextStruc extends LayerStruc implements LayerModel.Text {
       backgroundColor: this.backgroundColor,
       backgroundAlpha: this.backgroundAlpha,
       padding: this.padding,
+      verticalAlign: this.verticalAlign,
     };
   }
 }

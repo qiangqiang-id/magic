@@ -104,6 +104,7 @@ export function getTextDefaultValues(): Required<LayerModel.Text> {
       right: 0,
       bottom: 0,
     },
+    verticalAlign: 'top',
   };
 }
 

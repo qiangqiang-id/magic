@@ -89,6 +89,8 @@ declare namespace LayerModel {
     backgroundColor?: string;
     /** 背景透明度 0-100 */
     backgroundAlpha?: number;
+    /** 垂直对齐 */
+    verticalAlign?: string;
     padding?: {
       top: number;
       left: number;

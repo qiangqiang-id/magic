@@ -5,17 +5,7 @@ import { LayerStrucType } from '@/types/model';
 /**
  * 应用在容器上的样式
  */
-const onContainerKeys = [
-  'width',
-  'height',
-  'paddingTop',
-  'paddingRight',
-  'paddingLeft',
-  'paddingBottom',
-  'padding',
-  'lineHeight',
-  'opacity',
-];
+const onContainerKeys = ['width', 'height', 'opacity'];
 
 /**
  * 在图层上的样式

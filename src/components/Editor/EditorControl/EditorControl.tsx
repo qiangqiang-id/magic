@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { observer } from 'mobx-react';
 import cls from 'classnames';
-import { EditorBox, POINT_TYPE, RectData } from '@p/EditorTools';
+import { EditorBox, POINT_TYPE, RectData, isCenterPoint } from '@p/EditorTools';
 import { LayerStrucType } from '@/types/model';
 import { moveHandle } from '@/utils/move';
 import { useStores } from '@/store';
@@ -9,7 +9,8 @@ import { ALL_POINTS, TEXT_POINTS } from '@/constants/PointList';
 
 import Style from './EditorControl.module.less';
 import { getPreviewSizePosition } from '@/utils/getPreviewSizePosition';
-import { ImageStruc } from '@/models/LayerStruc';
+import { ImageStruc, TextStruc } from '@/models/LayerStruc';
+import { MAX_FONT_SIZE, MIN_FONT_SIZE } from '@/constants/FontSize';
 
 export interface EditorControlProps {
   zoomLevel?: number;
@@ -99,9 +100,27 @@ function EditorControl(props: EditorControlProps) {
   /**
    * 拉伸
    *  */
-  const onScale = (data: RectData, _point: POINT_TYPE, e: MouseEvent) => {
+  const onScale = (data: RectData, point: POINT_TYPE, e: MouseEvent) => {
     setPreviewPosition(e);
-    model?.update(data);
+
+    const updateData = { ...data };
+
+    const preWidth = +(model?.width ?? 0);
+    const ratio = updateData.width / preWidth;
+
+    /** 如果是文字组件，并且拉伸的是顶点，一些属性需要做同比例缩放 */
+    if (model.isText && !isCenterPoint(point)) {
+      const { fontSize = 12 } = model as TextStruc;
+      const newFontSize = Math.min(
+        MAX_FONT_SIZE,
+        Math.max(MIN_FONT_SIZE, +fontSize * ratio)
+      );
+      /** 如果字体大小到了最小值，不允许缩小了 */
+      if (newFontSize <= MIN_FONT_SIZE || newFontSize >= MAX_FONT_SIZE) return;
+      Object.assign(updateData, { fontSize: newFontSize });
+    }
+
+    model?.update(updateData);
   };
 
   /**

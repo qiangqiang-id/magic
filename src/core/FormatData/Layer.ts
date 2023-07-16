@@ -12,6 +12,8 @@ const ADD_IMAGE_TO_CANVAS_RATE = 0.7;
 /** 文字大小加入画布比例 */
 const ADD_TEXT_TO_CANVAS_RATE = 0.05;
 
+const ADD_TEXT_HEIGHT_FONT_RATE = 1.2;
+
 /**
  * 获取layer自适应画布的比例
  * @param {Size} layerSize
@@ -112,7 +114,7 @@ export function createTextData(
   const fontNum = content?.length || 0;
 
   const width = fontSize * fontNum + (fontNum - 1) * letterSpacing;
-  const height = fontSize;
+  const height = fontSize * ADD_TEXT_HEIGHT_FONT_RATE;
 
   const x = (templateWidth - width) / 2 + anchor.x * width;
   const y = (templateHeight - height) / 2 + anchor.y * height;

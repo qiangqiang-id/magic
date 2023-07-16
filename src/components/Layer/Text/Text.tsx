@@ -8,5 +8,9 @@ export default function Text(props: TextProps) {
 
   const { content } = model;
 
-  return <div style={style}>{content}</div>;
+  return (
+    <div style={style}>
+      <span>{content}</span>
+    </div>
+  );
 }
