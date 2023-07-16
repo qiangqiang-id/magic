@@ -2,7 +2,7 @@ import { CSSProperties } from 'react';
 import cls from 'classnames';
 import { observer } from 'mobx-react';
 import SceneStruc from '@/models/SceneStruc';
-import Layer from '../Layer';
+import Layer from './Layer';
 import Style from './Renderer.module.less';
 
 interface RendererProps {

@@ -1,6 +1,6 @@
 import { ShapeList } from '@/config/Shape';
 import { useStores } from '@/store';
-import ShapeLayer from '@/components/Layer/Shape';
+import ShapeLayer from '@/components/Renderer/Layer/Shape';
 
 import Style from './Shape.module.less';
 
