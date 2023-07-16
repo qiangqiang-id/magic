@@ -30,6 +30,8 @@ export default class TextStruc extends LayerStruc implements LayerModel.Text {
   /** 背景透明度 0-100 */
   backgroundAlpha?: number;
 
+  padding?: { top: number; left: number; bottom: number; right: number };
+
   constructor(data?: Partial<LayerModel.Text>) {
     super(data);
     makeObservable(this, {
@@ -58,6 +60,7 @@ export default class TextStruc extends LayerStruc implements LayerModel.Text {
     this.fontWeight = data?.fontWeight;
     this.backgroundColor = data?.backgroundColor;
     this.backgroundAlpha = data?.backgroundAlpha;
+    this.padding = data?.padding;
   }
 
   model(): LayerModel.Text {
@@ -77,6 +80,7 @@ export default class TextStruc extends LayerStruc implements LayerModel.Text {
       fontWeight: this.fontWeight,
       backgroundColor: this.backgroundColor,
       backgroundAlpha: this.backgroundAlpha,
+      padding: this.padding,
     };
   }
 }

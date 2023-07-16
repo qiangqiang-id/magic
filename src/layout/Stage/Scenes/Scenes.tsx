@@ -71,7 +71,7 @@ function Scenes() {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) return;
-    if (active.id !== over?.id) {
+    if (active.id !== over.id) {
       const oldIndex = magic.getSceneIndex(active.id as string);
       const newIndex = magic.getSceneIndex(over.id as string);
       const newScenes = arrayMove(scenes, oldIndex, newIndex);

@@ -41,6 +41,8 @@ export default async function screenshot<T extends Node>(
       }
     }
   };
+
+  // todo: 替换并发限制逻辑
   await Promise.all([...Array(4)].map(runTask));
   debug && console.timeEnd('runTask');
 

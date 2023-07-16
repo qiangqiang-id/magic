@@ -1,7 +1,6 @@
 /**
  * 执行终端
  */
-
 import CmdEnum from '@/constants/CmdEnum';
 
 export interface CmdItem {

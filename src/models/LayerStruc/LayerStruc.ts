@@ -43,6 +43,8 @@ export default class LayerStruc implements LayerModel.Base {
   /** 所在的场景 */
   scene?: SceneStruc | null = null;
 
+  mask?: Rect;
+
   constructor(data?: Partial<LayerModel.Base> & Record<string, any>) {
     makeObservable<this, 'handleUpdate'>(this, {
       name: observable,
@@ -59,6 +61,7 @@ export default class LayerStruc implements LayerModel.Base {
       loading: observable,
       disabled: observable,
       opacity: observable,
+      mask: observable,
       isBack: computed,
       isImage: computed,
       isShape: computed,
@@ -97,6 +100,7 @@ export default class LayerStruc implements LayerModel.Base {
       disabled: this.disabled,
       group: this.group,
       scene: this.scene,
+      mask: this.mask,
     };
   }
 

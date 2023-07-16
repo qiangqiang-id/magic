@@ -1,7 +1,7 @@
 import { makeObservable, observable, computed, action } from 'mobx';
 import SceneStruc from '../SceneStruc';
 import { LayerStrucType } from '@/types/model';
-import { createEmptySceneData } from '@/core/FormatData/Scene';
+import { createSceneData } from '@/core/FormatData/Scene';
 import { createScene } from '../FactoryStruc/SceneFactory';
 
 export default class MagicStruc implements MagicModel {
@@ -46,7 +46,7 @@ export default class MagicStruc implements MagicModel {
   }
 
   /**
-   * 释放所有活动组件
+   *  释放所有活动组件
    */
   public releaseAllLayers() {
     this.activedLayers.forEach(layer => layer.inactive());
@@ -110,11 +110,10 @@ export default class MagicStruc implements MagicModel {
   }
 
   public addScene(data?: Partial<SceneModel>) {
-    if (!data) {
-      const sceneData = createEmptySceneData();
-      const scene = createScene(sceneData);
-      this.handleAddScene(scene);
-    }
+    const sceneData = createSceneData(data);
+    const scene = createScene(sceneData);
+    this.handleAddScene(scene);
+    this.activeScene(scene);
   }
 
   protected handleAddScene(scene: SceneStruc, index?: number) {

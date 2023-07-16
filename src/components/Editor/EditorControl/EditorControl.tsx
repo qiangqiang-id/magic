@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { observer } from 'mobx-react';
 import cls from 'classnames';
 import { EditorBox, POINT_TYPE, RectData } from '@p/EditorTools';
@@ -9,6 +9,7 @@ import { ALL_POINTS, TEXT_POINTS } from '@/constants/PointList';
 
 import Style from './EditorControl.module.less';
 import { getPreviewSizePosition } from '@/utils/getPreviewSizePosition';
+import { ImageStruc } from '@/models/LayerStruc';
 
 export interface EditorControlProps {
   zoomLevel?: number;
@@ -43,6 +44,13 @@ function EditorControl(props: EditorControlProps) {
     setPointsByCmpTag();
   }, [model]);
 
+  const scaleType = useMemo(() => {
+    if (model.isImage) {
+      return 'mask-cover';
+    }
+    return 'default';
+  }, [model.type]);
+
   /**
    * 获取矩形的信息
    */
@@ -56,7 +64,7 @@ function EditorControl(props: EditorControlProps) {
       anchor = { x: 0, y: 0 },
     } = model;
 
-    const rectData = {
+    const rectData: RectData = {
       height,
       width,
       x,
@@ -64,6 +72,10 @@ function EditorControl(props: EditorControlProps) {
       anchor,
       rotate,
     };
+
+    if (model.isImage) {
+      rectData.mask = (model as ImageStruc).mask;
+    }
 
     return rectData;
   };
@@ -148,7 +160,7 @@ function EditorControl(props: EditorControlProps) {
       <EditorBox
         className={cls({ [Style.pointer_events_none]: model.isBack })}
         points={points}
-        scaleType="default"
+        scaleType={scaleType}
         isShowPoint={!OS.isMoveing && !model.isLock}
         rectInfo={rectInfo}
         zoomLevel={zoomLevel}

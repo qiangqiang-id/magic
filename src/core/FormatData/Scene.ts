@@ -5,7 +5,10 @@ import { randomString } from '@/utils/random';
 /**
  * 创建一个空场景
  */
-export function createEmptySceneData(): SceneModel {
-  const layers = [createBackData(getSceneDefaultValues())];
-  return { ...getSceneDefaultValues(), id: randomString(), layers };
+export function createSceneData(data?: Partial<SceneModel>): SceneModel {
+  const layers = [
+    createBackData(getSceneDefaultValues()),
+    ...(data?.layers ?? []),
+  ];
+  return { ...getSceneDefaultValues(), id: randomString(), layers, ...data };
 }

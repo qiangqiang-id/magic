@@ -39,7 +39,6 @@ function Scene(props: SceneProps, ref: Ref<HTMLDivElement>) {
     <div
       ref={ref}
       onClick={() => magic.activeScene(scene)}
-      key={scene.id}
       className={cls(Style.scene_item, actived && Style.actived)}
       style={sceneWrapperStyle}
       {...otherProps}

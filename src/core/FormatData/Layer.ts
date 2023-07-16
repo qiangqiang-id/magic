@@ -76,6 +76,12 @@ export function createImageData(
     ...rectData,
     originalWidth: imageData.width,
     originalHeight: imageData.height,
+    mask: {
+      x: 0,
+      y: 0,
+      width: rectData.width,
+      height: rectData.height,
+    },
   };
 }
 

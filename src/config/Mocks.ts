@@ -24,6 +24,12 @@ const layer1: LayerModel.Image = {
   y: 300,
   rotate: 0,
   url: 'https://img.miaotui.com//common/mtv/2022/04/11/09/b3f91154c7c43ff71c8afbb27b93bc42.webp',
+  mask: {
+    x: 0,
+    y: 0,
+    width: 800,
+    height: 450,
+  },
 };
 
 const layer2: LayerModel.Image = {
@@ -37,6 +43,12 @@ const layer2: LayerModel.Image = {
   y: 800,
   rotate: 0,
   url: 'https://img.miaotui.com//common/mtv/2022/04/11/09/b3f91154c7c43ff71c8afbb27b93bc42.webp',
+  mask: {
+    x: 0,
+    y: 0,
+    width: 800,
+    height: 450,
+  },
 };
 
 const scene1: SceneModel = {

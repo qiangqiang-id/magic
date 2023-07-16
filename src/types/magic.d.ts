@@ -54,6 +54,13 @@ declare namespace LayerModel {
     loading?: boolean;
     /** 透明度 */
     opacity?: number;
+    /** 蒙层 */
+    mask?: {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    };
   }
 
   /** 文字 */
@@ -64,6 +71,7 @@ declare namespace LayerModel {
     charAttrs?: Record<string, any>[];
     /** 是否可编辑中 */
     isEditing?: boolean;
+    /** 字体 */
     fontFamily?: string;
     /** 文字颜色 */
     color?: string;
@@ -81,25 +89,12 @@ declare namespace LayerModel {
     backgroundColor?: string;
     /** 背景透明度 0-100 */
     backgroundAlpha?: number;
-    /** 背景图片宽 */
-    // imageWidth?: number;
-    // /** 背景图片高 */
-    // imageHeight?: number;
-    // /** 背景图片名 */
-    // imageName?: string;
-    // /** 图片地址 */
-    // imageUrl?: string;
-    // /** 图片拉伸信息 */
-    // imageNinePath?: {
-    //   /** 起始x位置 */
-    //   x: number;
-    //   /** 起始y位置 */
-    //   y: number;
-    //   /** 可拉伸宽 */
-    //   w: number;
-    //   /** 可拉伸高 */
-    //   h: number;
-    // };
+    padding?: {
+      top: number;
+      left: number;
+      bottom: number;
+      right: number;
+    };
   }
 
   /** 图片 */

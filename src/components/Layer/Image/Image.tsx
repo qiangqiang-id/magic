@@ -4,11 +4,12 @@ import { LayerProps } from '../Layer';
 import Style from './Image.module.less';
 
 interface ImageProps extends LayerProps<ImageStruc> {}
+
 function Image(props: ImageProps) {
-  const { model } = props;
+  const { model, style } = props;
   const { url } = model;
   return (
-    <div className={Style.image_container}>
+    <div style={style} className={Style.image_container}>
       <img className={Style.image} src={url} alt="" />
     </div>
   );

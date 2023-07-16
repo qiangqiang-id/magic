@@ -40,11 +40,15 @@ export function getLayerDefaultValues(): Required<LayerModel.Base> {
     y: 0,
     width: 0,
     height: 0,
-    // mask: { x: 0, y: 0, width: 0, height: 0 },
+    mask: {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+    },
     rotate: 0,
     scale: { ...ScaleDefault },
     anchor: { ...AnchorDefault },
-    // tileBlurSize: 0,
     actived: false,
     visible: true,
     isLock: false,
@@ -89,11 +93,17 @@ export function getTextDefaultValues(): Required<LayerModel.Text> {
     opacity: 100,
     strokes: [],
     fontSize: 45,
-    lineHeight: 1.2,
+    lineHeight: 1,
     letterSpacing: 0,
     fontWeight: 400,
     backgroundColor: 'transparent',
     backgroundAlpha: 100,
+    padding: {
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+    },
   };
 }
 

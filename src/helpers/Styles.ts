@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react';
-import { pointToTopLeft } from '@p/EditorTools';
+import { getMaskInCanvasRectData, pointToTopLeft } from '@p/EditorTools';
 import { LayerStrucType } from '@/types/model';
 
 /**
@@ -80,24 +80,49 @@ export function getLayerRectStyles<M extends LayerStrucType = LayerStrucType>(
     width = 0,
     height = 0,
     anchor = { x: 0, y: 0 },
+    mask,
   } = model;
 
-  const rectData = pointToTopLeft({ x, y, width, height, anchor });
+  const topLeftPoint = pointToTopLeft({ x, y, width, height, anchor });
+  let layerWidth = width;
+  let layerHeight = height;
+  let layerLeft = topLeftPoint.x;
+  let layerTop = topLeftPoint.y;
+
+  /** 处理图片蒙层 */
+  if (model.isImage) {
+    const maskInCanvasRectData = getMaskInCanvasRectData({
+      ...topLeftPoint,
+      width,
+      height,
+      mask,
+    });
+    layerWidth = maskInCanvasRectData.width;
+    layerHeight = maskInCanvasRectData.height;
+    layerLeft = maskInCanvasRectData.x;
+    layerTop = maskInCanvasRectData.y;
+  }
 
   return {
-    width: width * zoomLevel,
-    height: height * zoomLevel,
-    transform: `translate(${rectData.x * zoomLevel}px,${
-      rectData.y * zoomLevel
+    width: layerWidth * zoomLevel,
+    height: layerHeight * zoomLevel,
+    transform: `translate(${layerLeft * zoomLevel}px,${
+      layerTop * zoomLevel
     }px) rotate(${rotate}deg)`,
-    transformOrigin: `${anchor.x * 100}% ${anchor.y * 100}%`,
   };
 }
 
+/**
+ * 获取图层的内部样式
+ * @param model
+ * @param zoomLevel
+ * @returns {CSSProperties}
+ */
 export function getLayerInnerStyles<M extends LayerStrucType = LayerStrucType>(
-  model: M
-) {
-  return onLayerKeys.reduce((styles, key) => {
+  model: M,
+  zoomLevel = 1
+): CSSProperties {
+  let styles = onLayerKeys.reduce((styles, key) => {
     if (Reflect.has(model, key)) {
       return {
         ...styles,
@@ -106,4 +131,33 @@ export function getLayerInnerStyles<M extends LayerStrucType = LayerStrucType>(
     }
     return styles;
   }, {});
+
+  if (model.isImage) {
+    styles = {
+      ...styles,
+      ...getMaskStyle(model, zoomLevel),
+    };
+  }
+
+  return styles;
+}
+
+/**
+ * 获取蒙层样式
+ * @param model
+ * @param zoomLevel
+ * @returns {CSSProperties}
+ */
+export function getMaskStyle<M extends LayerStrucType = LayerStrucType>(
+  model: M,
+  zoomLevel = 1
+): CSSProperties {
+  const { x = 0, y = 0, width = 0, height = 0, mask } = model;
+  if (!mask) return {};
+
+  return {
+    width: width * zoomLevel,
+    height: height * zoomLevel,
+    transform: `translate(${x * zoomLevel}px,${y * zoomLevel}px) )`,
+  };
 }

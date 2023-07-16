@@ -6,7 +6,7 @@ export const ShapeList: Partial<LayerModel.Shape>[] = [
     height: 100,
     x: 0,
     y: 0,
-    rx: 30,
-    ry: 30,
+    rx: 20,
+    ry: 20,
   },
 ];
