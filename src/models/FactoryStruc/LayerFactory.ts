@@ -8,13 +8,16 @@ import LayerStruc, {
 } from '../LayerStruc';
 import SceneStruc from '../SceneStruc';
 
-const LayerTypeMapStruc: Record<LayerModel.LayerType, typeof LayerStruc> = {
+const LayerTypeMapStruc: Record<
+  LayerModel.LayerType,
+  typeof LayerStruc | null
+> = {
   [LayerType.TEXT]: TextStruc,
   [LayerType.BACKGROUND]: BackgroundStruc,
   [LayerType.IMAGE]: ImageStruc,
   [LayerType.GROUP]: GroupStruc,
   [LayerType.SHAPE]: ShapeStruc,
-  [LayerType.UNKNOWN]: TextStruc,
+  [LayerType.UNKNOWN]: null,
 };
 
 export default function CreateLayerStruc<T extends LayerModel.LayerType>(

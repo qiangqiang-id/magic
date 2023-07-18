@@ -15,5 +15,5 @@ export enum NodeNameplate {
   SCENE = 'scene',
 
   /** 图层 */
-  LAYER = 'LAYER',
+  LAYER = 'layer',
 }

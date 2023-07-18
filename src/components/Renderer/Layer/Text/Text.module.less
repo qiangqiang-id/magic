@@ -1,0 +1,27 @@
+.text-container {
+  position: relative;
+  // height: 100%;
+
+  :global {
+    .ql-editor {
+      padding: 0;
+      overflow: visible;
+      font-family: inherit;
+      line-height: inherit;
+      white-space: break-spaces;
+      text-align: inherit;
+      outline: none;
+      cursor: move;
+      user-select: none;
+      line-break: anywhere;
+    }
+
+    .ql-clipboard {
+      position: absolute;
+      top: 50%;
+      left: -100000px;
+      height: 1px;
+      overflow-y: hidden;
+    }
+  }
+}

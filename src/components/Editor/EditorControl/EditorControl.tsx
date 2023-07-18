@@ -168,6 +168,10 @@ function EditorControl(props: EditorControlProps) {
     isMouseEventFormEditor.current = false;
   };
 
+  const onDoubleClick = () => {
+    if (model.isText) (model as TextStruc).onEdit();
+  };
+
   const rectInfo = getRectInfo();
 
   const previewSize = `宽度:${Math.round(rectInfo.width)} 高度:${Math.round(
@@ -191,6 +195,7 @@ function EditorControl(props: EditorControlProps) {
         onRotateEnd={onRotateEnd}
         onMouseDown={onMouseDown}
         onMouseUp={onMouseUp}
+        onDoubleClick={onDoubleClick}
         minHeight={10}
         minWidth={10}
       />

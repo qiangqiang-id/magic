@@ -1,11 +1,14 @@
-import { getBackDefaultValues, getImageDefaultValues } from './DefaultValues';
+import {
+  getBackDefaultValues,
+  getImageDefaultValues,
+  getTextDefaultValues,
+} from './DefaultValues';
 import { LayerType } from '@/constants/LayerTypeEnum';
 import { TEMPLATE_HEIGHT, TEMPLATE_WIDTH } from '@/constants/TemplateSize';
 import { randomString } from '@/utils/random';
 
 const backLayer: LayerModel.Background = {
   ...getBackDefaultValues(),
-  id: randomString(),
   name: '第一张图片',
   width: TEMPLATE_WIDTH,
   height: TEMPLATE_HEIGHT,
@@ -15,7 +18,6 @@ const backLayer: LayerModel.Background = {
 
 const layer1: LayerModel.Image = {
   ...getImageDefaultValues(),
-  id: randomString(),
   name: '第一张图片',
   type: LayerType.IMAGE,
   width: 800,
@@ -34,7 +36,6 @@ const layer1: LayerModel.Image = {
 
 const layer2: LayerModel.Image = {
   ...getImageDefaultValues(),
-  id: randomString(),
   name: '第二张图片',
   type: LayerType.IMAGE,
   width: 800,
@@ -51,10 +52,18 @@ const layer2: LayerModel.Image = {
   },
 };
 
+const textLayer = {
+  ...getTextDefaultValues(),
+  width: 400,
+  height: 70,
+  x: 500,
+  y: 1300,
+};
+
 const scene1: SceneModel = {
   id: randomString(),
   name: '第一个页面',
-  layers: [backLayer, layer1, layer2],
+  layers: [backLayer, layer1, layer2, textLayer],
   width: TEMPLATE_WIDTH,
   height: TEMPLATE_HEIGHT,
 };

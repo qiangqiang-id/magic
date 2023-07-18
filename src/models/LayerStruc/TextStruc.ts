@@ -1,4 +1,4 @@
-import { makeObservable, observable } from 'mobx';
+import { makeObservable, observable, action } from 'mobx';
 import LayerStruc from './LayerStruc';
 
 export default class TextStruc extends LayerStruc implements LayerModel.Text {
@@ -49,6 +49,9 @@ export default class TextStruc extends LayerStruc implements LayerModel.Text {
       fontWeight: observable,
       backgroundColor: observable,
       verticalAlign: observable,
+
+      onEdit: action,
+      unEdit: action,
     });
 
     this.content = data?.content;
@@ -87,5 +90,19 @@ export default class TextStruc extends LayerStruc implements LayerModel.Text {
       padding: this.padding,
       verticalAlign: this.verticalAlign,
     };
+  }
+
+  /**
+   * 开启富文本编辑
+   */
+  onEdit() {
+    this.isEditing = true;
+  }
+
+  /**
+   * 关闭富文本编辑
+   */
+  unEdit() {
+    this.isEditing = false;
   }
 }

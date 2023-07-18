@@ -2,7 +2,7 @@ enum HotKeyScope {
   CANVAS = '画布',
   LAYER = '图层',
   LAYOUT = '布局',
-  MAGIC = '作品数据',
+  MAGIC = 'magic',
 }
 
 export default HotKeyScope;

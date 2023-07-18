@@ -4,6 +4,8 @@ import EditorControl from './EditorControl';
 import { LayerStrucType } from '@/types/model';
 import Style from './Editor.module.less';
 import Hover from './Hover';
+import RichText from './RichText';
+import { TextStruc } from '@/models/LayerStruc';
 
 interface EditorProps {
   isMultiple?: boolean;
@@ -13,7 +15,14 @@ interface EditorProps {
 }
 
 function Editor(props: EditorProps) {
-  const { isMultiple, activedLayers, zoomLevel, magneticLines } = props;
+  const {
+    isMultiple = false,
+    activedLayers,
+    zoomLevel = 1,
+    magneticLines,
+  } = props;
+
+  const model = activedLayers[0];
 
   const getEditorControl = () => {
     if (activedLayers.length === 0) return null;
@@ -40,6 +49,15 @@ function Editor(props: EditorProps) {
 
       {/* 磁力线 */}
       <MagneticLine lines={magneticLines} />
+
+      {/* 富文本 */}
+      {model?.isText && (
+        <RichText
+          zoomLevel={zoomLevel}
+          isMultiple={isMultiple}
+          model={model as TextStruc}
+        />
+      )}
     </div>
   );
 }

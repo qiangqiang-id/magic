@@ -1,0 +1,32 @@
+.rich_text_contariner {
+  position: absolute;
+  visibility: hidden;
+}
+
+.rich_text_main {
+  outline: none;
+
+  :global {
+    .ql-editor {
+      padding: 0;
+      overflow: visible;
+      white-space: break-spaces;
+      outline: none;
+      cursor: text;
+      // user-select: none;
+      line-break: anywhere;
+    }
+
+    .ql-clipboard {
+      position: absolute;
+      top: 50%;
+      left: -100000px;
+      height: 1px;
+      overflow-y: hidden;
+    }
+  }
+}
+
+.show {
+  visibility: visible;
+}
