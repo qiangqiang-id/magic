@@ -120,6 +120,16 @@ function EditorControl(props: EditorControlProps) {
       Object.assign(updateData, { fontSize: newFontSize });
     }
 
+    /**
+     * 如果是文字，并拉伸的是左右改变宽度时，这里不改变文字的高度，富文本会改变文字的高度
+     * */
+    if (
+      model.isText &&
+      [POINT_TYPE.RIGHT_CENTER, POINT_TYPE.LEFT_CENTER].includes(point)
+    ) {
+      Reflect.deleteProperty(updateData, 'height');
+    }
+
     model?.update(updateData);
   };
 

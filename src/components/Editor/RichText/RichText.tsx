@@ -5,6 +5,7 @@ import Delta from 'quill-delta';
 import { observer } from 'mobx-react';
 import { TextStruc } from '@/models/LayerStruc';
 import { getLayerOuterStyles, getLayerInnerStyles } from '@/helpers/Styles';
+import useResizeObserver from '@/hooks/useResizeObserver';
 import Style from './RichText.module.less';
 
 const getBindings = () => ({
@@ -33,14 +34,17 @@ interface RichTextProps {
 function RichText(props: RichTextProps) {
   const { model, isMultiple, zoomLevel } = props;
 
-  const { content, charAttrs } = model;
+  const { content, charAttrs, isEditing } = model;
 
   const quillRef = useRef<Quill | null>(null);
   const richTextContainerRef = useRef<HTMLDivElement>(null);
   const richTextRef = useRef<HTMLDivElement>(null);
   const selectedRange = useRef<RangeStatic | null>(null);
   const isFocus = useRef(false);
-  const isShow = !isMultiple && model.isEditing;
+
+  const [entry] = useResizeObserver(richTextContainerRef);
+
+  const isShow = !isMultiple && isEditing;
 
   /**
    * 实例化quill
@@ -114,7 +118,6 @@ function RichText(props: RichTextProps) {
       // const style = quillRef.current?.getFormat(selectedRange.current);
       // model.setSelectedStyle(style);
     }
-    console.log('content', content);
     model.update<Partial<TextStruc>>({ content });
   };
 
@@ -153,10 +156,40 @@ function RichText(props: RichTextProps) {
     return quillRef.current?.getContents();
   };
 
-  /** 初始化富文本内容 */
+  /**
+   * 初始化富文本内容
+   *  */
   const initTextContent = (val: string) => {
     const delta = formatText(val);
     quillRef.current?.setContents(delta);
+  };
+
+  /**
+   *  禁止编辑
+   * */
+  const disableEdit = () => {
+    quillRef.current?.enable(false);
+    quillRef.current?.blur();
+  };
+
+  /**
+   * 开启编辑
+   */
+  const editableEdit = () => {
+    quillRef.current?.enable(true);
+    quillRef.current?.focus();
+    quillRef.current?.setSelection(0, getTextValue().length);
+  };
+
+  /**
+   * 更新高度
+   *  */
+  const uploadHeight = (entry: ResizeObserverEntry) => {
+    const offsetHeight = (entry.target as HTMLDivElement).offsetHeight;
+    const height = offsetHeight || model.height;
+    model.update({
+      height,
+    });
   };
 
   /** 获取文字 */
@@ -170,6 +203,15 @@ function RichText(props: RichTextProps) {
     initTextContent(getTextValue());
   }, [model]);
 
+  useEffect(() => {
+    isEditing ? editableEdit() : disableEdit();
+  }, [isEditing]);
+
+  /** 更新高度 */
+  useEffect(() => {
+    entry && uploadHeight(entry);
+  }, [entry]);
+
   const containerStyle = getLayerOuterStyles(model, zoomLevel);
   const innerStyle = getLayerInnerStyles(model);
   const outerStyle = {
@@ -177,6 +219,7 @@ function RichText(props: RichTextProps) {
     transform: `scale(${zoomLevel})`,
   };
   Reflect.deleteProperty(outerStyle, 'height');
+
   return (
     <div
       className={cls(Style.rich_text_contariner, {
@@ -193,10 +236,7 @@ function RichText(props: RichTextProps) {
       >
         <div
           className={Style.rich_text_main}
-          style={{
-            // ...getTextFillStyle(fill),
-            ...innerStyle,
-          }}
+          style={{ ...innerStyle }}
           spellCheck="false"
           ref={richTextRef}
         />

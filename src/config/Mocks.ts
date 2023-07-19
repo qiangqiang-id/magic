@@ -55,7 +55,6 @@ const layer2: LayerModel.Image = {
 const textLayer = {
   ...getTextDefaultValues(),
   width: 400,
-  height: 70,
   x: 500,
   y: 1300,
 };

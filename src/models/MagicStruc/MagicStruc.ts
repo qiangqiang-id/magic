@@ -36,6 +36,7 @@ export default class MagicStruc implements MagicModel {
       activeLayer: action,
       activeScene: action,
       handleAddScene: action,
+      hoverLayer: action,
     });
   }
 
@@ -135,7 +136,7 @@ export default class MagicStruc implements MagicModel {
   /**
    * 高亮组件
    */
-  hoverLayer(layer: LayerStrucType | null) {
+  public hoverLayer(layer: LayerStrucType | null) {
     this.hoveredLayer = layer;
   }
 

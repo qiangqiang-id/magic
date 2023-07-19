@@ -11,7 +11,7 @@ interface TextProps extends LayerProps<TextStruc> {}
 function Text(props: TextProps) {
   const { model, style } = props;
 
-  const { content, charAttrs } = model;
+  const { content, charAttrs, isEditing } = model;
 
   const [textValue, setTextValue] = useState('');
 
@@ -79,11 +79,9 @@ function Text(props: TextProps) {
         spellCheck="false"
         className={Style['text-main']}
         ref={textMainRef}
-        style={
-          {
-            // visibility: model.isEditing ? 'hidden' : 'visible',
-          }
-        }
+        style={{
+          visibility: isEditing ? 'hidden' : 'visible',
+        }}
       />
     </div>
   );

@@ -85,6 +85,7 @@ export function getTextDefaultValues(): Required<LayerModel.Text> {
   return {
     ...getLayerDefaultValues(),
     type: LayerType.TEXT,
+    anchor: { x: 0, y: 0 },
     content: '双击编辑文字',
     charAttrs: [],
     isEditing: false,
@@ -93,7 +94,8 @@ export function getTextDefaultValues(): Required<LayerModel.Text> {
     opacity: 100,
     strokes: [],
     fontSize: 45,
-    lineHeight: 1,
+    height: 1.2 * 45,
+    lineHeight: 1.2,
     letterSpacing: 0,
     fontWeight: 400,
     backgroundColor: 'transparent',

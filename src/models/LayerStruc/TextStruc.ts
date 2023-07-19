@@ -105,4 +105,12 @@ export default class TextStruc extends LayerStruc implements LayerModel.Text {
   unEdit() {
     this.isEditing = false;
   }
+
+  /**
+   * 取消选中
+   */
+  inactive() {
+    this.actived = false;
+    this.unEdit();
+  }
 }
