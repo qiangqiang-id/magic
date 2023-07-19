@@ -107,15 +107,14 @@ export function registerAppActions(magic: MagicStore) {
  * @param OS 系统设置
  */
 export function registerOSSActions(OS: OSStore) {
-  console.log('registerOSSActions', OS);
   const cmdToAction: Record<string, CmdHandler> = {
     [CmdEnum['ZOOM IN']]() {
       console.log('ZOOM IN');
-      // OS.zoomIn();
+      OS.zoomIn();
     },
     [CmdEnum['ZOOM OUT']]() {
-      // OS.zoomOut();
       console.log('ZOOM OUT');
+      OS.zoomOut();
     },
   };
 

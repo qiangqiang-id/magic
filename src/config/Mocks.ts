@@ -22,7 +22,7 @@ const layer1: LayerModel.Image = {
   type: LayerType.IMAGE,
   width: 800,
   height: 450,
-  x: 100,
+  x: 550,
   y: 300,
   rotate: 0,
   url: 'https://img.miaotui.com//common/mtv/2022/04/11/09/b3f91154c7c43ff71c8afbb27b93bc42.webp',
@@ -40,8 +40,8 @@ const layer2: LayerModel.Image = {
   type: LayerType.IMAGE,
   width: 800,
   height: 450,
-  x: 200,
-  y: 800,
+  x: 550,
+  y: 1000,
   rotate: 0,
   url: 'https://img.miaotui.com//common/mtv/2022/04/11/09/b3f91154c7c43ff71c8afbb27b93bc42.webp',
   mask: {
@@ -55,7 +55,7 @@ const layer2: LayerModel.Image = {
 const textLayer = {
   ...getTextDefaultValues(),
   width: 400,
-  x: 500,
+  x: 400,
   y: 1300,
 };
 

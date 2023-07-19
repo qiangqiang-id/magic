@@ -50,7 +50,10 @@ export function getPreviewSizePosition(
 
   // bottom
   const previewDomHeight = previewSizeDom.offsetHeight;
-  if (point.y + previewDomHeight > canvasWrapRectInfo.bottom) {
+  if (
+    point.y + previewDomHeight + PREVIEW_SIZE_OFFSET_Y >
+    canvasWrapRectInfo.bottom
+  ) {
     result.y = canvasRectInfo.height + verticalOffet - previewDomHeight;
   }
 

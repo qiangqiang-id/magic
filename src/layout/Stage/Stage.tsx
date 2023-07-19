@@ -38,12 +38,12 @@ function Stage() {
   if (!activedScene) return null;
 
   return (
-    <div
-      data-nameplate={NodeNameplate.CANVAS_WRAP}
-      className={Style.stage}
-      onMouseDown={handleStageMousedown}
-    >
-      <div className={Style.canvas_wrapper} ref={CANVAS_WRAPPER}>
+    <div className={Style.stage} onMouseDown={handleStageMousedown}>
+      <div
+        className={Style.canvas_wrapper}
+        data-nameplate={NodeNameplate.CANVAS_WRAP}
+        ref={CANVAS_WRAPPER}
+      >
         <Canvas canvasWidth={templateWidth} canvasHeight={templateHeight} />
       </div>
 
