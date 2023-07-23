@@ -2,7 +2,7 @@ import { observer } from 'mobx-react';
 import { LayerType } from '@/constants/LayerTypeEnum';
 import TextSetting from './Text';
 import ImageSetting from './Image';
-import BackSetting from './Back';
+import CanvasSetting from './Canvas';
 import ShapeSetting from './Shape';
 import GroupSetting from './Group';
 import { useStores } from '@/store';
@@ -10,7 +10,7 @@ import { LayerStrucType } from '@/types/model';
 import Style from './Setting.module.less';
 
 const SettingMap = {
-  [LayerType.BACKGROUND]: BackSetting,
+  [LayerType.BACKGROUND]: CanvasSetting,
   [LayerType.IMAGE]: ImageSetting,
   [LayerType.TEXT]: TextSetting,
   [LayerType.SHAPE]: ShapeSetting,
@@ -26,7 +26,7 @@ function Setting() {
   const { activedLayers, isMultiple } = magic;
 
   const getSetingRender = () => {
-    if (activedLayers.length === 0) return <BackSetting />;
+    if (activedLayers.length === 0) return <CanvasSetting />;
 
     /** 选中多个图层 */
     if (isMultiple) {
