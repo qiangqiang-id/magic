@@ -1,11 +1,18 @@
 import SettingContainer from '@/components/SettingContainer';
 import LayerBaseSetting from '@/components/LayerBaseSetting';
+import { ImageStruc } from '@/models/LayerStruc';
 
-export default function Image() {
+import { SettingProps } from '../Setting';
+
+interface ImageProps extends SettingProps<ImageStruc> {}
+
+export default function Image(props: ImageProps) {
+  const { model } = props;
+
   return (
     <SettingContainer title="图片">
       <div>
-        <LayerBaseSetting />
+        <LayerBaseSetting model={model} />
       </div>
     </SettingContainer>
   );

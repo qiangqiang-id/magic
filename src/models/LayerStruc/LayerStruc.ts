@@ -1,8 +1,12 @@
 import { makeObservable, observable, computed, action } from 'mobx';
+import { clone } from 'lodash';
 import GroupStruc from './GroupStruc';
 import SceneStruc from '../SceneStruc';
-import { LayerType } from '@/constants/LayerTypeEnum';
+import { LayerTypeEnum } from '@/constants/LayerTypeEnum';
 import { filterSameData } from '@/utils/filterData';
+import { randomString } from '@/utils/random';
+import CreateLayerStruc from '../FactoryStruc/LayerFactory';
+import { LayerStrucType } from '@/types/model';
 
 export default class LayerStruc implements LayerModel.Base {
   id!: string;
@@ -140,12 +144,48 @@ export default class LayerStruc implements LayerModel.Base {
   }
 
   /**
+   * 复制
+   */
+  clone(): LayerStrucType {
+    /** 通用复制方法， 子类将会具体实现 */
+    const model = clone(this.model());
+    model.id = randomString();
+    return CreateLayerStruc(model.type, model, this.getParent());
+  }
+
+  /**
+   * 删除
+   */
+  remove() {
+    const parent = this.getParent();
+    parent && parent.removeLayer(this);
+  }
+
+  /**
+   * 返回父级：场景或者组合
+   */
+  getParent() {
+    return this.scene || this.group;
+  }
+
+  /**
+   * 获取根父节点
+   */
+  getRootParent() {
+    let parent = this.getParent();
+    while (parent && !(parent instanceof SceneStruc)) {
+      parent = parent.getParent();
+    }
+    return parent;
+  }
+
+  /**
    * 是否是背景
    * @readonly
    * @memberof LayerStruc
    */
   get isBack() {
-    return this.type === LayerType.BACKGROUND;
+    return this.type === LayerTypeEnum.BACKGROUND;
   }
 
   /**
@@ -154,7 +194,7 @@ export default class LayerStruc implements LayerModel.Base {
    * @memberof LayerStruc
    */
   get isImage() {
-    return this.type === LayerType.IMAGE;
+    return this.type === LayerTypeEnum.IMAGE;
   }
 
   /**
@@ -163,7 +203,7 @@ export default class LayerStruc implements LayerModel.Base {
    * @memberof LayerStruc
    */
   get isShape() {
-    return this.type === LayerType.SHAPE;
+    return this.type === LayerTypeEnum.SHAPE;
   }
 
   /**
@@ -172,7 +212,7 @@ export default class LayerStruc implements LayerModel.Base {
    * @memberof LayerStruc
    */
   get isText() {
-    return this.type === LayerType.TEXT;
+    return this.type === LayerTypeEnum.TEXT;
   }
 
   /**
@@ -181,6 +221,6 @@ export default class LayerStruc implements LayerModel.Base {
    * @memberof LayerStruc
    */
   get isGroup() {
-    return this.type === LayerType.GROUP;
+    return this.type === LayerTypeEnum.GROUP;
   }
 }

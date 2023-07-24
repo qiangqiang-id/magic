@@ -1,5 +1,6 @@
+import { ComponentType } from 'react';
 import { observer } from 'mobx-react';
-import { LayerType } from '@/constants/LayerTypeEnum';
+import { LayerTypeEnum } from '@/constants/LayerTypeEnum';
 import TextSetting from './Text';
 import ImageSetting from './Image';
 import CanvasSetting from './Canvas';
@@ -10,14 +11,16 @@ import { LayerStrucType } from '@/types/model';
 import Style from './Setting.module.less';
 
 const SettingMap = {
-  [LayerType.BACKGROUND]: CanvasSetting,
-  [LayerType.IMAGE]: ImageSetting,
-  [LayerType.TEXT]: TextSetting,
-  [LayerType.SHAPE]: ShapeSetting,
-  [LayerType.GROUP]: GroupSetting,
+  [LayerTypeEnum.BACKGROUND]: CanvasSetting,
+  [LayerTypeEnum.IMAGE]: ImageSetting,
+  [LayerTypeEnum.TEXT]: TextSetting,
+  [LayerTypeEnum.SHAPE]: ShapeSetting,
+  [LayerTypeEnum.GROUP]: GroupSetting,
 };
 
-export interface SettingProps<M extends LayerStrucType = LayerStrucType> {
+export interface SettingProps<
+  M extends LayerStrucType | null = LayerStrucType
+> {
   model: M;
 }
 
@@ -26,17 +29,21 @@ function Setting() {
   const { activedLayers, isMultiple } = magic;
 
   const getSetingRender = () => {
-    if (activedLayers.length === 0) return <CanvasSetting />;
+    if (activedLayers.length === 0) return <CanvasSetting model={null} />;
 
     /** 选中多个图层 */
     if (isMultiple) {
       return <div>选择多个组件</div>;
     }
     const layer = activedLayers[0];
-    const LayerSetting = SettingMap[layer.type];
+
+    const LayerSetting = SettingMap[layer.type] as ComponentType<
+      SettingProps<LayerStrucType>
+    >;
+
     if (!LayerSetting) return null;
 
-    return <LayerSetting />;
+    return <LayerSetting model={layer} />;
   };
 
   return <div className={Style.setting}>{getSetingRender()}</div>;

@@ -134,6 +134,15 @@ export default class MagicStruc implements MagicModel {
   }
 
   /**
+   * 移除激活组件
+   *  */
+  public removeActivedLayer(layer: LayerStrucType) {
+    const index = this.activedLayers.findIndex(item => item.id === layer.id);
+    if (index < 0) return;
+    this.activedLayers.splice(index, 1);
+  }
+
+  /**
    * 高亮组件
    */
   public hoverLayer(layer: LayerStrucType | null) {

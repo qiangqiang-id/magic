@@ -1,4 +1,4 @@
-import { LayerType } from '@/constants/LayerTypeEnum';
+import { LayerTypeEnum } from '@/constants/LayerTypeEnum';
 import LayerStruc, {
   TextStruc,
   ImageStruc,
@@ -12,12 +12,12 @@ const LayerTypeMapStruc: Record<
   LayerModel.LayerType,
   typeof LayerStruc | null
 > = {
-  [LayerType.TEXT]: TextStruc,
-  [LayerType.BACKGROUND]: BackgroundStruc,
-  [LayerType.IMAGE]: ImageStruc,
-  [LayerType.GROUP]: GroupStruc,
-  [LayerType.SHAPE]: ShapeStruc,
-  [LayerType.UNKNOWN]: null,
+  [LayerTypeEnum.TEXT]: TextStruc,
+  [LayerTypeEnum.BACKGROUND]: BackgroundStruc,
+  [LayerTypeEnum.IMAGE]: ImageStruc,
+  [LayerTypeEnum.GROUP]: GroupStruc,
+  [LayerTypeEnum.SHAPE]: ShapeStruc,
+  [LayerTypeEnum.UNKNOWN]: null,
 };
 
 export default function CreateLayerStruc<T extends LayerModel.LayerType>(

@@ -1,6 +1,6 @@
 import { ComponentType, CSSProperties } from 'react';
 import { observer } from 'mobx-react';
-import { LayerType } from '@/constants/LayerTypeEnum';
+import { LayerTypeEnum } from '@/constants/LayerTypeEnum';
 import { LayerStrucType } from '@/types/model';
 import Image from './Image';
 import Text from './Text';
@@ -14,11 +14,11 @@ import { moveHandle } from '@/utils/move';
 import { NodeNameplate } from '@/constants/NodeNamePlate';
 
 const LayerCmpMap = {
-  [LayerType.BACKGROUND]: Back,
-  [LayerType.GROUP]: Group,
-  [LayerType.TEXT]: Text,
-  [LayerType.IMAGE]: Image,
-  [LayerType.SHAPE]: Shape,
+  [LayerTypeEnum.BACKGROUND]: Back,
+  [LayerTypeEnum.GROUP]: Group,
+  [LayerTypeEnum.TEXT]: Text,
+  [LayerTypeEnum.IMAGE]: Image,
+  [LayerTypeEnum.SHAPE]: Shape,
 };
 
 export interface LayerProps<M> {

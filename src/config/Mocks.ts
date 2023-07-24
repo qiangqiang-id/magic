@@ -3,7 +3,7 @@ import {
   getImageDefaultValues,
   getTextDefaultValues,
 } from './DefaultValues';
-import { LayerType } from '@/constants/LayerTypeEnum';
+import { LayerTypeEnum } from '@/constants/LayerTypeEnum';
 import { TEMPLATE_HEIGHT, TEMPLATE_WIDTH } from '@/constants/TemplateSize';
 import { randomString } from '@/utils/random';
 
@@ -19,7 +19,7 @@ const backLayer: LayerModel.Background = {
 const layer1: LayerModel.Image = {
   ...getImageDefaultValues(),
   name: '第一张图片',
-  type: LayerType.IMAGE,
+  type: LayerTypeEnum.IMAGE,
   width: 800,
   height: 450,
   x: 550,
@@ -37,7 +37,7 @@ const layer1: LayerModel.Image = {
 const layer2: LayerModel.Image = {
   ...getImageDefaultValues(),
   name: '第二张图片',
-  type: LayerType.IMAGE,
+  type: LayerTypeEnum.IMAGE,
   width: 800,
   height: 450,
   x: 550,

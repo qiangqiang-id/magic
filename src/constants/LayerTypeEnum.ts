@@ -1,4 +1,4 @@
-export enum LayerType {
+export enum LayerTypeEnum {
   BACKGROUND = 'Background',
   TEXT = 'Text',
   IMAGE = 'Image',

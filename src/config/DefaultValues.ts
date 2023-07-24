@@ -1,4 +1,4 @@
-import { LayerType } from '@/constants/LayerTypeEnum';
+import { LayerTypeEnum } from '@/constants/LayerTypeEnum';
 import { TEMPLATE_HEIGHT, TEMPLATE_WIDTH } from '@/constants/TemplateSize';
 import { randomString } from '@/utils/random';
 
@@ -35,7 +35,7 @@ export function getLayerDefaultValues(): Required<LayerModel.Base> {
   return {
     id: randomString(),
     name: '',
-    type: LayerType.UNKNOWN,
+    type: LayerTypeEnum.UNKNOWN,
     x: 0,
     y: 0,
     width: 0,
@@ -61,7 +61,7 @@ export function getLayerDefaultValues(): Required<LayerModel.Base> {
 export function getImageDefaultValues(): Required<LayerModel.Image> {
   return {
     ...getLayerDefaultValues(),
-    type: LayerType.IMAGE,
+    type: LayerTypeEnum.IMAGE,
     url: '',
     originalHeight: 0,
     originalWidth: 0,
@@ -72,7 +72,7 @@ export function getImageDefaultValues(): Required<LayerModel.Image> {
 export function getBackDefaultValues(): Required<LayerModel.Background> {
   return {
     ...getLayerDefaultValues(),
-    type: LayerType.BACKGROUND,
+    type: LayerTypeEnum.BACKGROUND,
     isLock: true,
     fillType: 'Color',
     url: '',
@@ -84,7 +84,7 @@ export function getBackDefaultValues(): Required<LayerModel.Background> {
 export function getTextDefaultValues(): Required<LayerModel.Text> {
   return {
     ...getLayerDefaultValues(),
-    type: LayerType.TEXT,
+    type: LayerTypeEnum.TEXT,
     anchor: { x: 0, y: 0 },
     content: '双击编辑文字',
     charAttrs: [],
@@ -113,7 +113,7 @@ export function getTextDefaultValues(): Required<LayerModel.Text> {
 export function getShapeDefaultValues(): Required<LayerModel.Shape> {
   return {
     ...getLayerDefaultValues(),
-    type: LayerType.SHAPE,
+    type: LayerTypeEnum.SHAPE,
     shapeType: 'rect',
     rx: 0,
     ry: 0,
