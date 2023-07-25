@@ -37,6 +37,15 @@ export default class GroupStruc extends LayerStruc implements LayerModel.Group {
   }
 
   /**
+   * 复制组件
+   * @param layer选中的图层
+   */
+  copyLayer(layer: LayerStrucType) {
+    const newLayer = layer.clone();
+    this.layers?.push(newLayer);
+  }
+
+  /**
    * 获取组件的下标
    * @param layer 选中的图层
    * @returns {number} 组件的位置

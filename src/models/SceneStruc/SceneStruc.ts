@@ -9,6 +9,7 @@ import {
   createTextData,
   createShapeData,
 } from '@/core/FormatData/Layer';
+import { COPY_OFFSET_RATIO } from '@/constants/LayerRatio';
 
 export default class SceneStruc implements SceneModel {
   id!: string;
@@ -154,6 +155,20 @@ export default class SceneStruc implements SceneModel {
     magic.removeActivedLayer(layer);
     this.layers?.splice(index, 1);
     layer.scene = null;
+  }
+
+  /**
+   * 复制组件
+   * @param layer选中的图层
+   */
+  copyLayer(layer: LayerStrucType) {
+    const { width = 0, height = 0 } = this;
+    const newLayer = layer.clone();
+    newLayer.x = (newLayer.x || 0) + COPY_OFFSET_RATIO * width;
+    newLayer.y = (newLayer.y || 0) + COPY_OFFSET_RATIO * height;
+    newLayer.actived = false;
+    this.layers?.push(newLayer);
+    magic.activeLayer(newLayer);
   }
 
   /**

@@ -13,6 +13,14 @@ function LayerBaseSetting(props: LayerBaseSettingProps) {
     model.remove();
   };
 
+  const handleCopy = () => {
+    model.copy();
+  };
+
+  const handleFlip = () => {
+    model.flipX();
+  };
+
   return (
     <div>
       <i className={cls('iconfont icon-left-layer', Style.icon_item)} />
@@ -20,8 +28,14 @@ function LayerBaseSetting(props: LayerBaseSettingProps) {
         className={cls('iconfont icon-del', Style.icon_item)}
         onClick={handleRemove}
       />
-      <i className={cls('iconfont icon-copy', Style.icon_item)} />
-      <i className={cls('iconfont icon-symmetric', Style.icon_item)} />
+      <i
+        className={cls('iconfont icon-copy', Style.icon_item)}
+        onClick={handleCopy}
+      />
+      <i
+        className={cls('iconfont icon-symmetric', Style.icon_item)}
+        onClick={handleFlip}
+      />
     </div>
   );
 }

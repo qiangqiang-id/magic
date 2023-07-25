@@ -142,13 +142,17 @@ export function getMaskStyle<M extends LayerStrucType = LayerStrucType>(
   model: M,
   zoomLevel = 1
 ): CSSProperties {
-  const { mask, width = 0, height = 0 } = model;
+  const { mask, width = 0, height = 0, scale } = model;
   if (!mask) return {};
   const { x, y } = mask;
+
+  const { x: scaleX = 1, y: scaleY = 1 } = scale || {};
 
   return {
     width: width * zoomLevel,
     height: height * zoomLevel,
-    transform: `translate(${-x * zoomLevel}px,${-y * zoomLevel}px)`,
+    transform: `translate(${-x * zoomLevel}px,${
+      -y * zoomLevel
+    }px) scale(${scaleX},${scaleY})`,
   };
 }

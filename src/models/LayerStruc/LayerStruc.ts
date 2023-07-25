@@ -1,5 +1,5 @@
 import { makeObservable, observable, computed, action } from 'mobx';
-import { clone } from 'lodash';
+import { cloneDeep } from 'lodash';
 import GroupStruc from './GroupStruc';
 import SceneStruc from '../SceneStruc';
 import { LayerTypeEnum } from '@/constants/LayerTypeEnum';
@@ -7,6 +7,7 @@ import { filterSameData } from '@/utils/filterData';
 import { randomString } from '@/utils/random';
 import CreateLayerStruc from '../FactoryStruc/LayerFactory';
 import { LayerStrucType } from '@/types/model';
+import { ScaleDefault } from '@/config/DefaultValues';
 
 export default class LayerStruc implements LayerModel.Base {
   id!: string;
@@ -147,8 +148,7 @@ export default class LayerStruc implements LayerModel.Base {
    * 复制
    */
   clone(): LayerStrucType {
-    /** 通用复制方法， 子类将会具体实现 */
-    const model = clone(this.model());
+    const model = cloneDeep(this.model());
     model.id = randomString();
     return CreateLayerStruc(model.type, model, this.getParent());
   }
@@ -158,7 +158,22 @@ export default class LayerStruc implements LayerModel.Base {
    */
   remove() {
     const parent = this.getParent();
-    parent && parent.removeLayer(this);
+    parent?.removeLayer(this);
+  }
+
+  /**
+   * 复制
+   */
+  copy() {
+    const parent = this.getParent();
+    parent?.copyLayer(this);
+  }
+
+  /** 翻转X */
+  flipX() {
+    const scale = { ...ScaleDefault, ...this.scale };
+    scale.x *= -1;
+    this.update({ scale });
   }
 
   /**
