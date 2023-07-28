@@ -1,4 +1,4 @@
-import { ReactNode, useState, useEffect, MouseEvent } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import { Popover, PopoverProps } from 'antd';
 import cls from 'classnames';
 
@@ -38,7 +38,7 @@ export default function MenuPopover(props: MenuPopoverProps) {
     setVisible(open);
   }, [open]);
 
-  const handleClickMenu = (e: MouseEvent, action: Action) => {
+  const handleClickMenu = (action: Action) => {
     if (action.disable) return;
     action.handle?.();
     setVisible(false);
@@ -59,8 +59,8 @@ export default function MenuPopover(props: MenuPopoverProps) {
           className={cls(Style.popover_item, itemClassName, {
             [Style.disable]: action.disable,
           })}
-          onClick={e => {
-            handleClickMenu(e, action);
+          onClick={() => {
+            handleClickMenu(action);
           }}
         >
           {action.icon && (
