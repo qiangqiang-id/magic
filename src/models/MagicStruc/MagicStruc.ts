@@ -2,7 +2,7 @@ import { makeObservable, observable, computed, action } from 'mobx';
 import SceneStruc from '../SceneStruc';
 import { LayerStrucType } from '@/types/model';
 import { createSceneData } from '@/core/FormatData/Scene';
-import { createScene } from '../FactoryStruc/SceneFactory';
+import { CreateScene } from '../FactoryStruc/SceneFactory';
 
 export default class MagicStruc implements MagicModel {
   id!: string | null;
@@ -22,7 +22,7 @@ export default class MagicStruc implements MagicModel {
   hoveredLayer: LayerStrucType | null = null;
 
   constructor() {
-    makeObservable<this, 'handleAddScene'>(this, {
+    makeObservable<this, 'handleAddScene' | 'handleRemoveScene'>(this, {
       name: observable,
       scenes: observable,
       activedScene: observable,
@@ -37,6 +37,7 @@ export default class MagicStruc implements MagicModel {
       activeScene: action,
       handleAddScene: action,
       hoverLayer: action,
+      handleRemoveScene: action,
     });
   }
 
@@ -114,10 +115,10 @@ export default class MagicStruc implements MagicModel {
     return this.scenes.findIndex(sc => sc.id === id);
   }
 
-  public addScene(data?: Partial<SceneModel>) {
+  public addScene(data?: Partial<SceneModel> | null, index?: number) {
     const sceneData = createSceneData(data);
-    const scene = createScene(sceneData);
-    this.handleAddScene(scene);
+    const scene = CreateScene(sceneData);
+    this.handleAddScene(scene, index);
     this.activeScene(scene);
   }
 
@@ -147,6 +148,40 @@ export default class MagicStruc implements MagicModel {
    */
   public hoverLayer(layer: LayerStrucType | null) {
     this.hoveredLayer = layer;
+  }
+
+  /**
+   * 删除场景
+   * @param scene 当前场景
+   */
+  public removeScene(scene?: SceneStruc) {
+    if (!scene) return;
+    this.handleRemoveScene(scene);
+  }
+
+  protected handleRemoveScene(scene: SceneStruc) {
+    const index = this.scenes.findIndex(s => s.id === scene.id);
+    if (index === -1) return;
+    this.scenes.splice(index, 1);
+    // 删除的恰好是选中的场景，则选中下一个场景
+    if (scene.id === this.activedScene?.id) {
+      const nextScene =
+        this.scenes[index] || this.scenes[this.scenes.length - 1];
+      nextScene && this.activeScene(nextScene);
+    }
+  }
+
+  /**
+   * 复制场景
+   * @param scene 场景
+   * @param index 复制插入的位置
+   */
+  public copyScene(scene: SceneStruc) {
+    const index = this.getSceneIndex(scene);
+    const newScene = scene.clone();
+    /** 加入到当前场景的后一位 */
+    this.handleAddScene(newScene, index + 1);
+    this.activeScene(newScene);
   }
 
   /** 是否多选 */

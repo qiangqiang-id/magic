@@ -20,14 +20,9 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { magic } from '@/store';
 import SceneStruc from '@/models/SceneStruc';
-import Scene from './Scene/Scene';
+import Scene, { SceneProps } from './Scene/Scene';
 
 import Style from './Scenes.module.less';
-
-interface SceneProps {
-  scene: SceneStruc;
-  actived: boolean;
-}
 
 function SortbleScene(props: SceneProps) {
   const { scene } = props;
@@ -83,6 +78,20 @@ function Scenes() {
     setDragScene(null);
   };
 
+  /** 增加空白场景 */
+  const addEmptyScene = (i?: number) => {
+    const index = typeof i === 'number' ? i + 1 : scenes.length;
+    magic.addScene(null, index);
+  };
+
+  const removeScene = (scene: SceneStruc) => {
+    magic.removeScene(scene);
+  };
+
+  const copyScene = (scene: SceneStruc) => {
+    magic.copyScene(scene);
+  };
+
   return (
     <div className={Style.scenes}>
       <div className={Style.scenes_content}>
@@ -96,11 +105,15 @@ function Scenes() {
             items={scenes.map(scene => scene.id)}
             strategy={horizontalListSortingStrategy}
           >
-            {scenes.map(scene => (
+            {scenes.map((scene, index) => (
               <SortbleScene
                 key={scene.id}
                 scene={scene}
+                disableRemove={scenes.length <= 1}
                 actived={activedScene?.id === scene.id}
+                addEmptyScene={() => addEmptyScene(index)}
+                removeScene={() => removeScene(scene)}
+                copyScene={() => copyScene(scene)}
               />
             ))}
           </SortableContext>
@@ -115,7 +128,7 @@ function Scenes() {
           </DragOverlay>
         </DndContext>
 
-        <div className={Style.add_item} onClick={() => magic.addScene()}>
+        <div className={Style.add_item} onClick={() => addEmptyScene()}>
           <PlusOutlined
             style={{
               fontSize: 25,

@@ -1,4 +1,5 @@
 import { makeObservable, observable, action, computed } from 'mobx';
+import { cloneDeep } from 'lodash';
 import { LayerStrucType } from '@/types/model';
 import { getSceneDefaultValues } from '@/config/DefaultValues';
 import { deepMerge } from '@/utils/mergeData';
@@ -9,7 +10,9 @@ import {
   createTextData,
   createShapeData,
 } from '@/core/FormatData/Layer';
-import { COPY_OFFSET_RATIO } from '@/constants/LayerRatio';
+
+import { randomString } from '@/utils/random';
+import { CreateScene } from '../FactoryStruc/SceneFactory';
 
 export default class SceneStruc implements SceneModel {
   id!: string;
@@ -66,6 +69,16 @@ export default class SceneStruc implements SceneModel {
       height: this.height,
       actived: this.actived,
     };
+  }
+
+  /**
+   * 复制
+   */
+  clone() {
+    const model = cloneDeep(this.model());
+    model.id = randomString();
+    model.actived = false;
+    return CreateScene(model);
   }
 
   update(data: Partial<SceneModel>) {
@@ -162,11 +175,7 @@ export default class SceneStruc implements SceneModel {
    * @param layer选中的图层
    */
   copyLayer(layer: LayerStrucType) {
-    const { width = 0, height = 0 } = this;
     const newLayer = layer.clone();
-    newLayer.x = (newLayer.x || 0) + COPY_OFFSET_RATIO * width;
-    newLayer.y = (newLayer.y || 0) + COPY_OFFSET_RATIO * height;
-    newLayer.actived = false;
     this.layers?.push(newLayer);
     magic.activeLayer(newLayer);
   }

@@ -1,0 +1,52 @@
+.menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 24px;
+  height: 14px;
+  padding: 0 4px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 9px;
+  cursor: default;
+
+  .point {
+    width: 2.5px;
+    height: 2.5px;
+    background-color: #d4d4d4;
+    border-radius: 100%;
+  }
+
+  &:hover {
+    background-color: #fd6b11;
+  }
+}
+
+.popover_content {
+  padding: 8px 0;
+
+  .popover_item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 102px;
+    height: 48px;
+    text-align: center;
+    background: #fff;
+    cursor: pointer;
+
+    &:hover {
+      background: #fafafa;
+    }
+  }
+
+  .popover_item_icon {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+  }
+
+  .disable {
+    cursor: no-drop;
+    opacity: 0.5;
+  }
+}

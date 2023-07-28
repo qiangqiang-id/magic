@@ -1,7 +1,7 @@
 import { makeObservable, observable } from 'mobx';
 import MagicStruc from '@/models/MagicStruc';
 import { getCreateMagicDefaultValues } from '@/config/DefaultValues';
-import { createScene } from '@/models/FactoryStruc/SceneFactory';
+import { CreateScene } from '@/models/FactoryStruc/SceneFactory';
 import { product1 } from '@/config/Mocks';
 import isEquals from '@/utils/equals';
 
@@ -29,13 +29,13 @@ export default class MagicStore extends MagicStruc {
   }
 
   private initData(data: MagicModel) {
-    const scenes = data.scenes.map(scene => createScene(scene));
+    const scenes = data.scenes.map(scene => CreateScene(scene));
     this.update({ ...data, scenes });
     this.activeScene(scenes[0] || null);
   }
 
   private create() {
-    const scene = createScene();
+    const scene = CreateScene();
     this.update({ ...getCreateMagicDefaultValues(), scenes: [scene] });
     this.activeScene(scene);
   }

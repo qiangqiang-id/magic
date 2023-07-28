@@ -184,9 +184,12 @@ function EditorControl(props: EditorControlProps) {
 
   const rectInfo = getRectInfo();
 
-  const previewSize = `宽度:${Math.round(rectInfo.width)} 高度:${Math.round(
-    rectInfo.height
-  )}`;
+  const previewSize = useMemo(() => {
+    const { width, height, mask } = rectInfo;
+    const w = mask?.width || width;
+    const h = mask?.height || height;
+    return `宽度:${Math.round(w)} 高度:${Math.round(h)}`;
+  }, [rectInfo]);
 
   return (
     <>

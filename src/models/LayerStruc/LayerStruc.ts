@@ -8,6 +8,7 @@ import { randomString } from '@/utils/random';
 import CreateLayerStruc from '../FactoryStruc/LayerFactory';
 import { LayerStrucType } from '@/types/model';
 import { ScaleDefault } from '@/config/DefaultValues';
+import { COPY_OFFSET_RATIO } from '@/constants/LayerRatio';
 
 export default class LayerStruc implements LayerModel.Base {
   id!: string;
@@ -148,8 +149,13 @@ export default class LayerStruc implements LayerModel.Base {
    * 复制
    */
   clone(): LayerStrucType {
+    const { width: parentWidth = 0, height: parentHeight = 0 } =
+      this.getParent() ?? {};
     const model = cloneDeep(this.model());
     model.id = randomString();
+    model.x = (model.x || 0) + COPY_OFFSET_RATIO * parentWidth;
+    model.y = (model.y || 0) + COPY_OFFSET_RATIO * parentHeight;
+    model.actived = false;
     return CreateLayerStruc(model.type, model, this.getParent());
   }
 

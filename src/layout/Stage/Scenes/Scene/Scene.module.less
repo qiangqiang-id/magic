@@ -2,6 +2,12 @@
   position: relative;
   margin-right: 10px;
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.08), 0 4px 12px 0 rgba(0, 0, 0, 0.04);
+
+  &:hover {
+    .menu_popover {
+      visibility: visible;
+    }
+  }
 }
 
 .scene_renderer_item {
@@ -24,4 +30,11 @@
     border-radius: 4px;
     content: '';
   }
+}
+
+.menu_popover {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  visibility: hidden;
 }
