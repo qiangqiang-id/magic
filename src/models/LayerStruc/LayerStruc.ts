@@ -175,11 +175,27 @@ export default class LayerStruc implements LayerModel.Base {
     parent?.copyLayer(this);
   }
 
-  /** 翻转X */
+  /**
+   * 翻转X
+   *  */
   flipX() {
     const scale = { ...ScaleDefault, ...this.scale };
     scale.x *= -1;
     this.update({ scale });
+  }
+
+  /**
+   * 锁
+   *  */
+  lock() {
+    this.update({ isLock: true });
+  }
+
+  /**
+   * 解锁
+   *  */
+  unlock() {
+    this.update({ isLock: false });
   }
 
   /**

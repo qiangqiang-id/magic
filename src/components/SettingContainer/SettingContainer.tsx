@@ -2,7 +2,7 @@ import Style from './SettingContainer.module.less';
 
 interface SettingContainerProps {
   title: string;
-  children?: React.ReactElement[];
+  children?: React.ReactElement[] | React.ReactElement;
 }
 
 export default function SettingContainer(props: SettingContainerProps) {

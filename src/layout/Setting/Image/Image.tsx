@@ -1,3 +1,4 @@
+import { Button } from 'antd';
 import SettingContainer from '@/components/SettingContainer';
 import LayerBaseSetting from '@/components/LayerBaseSetting';
 import { ImageStruc } from '@/models/LayerStruc';
@@ -11,9 +12,11 @@ export default function Image(props: ImageProps) {
 
   return (
     <SettingContainer title="图片">
-      <div>
-        <LayerBaseSetting model={model} />
-      </div>
+      <LayerBaseSetting model={model} />
+
+      <Button block type="primary" className="setting-row">
+        替换图片
+      </Button>
     </SettingContainer>
   );
 }

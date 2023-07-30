@@ -9,6 +9,7 @@ interface LayerBaseSettingProps {
 }
 function LayerBaseSetting(props: LayerBaseSettingProps) {
   const { model } = props;
+  const { isLock } = model;
 
   const handleRemove = () => {
     model.remove();
@@ -22,8 +23,12 @@ function LayerBaseSetting(props: LayerBaseSettingProps) {
     model.flipX();
   };
 
+  const handleLock = () => {
+    isLock ? model.unlock() : model.lock();
+  };
+
   return (
-    <div>
+    <div className={cls(Style.layer_base_setting, 'setting-row')}>
       <Tooltip title="图层顺序">
         <i className={cls('iconfont icon-left-layer', Style.icon_item)} />
       </Tooltip>
@@ -46,6 +51,18 @@ function LayerBaseSetting(props: LayerBaseSettingProps) {
         <i
           className={cls('iconfont icon-symmetric', Style.icon_item)}
           onClick={handleFlip}
+        />
+      </Tooltip>
+
+      <Tooltip title={isLock ? '解锁' : '锁定'}>
+        <i
+          style={{ fontSize: 24 }}
+          className={cls(
+            'iconfont',
+            isLock ? 'icon-linshimima' : 'icon-kaisuo',
+            Style.icon_item
+          )}
+          onClick={handleLock}
         />
       </Tooltip>
     </div>
