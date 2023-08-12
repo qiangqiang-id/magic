@@ -13,7 +13,7 @@ import {
 
 import { randomString } from '@/utils/random';
 import { CreateScene } from '../FactoryStruc/SceneFactory';
-import { BackgroundStruc } from '../LayerStruc';
+import LayerStruc, { BackgroundStruc } from '../LayerStruc';
 
 export default class SceneStruc implements SceneModel {
   id!: string;
@@ -154,6 +154,11 @@ export default class SceneStruc implements SceneModel {
     magic.activeLayer(layer);
   }
 
+  /**
+   *  添加图层
+   * @param layer 图层
+   * @param index 添加的位置
+   */
   protected addLayer(layer: LayerStrucType, index?: number) {
     index !== undefined
       ? this.layers?.splice(index, 0, layer)
@@ -164,7 +169,7 @@ export default class SceneStruc implements SceneModel {
    * 删除组件
    * @param layer选中的图层
    */
-  removeLayer(layer: LayerStrucType) {
+  removeLayer(layer: LayerStruc) {
     const index = this.getLayerIndex(layer);
     if (index < 0) return;
     magic.removeActivedLayer(layer);
@@ -176,7 +181,7 @@ export default class SceneStruc implements SceneModel {
    * 复制组件
    * @param layer选中的图层
    */
-  copyLayer(layer: LayerStrucType) {
+  copyLayer(layer: LayerStruc) {
     const newLayer = layer.clone();
     this.layers?.push(newLayer);
     magic.activeLayer(newLayer);
@@ -187,7 +192,7 @@ export default class SceneStruc implements SceneModel {
    * @param layer 选中的图层
    * @returns {number} 组件的位置
    */
-  getLayerIndex(layer: LayerStrucType): number {
+  getLayerIndex(layer: LayerStruc): number {
     return this.layers?.findIndex(item => item.id === layer.id) || -1;
   }
 

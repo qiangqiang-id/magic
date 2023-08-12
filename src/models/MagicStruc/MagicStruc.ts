@@ -3,6 +3,7 @@ import SceneStruc from '../SceneStruc';
 import { LayerStrucType } from '@/types/model';
 import { createSceneData } from '@/core/FormatData/Scene';
 import { CreateScene } from '../FactoryStruc/SceneFactory';
+import LayerStruc from '../LayerStruc';
 
 export default class MagicStruc implements MagicModel {
   id!: string | null;
@@ -137,7 +138,7 @@ export default class MagicStruc implements MagicModel {
   /**
    * 移除激活组件
    *  */
-  public removeActivedLayer(layer: LayerStrucType) {
+  public removeActivedLayer(layer: LayerStruc) {
     const index = this.activedLayers.findIndex(item => item.id === layer.id);
     if (index < 0) return;
     this.activedLayers.splice(index, 1);

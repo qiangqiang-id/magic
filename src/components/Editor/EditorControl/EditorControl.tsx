@@ -179,7 +179,7 @@ function EditorControl(props: EditorControlProps) {
   };
 
   const onDoubleClick = () => {
-    if (model.isText) (model as TextStruc).onEdit();
+    if (model.isText && !model.isLock) (model as TextStruc).onEdit();
   };
 
   const rectInfo = getRectInfo();

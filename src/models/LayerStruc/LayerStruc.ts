@@ -1,5 +1,6 @@
 import { makeObservable, observable, computed, action } from 'mobx';
 import { cloneDeep } from 'lodash';
+import { pointToTopLeft } from '@p/EditorTools';
 import GroupStruc from './GroupStruc';
 import SceneStruc from '../SceneStruc';
 import { LayerTypeEnum } from '@/constants/LayerTypeEnum';
@@ -203,6 +204,15 @@ export default class LayerStruc implements LayerModel.Base {
    */
   getParent() {
     return this.scene || this.group;
+  }
+
+  /**
+   * 获取左上角位置
+   * 因为位置储存的是基于锚点的位置，不能进行计算
+   *  */
+  getPointAtTopLeft() {
+    const { width = 0, height = 0, x = 0, y = 0, anchor } = this;
+    return pointToTopLeft({ width, height, x, y, anchor });
   }
 
   /**

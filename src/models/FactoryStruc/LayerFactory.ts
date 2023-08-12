@@ -7,6 +7,7 @@ import LayerStruc, {
   BackgroundStruc,
 } from '../LayerStruc';
 import SceneStruc from '../SceneStruc';
+import { LayerStrucType } from '@/types/model';
 
 const LayerTypeMapStruc: Record<
   LayerModel.LayerType,
@@ -24,7 +25,7 @@ export default function CreateLayerStruc<T extends LayerModel.LayerType>(
   type: T,
   data?: Partial<LayerModel.Layer>,
   parent?: SceneStruc | GroupStruc | null
-) {
+): LayerStrucType {
   const Structure = LayerTypeMapStruc[type];
   if (!Structure) throw new Error(`${type}组件暂未实现`);
 
@@ -39,5 +40,5 @@ export default function CreateLayerStruc<T extends LayerModel.LayerType>(
     structure.group = null;
   }
 
-  return structure;
+  return structure as LayerStrucType;
 }
