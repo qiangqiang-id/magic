@@ -194,7 +194,10 @@ function EditorControl(props: EditorControlProps) {
   return (
     <>
       <EditorBox
-        className={cls({ [Style.pointer_events_none]: model.isBack })}
+        className={cls({
+          [Style.pointer_events_none]: model.isBack,
+          [Style.editor_control]: !model.isLock,
+        })}
         points={points}
         scaleType={scaleType}
         isShowPoint={!OS.isMoveing && !model.isLock}

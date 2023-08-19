@@ -13,7 +13,7 @@ export default class MaskScale {
   private readonly anchor: Coordinate;
 
   /** 翻转 */
-  private readonly flip: Coordinate;
+  private readonly scale: Coordinate;
 
   /** 蒙层数据 */
   private readonly startMaskData: BaseRectData;
@@ -35,11 +35,11 @@ export default class MaskScale {
     pointType: POINT_TYPE,
     options: ScaleHandlerOptions
   ) {
-    const { width, height, mask, rotate = 0, anchor, flip } = rectData;
+    const { width, height, mask, rotate = 0, anchor, scale } = rectData;
     this.angle = rotate;
     this.pointType = pointType;
     this.anchor = anchor || { x: 0.5, y: 0.5 };
-    this.flip = flip || { x: 1, y: 1 };
+    this.scale = scale || { x: 1, y: 1 };
     this.startMaskData = mask || { x: 0, y: 0, width, height };
     this.startRectData = rectData;
     this.startRectPositionForRotated = this.getStartRectPositionForRotated();
@@ -154,7 +154,7 @@ export default class MaskScale {
       newRectPosition
     );
 
-    const { x: flipX, y: flipY } = this.flip;
+    const { x: scaleX, y: scaleY } = this.scale;
 
     if (isMaskInRect) {
       /** 滑动的过快，会导致更新不过来，手动回到原始大小 */
@@ -166,7 +166,7 @@ export default class MaskScale {
         y: newRectPosition.y,
       };
 
-      if (flipX < 0) {
+      if (scaleX < 0) {
         // eslint-disable-next-line default-case
         switch (this.pointType) {
           case POINT_TYPE.RIGHT_CENTER: {
@@ -183,7 +183,7 @@ export default class MaskScale {
           }
         }
       }
-      if (flipY < 0) {
+      if (scaleY < 0) {
         // eslint-disable-next-line default-case
         switch (this.pointType) {
           case POINT_TYPE.BOTTOM_CENTER: {
@@ -207,7 +207,7 @@ export default class MaskScale {
         case POINT_TYPE.RIGHT_CENTER: {
           /** mask 和 rect 同比例缩放，弥补宽度 */
           const maskWidthDiff =
-            flipX > 0
+            scaleX > 0
               ? startRectRightBottom.x - startMaskRigthBottom.x
               : startMaskLeftTop.x - startRectLeftTop.x;
           const startWidthRate = startRectW / (startMaskW + maskWidthDiff);
@@ -219,7 +219,7 @@ export default class MaskScale {
           const rateW = width / startRectW;
           const maskStartX = startMaskX - newRectPosition.x;
           const diffMaskX =
-            flipX > 0
+            scaleX > 0
               ? startMaskX * rateW - startMaskX
               : startMaskX - maskStartX - newMaskDataInEditArea.x;
 
@@ -236,7 +236,7 @@ export default class MaskScale {
 
         case POINT_TYPE.LEFT_CENTER: {
           const maskWidthDiff =
-            flipX > 0
+            scaleX > 0
               ? startMaskLeftTop.x - startRectLeftTop.x
               : startRectRightBottom.x - startMaskRigthBottom.x;
           const startWidthRate = startRectW / (startMaskW + maskWidthDiff);
@@ -254,7 +254,7 @@ export default class MaskScale {
             startMaskCenterInEditArea.x -
             (startRectRightBottom.x - startMaskCenterInEditArea.x);
           const diffMaskX =
-            flipX > 0
+            scaleX > 0
               ? startMaskX - maskStartX - newMaskDataInEditArea.x
               : physicsX - newMaskDataInEditArea.x + diff;
           const anchorY = startMaskCenterInRect.y / startRectH;
@@ -269,7 +269,7 @@ export default class MaskScale {
         }
         case POINT_TYPE.BOTTOM_CENTER: {
           const maskHeightDiff =
-            flipY > 0
+            scaleY > 0
               ? startRectRightBottom.y - startMaskRigthBottom.y
               : startMaskLeftTop.y - startRectLeftTop.y;
           const startHeightRate = startRectH / (startMaskH + maskHeightDiff);
@@ -282,7 +282,7 @@ export default class MaskScale {
           const rateW = height / startRectH;
           const maskStartY = startMaskY - newRectPosition.y;
           const diffMaskY =
-            flipY > 0
+            scaleY > 0
               ? startMaskY * rateW - startMaskY
               : startMaskY - maskStartY - newMaskDataInEditArea.y;
 
@@ -300,7 +300,7 @@ export default class MaskScale {
         // case POINT_TYPE.TOP_CENTER:
         default: {
           const maskHeightDiff =
-            flipY > 0
+            scaleY > 0
               ? startMaskLeftTop.y - startRectLeftTop.y
               : startRectRightBottom.y - startMaskRigthBottom.y;
           const startHeightRate = startRectH / (startMaskH + maskHeightDiff);
@@ -316,7 +316,7 @@ export default class MaskScale {
             startMaskCenterInEditArea.y -
             (startRectRightBottom.y - startMaskCenterInEditArea.y);
           const diffMaskY =
-            flipY > 0
+            scaleY > 0
               ? startMaskY - maskStartY - newMaskDataInEditArea.y
               : physicsY - newMaskDataInEditArea.y + diff;
 
@@ -524,14 +524,14 @@ export default class MaskScale {
         this.startMaskData.y +
         this.startMaskData.height / 2,
     };
-    const { x: flipX, y: flipY } = this.flip;
+    const { x: scaleX, y: scaleY } = this.scale;
     /** 如果发生翻转 计算真实的物理位置 */
-    if (flipX < 0) {
+    if (scaleX < 0) {
       data.rectX =
         startMaskCenter.x -
         (newRectPosition.x + this.startRectData.width - startMaskCenter.x);
     }
-    if (flipY < 0) {
+    if (scaleY < 0) {
       data.rectY =
         startMaskCenter.y -
         (newRectPosition.y + this.startRectData.height - startMaskCenter.y);

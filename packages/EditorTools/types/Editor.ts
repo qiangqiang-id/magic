@@ -18,7 +18,7 @@ export interface RectData extends BaseRectData {
   /** 锚点数据 */
   anchor?: Coordinate;
   /** 翻转数据 */
-  flip?: Coordinate;
+  scale?: Coordinate;
   /** 旋转角度 */
   rotate?: number;
 }

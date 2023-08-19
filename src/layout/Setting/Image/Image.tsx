@@ -1,16 +1,22 @@
+import cls from 'classnames';
+import { observer } from 'mobx-react';
 import SettingContainer from '@/components/SettingContainer';
 import LayerBaseSetting from '@/components/LayerBaseSetting';
 import UploadBtn from '@/components/UploadBtn';
 import { ImageStruc } from '@/models/LayerStruc';
 import { makeImage } from '@/utils/image';
 import { fileToBase64 } from '@/utils/file';
+import { setting } from '@/store';
 
 import { SettingProps } from '../Setting';
 
+import Style from './Image.module.less';
+
 interface ImageProps extends SettingProps<ImageStruc> {}
 
-export default function Image(props: ImageProps) {
+function Image(props: ImageProps) {
   const { model } = props;
+  const { isOpenImageCrop } = setting;
 
   const handleChange = async (files: File[]) => {
     const file = files[0];
@@ -20,6 +26,10 @@ export default function Image(props: ImageProps) {
     model.replaceUrl(url, { width, height });
   };
 
+  const onCrop = () => {
+    isOpenImageCrop ? setting.closeImageCrop() : setting.openImageCrop();
+  };
+
   return (
     <SettingContainer title="图片">
       <LayerBaseSetting model={model} />
@@ -27,8 +37,21 @@ export default function Image(props: ImageProps) {
       <UploadBtn
         onChange={handleChange}
         btnTitle="替换图片"
-        className="setting-row"
+        className={cls('setting-row', Style.replace_image_btn)}
       />
+
+      <div className={Style.feature_wrapper}>
+        <div>
+          <div className={Style.feature_item} onClick={onCrop}>
+            <i
+              className={cls('iconfont icon-image-crop', Style.feature_icon)}
+            />
+            <span className={Style.feature_name}>裁剪</span>
+          </div>
+        </div>
+      </div>
     </SettingContainer>
   );
 }
+
+export default observer(Image);

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { CSSProperties } from 'react';
 import { observer } from 'mobx-react';
 import Renderer from '@/components/Renderer';
 import Editor from '@/components/Editor';
@@ -10,22 +10,15 @@ import { NodeNameplate } from '@/constants/NodeNamePlate';
 interface CanvasProps {
   canvasWidth: number;
   canvasHeight: number;
+  style?: CSSProperties;
 }
 
 function Canvas(props: CanvasProps) {
-  const { canvasWidth, canvasHeight } = props;
+  const { canvasWidth, canvasHeight, style } = props;
 
   const { OS, magic } = useStores();
   const { activedScene, activedLayers, isMultiple } = magic;
   const { zoomLevel, magneticLines } = OS;
-
-  const canvasStyle = useMemo(
-    () => ({
-      width: canvasWidth * zoomLevel,
-      height: canvasHeight * zoomLevel,
-    }),
-    [zoomLevel]
-  );
 
   if (!activedScene || !activedScene?.layers) return null;
 
@@ -36,7 +29,7 @@ function Canvas(props: CanvasProps) {
   };
 
   return (
-    <section className={Style.canvas} style={canvasStyle}>
+    <section className={Style.canvas} style={style}>
       <div
         className={Style.renderer_wrapper}
         ref={CANVAS_REF}
