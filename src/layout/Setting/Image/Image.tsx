@@ -27,6 +27,7 @@ function Image(props: ImageProps) {
   };
 
   const onCrop = () => {
+    if (model.isLock) return;
     isOpenImageCrop ? setting.closeImageCrop() : setting.openImageCrop();
   };
 
@@ -43,7 +44,9 @@ function Image(props: ImageProps) {
       <div className={Style.feature_wrapper}>
         <div>
           <div
-            className={Style.feature_item}
+            className={cls(Style.feature_item, {
+              locked: model.isLock,
+            })}
             onClick={onCrop}
             onMouseDown={e => e.stopPropagation()}
           >

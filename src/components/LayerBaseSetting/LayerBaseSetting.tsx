@@ -12,15 +12,15 @@ function LayerBaseSetting(props: LayerBaseSettingProps) {
   const { isLock } = model;
 
   const handleRemove = () => {
-    model.remove();
+    !model.isLock && model.remove();
   };
 
   const handleCopy = () => {
-    model.copy();
+    !model.isLock && model.copy();
   };
 
   const handleFlip = () => {
-    model.flipX();
+    !model.isLock && model.flipX();
   };
 
   const handleLock = () => {
@@ -30,26 +30,36 @@ function LayerBaseSetting(props: LayerBaseSettingProps) {
   return (
     <div className={cls(Style.layer_base_setting, 'setting-row')}>
       <Tooltip title="图层顺序">
-        <i className={cls('iconfont icon-left-layer', Style.icon_item)} />
+        <i
+          className={cls('iconfont icon-left-layer', Style.icon_item, {
+            locked: isLock,
+          })}
+        />
       </Tooltip>
 
       <Tooltip title="删除">
         <i
-          className={cls('iconfont icon-del', Style.icon_item)}
+          className={cls('iconfont icon-del', Style.icon_item, {
+            locked: isLock,
+          })}
           onClick={handleRemove}
         />
       </Tooltip>
 
       <Tooltip title="复制">
         <i
-          className={cls('iconfont icon-copy', Style.icon_item)}
+          className={cls('iconfont icon-copy', Style.icon_item, {
+            locked: isLock,
+          })}
           onClick={handleCopy}
         />
       </Tooltip>
 
       <Tooltip title="翻转">
         <i
-          className={cls('iconfont icon-symmetric', Style.icon_item)}
+          className={cls('iconfont icon-symmetric', Style.icon_item, {
+            locked: isLock,
+          })}
           onClick={handleFlip}
         />
       </Tooltip>
@@ -60,7 +70,10 @@ function LayerBaseSetting(props: LayerBaseSettingProps) {
           className={cls(
             'iconfont',
             isLock ? 'icon-linshimima' : 'icon-kaisuo',
-            Style.icon_item
+            Style.icon_item,
+            {
+              [Style.locked_icon]: isLock,
+            }
           )}
           onClick={handleLock}
         />
