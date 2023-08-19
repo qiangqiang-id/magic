@@ -138,3 +138,81 @@ export function calcMaxWidthAndMaxHeight(
 
   return valuesMap[point];
 }
+
+/**
+ * 计算最终裁剪后的数据
+ * 逻辑：将rect 的坐标以 mask 锚点计算其基于画布的位置，统一锚点后，mask 和 rect 的坐标可直接加减计算mask 的相对位置、rect新的锚点。
+ * @param rectData rect 位置信息，基于画布定位
+ * @param maskData masl 位置信息，基于画布定位
+ * @returns {rectData} 矩形相关信息
+ */
+export function calcCropRectData(
+  rectData: RectData,
+  maskData: BaseRectData
+): Partial<RectData> {
+  const {
+    scale = { x: 1, y: 1 },
+    anchor = { x: 0, y: 0 },
+    x: rectX,
+    y: rectY,
+    width: rectW,
+    height: rectH,
+    rotate = 0,
+  } = rectData;
+
+  const { x: maskX, y: maskY, width: maskW, height: maskH } = maskData;
+
+  const rectAnchor = {
+    x: rectX + rectW * anchor.x,
+    y: rectY + rectH * anchor.y,
+  };
+
+  const { x: physicsX, y: physicsY } = calcPhysicsPonitByFlip(rectData);
+  /** 矩形的左上角旋转之后的物理位置 */
+  const rectRotatedPoint = calcRotatedPoint(
+    { x: physicsX, y: physicsY },
+    rectAnchor,
+    rotate
+  );
+
+  const maskAnchor = {
+    x: maskX + maskW / 2,
+    y: maskY + maskH / 2,
+  };
+
+  const newRectPoint = calcRotatedPoint(rectRotatedPoint, maskAnchor, -rotate);
+
+  /** 翻转计算 */
+  if (scale.x < 0) {
+    const right = newRectPoint.x + rectW;
+    newRectPoint.x = maskAnchor.x - (right - maskAnchor.x);
+  }
+  if (scale.y < 0) {
+    const bottom = newRectPoint.y + rectH;
+    newRectPoint.y = maskAnchor.y - (bottom - maskAnchor.y);
+  }
+
+  /** 新的mask 数据 */
+  const newMaskData = {
+    x: maskX - newRectPoint.x,
+    y: maskY - newRectPoint.y,
+    width: maskW,
+    height: maskH,
+  };
+
+  /** 新的锚点 */
+  const newAnchor = {
+    x: (maskX - newRectPoint.x + maskW / 2) / rectW,
+    y: (maskY - newRectPoint.y + maskH / 2) / rectH,
+  };
+
+  /** 将原图的坐标移至锚点位置 */
+  newRectPoint.x += newAnchor.x * rectW;
+  newRectPoint.y += newAnchor.y * rectH;
+
+  return {
+    mask: newMaskData,
+    ...newRectPoint,
+    anchor: newAnchor,
+  };
+}

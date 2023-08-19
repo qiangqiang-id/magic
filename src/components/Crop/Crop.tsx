@@ -7,12 +7,13 @@ import {
   RectData,
   ScaleHandlerOptions,
   dragAction,
+  valuesToDivide,
   valuesToMultiply,
 } from '@p/EditorTools';
-import { magic, OS } from '@/store';
+import { magic, OS, setting } from '@/store';
 import Style from './Crop.module.less';
 import { ImageStruc } from '@/models/LayerStruc';
-import { calcMaxWidthAndMaxHeight } from '@/helpers/Crop';
+import { calcCropRectData, calcMaxWidthAndMaxHeight } from '@/helpers/Crop';
 import { getCanvasRectInfo } from '@/helpers/Node';
 import CropMove from '@/core/Tools/CropMove';
 
@@ -61,13 +62,13 @@ function Crop(props: CropProps) {
   const picStyle = useMemo(() => {
     if (!transformData) return {};
     const { x, y, width, height, scale, rotate, anchor } = transformData;
-    const scaleValue = `${scale.x > 0 ? 1 : -1},${scale.y > 0 ? 1 : -1}`;
+    const scaleValue = `${scale.x},${scale.y}`;
 
     return {
       width,
       height,
-      transform: `translate(${x}px ,${y}px) rotate(${rotate}deg) scale(${scaleValue})`,
       transformOrigin: `${anchor.x * 100}% ${anchor.y * 100}%`,
+      transform: `translate(${x}px ,${y}px) rotate(${rotate}deg) scale(${scaleValue})`,
     };
   }, [transformData]);
 
@@ -176,6 +177,29 @@ function Crop(props: CropProps) {
     setRectInfo(oldData => ({ ...oldData, ...data }));
   };
 
+  /**
+   * 确认裁剪
+   *  */
+  const confirmCrop = () => {
+    if (!transformData || !rectInfo) return;
+    const { scale, rotate, anchor } = transformData;
+    const { x, y, width, height } = valuesToDivide(transformData, zoomLevel);
+    const rectData = {
+      x,
+      y,
+      width,
+      height,
+      scale,
+      rotate,
+      anchor,
+    };
+    const maskData = valuesToDivide(rectInfo, zoomLevel);
+    const updateData = calcCropRectData(rectData, maskData);
+
+    layer?.update(updateData);
+    setting.closeImageCrop();
+  };
+
   useEffect(() => {
     initRectInfo();
   }, [transformData]);
@@ -226,7 +250,7 @@ function Crop(props: CropProps) {
 
       <div className={Style.btn_box}>
         <Button>取消</Button>
-        <Button className={Style.confirm} type="primary">
+        <Button onClick={confirmCrop} className={Style.confirm} type="primary">
           确定
         </Button>
       </div>

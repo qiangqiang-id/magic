@@ -71,6 +71,7 @@ export function getLayerRectStyles<M extends LayerStrucType = LayerStrucType>(
     height = 0,
     anchor = { x: 0, y: 0 },
     mask,
+    scale = { x: 1, y: 1 },
   } = model;
 
   const topLeftPoint = pointToTopLeft({ x, y, width, height, anchor });
@@ -93,12 +94,14 @@ export function getLayerRectStyles<M extends LayerStrucType = LayerStrucType>(
     layerTop = maskInCanvasRectData.y;
   }
 
+  const { x: scaleX, y: scaleY } = scale || {};
+
   return {
     width: layerWidth * zoomLevel,
     height: layerHeight * zoomLevel,
     transform: `translate(${layerLeft * zoomLevel}px,${
       layerTop * zoomLevel
-    }px) rotate(${rotate}deg)`,
+    }px) rotate(${rotate}deg) scale(${scaleX},${scaleY}) `,
   };
 }
 
@@ -142,17 +145,13 @@ export function getMaskStyle<M extends LayerStrucType = LayerStrucType>(
   model: M,
   zoomLevel = 1
 ): CSSProperties {
-  const { mask, width = 0, height = 0, scale } = model;
+  const { mask, width = 0, height = 0 } = model;
   if (!mask) return {};
   const { x, y } = mask;
-
-  const { x: scaleX = 1, y: scaleY = 1 } = scale || {};
 
   return {
     width: width * zoomLevel,
     height: height * zoomLevel,
-    transform: `translate(${-x * zoomLevel}px,${
-      -y * zoomLevel
-    }px) scale(${scaleX},${scaleY})`,
+    transform: `translate(${-x * zoomLevel}px,${-y * zoomLevel}px)`,
   };
 }
