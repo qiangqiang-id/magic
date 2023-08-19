@@ -186,6 +186,15 @@ export default class LayerStruc implements LayerModel.Base {
   }
 
   /**
+   * 翻转Y
+   *  */
+  flipY() {
+    const scale = { ...ScaleDefault, ...this.scale };
+    scale.y *= -1;
+    this.update({ scale });
+  }
+
+  /**
    * 锁
    *  */
   lock() {

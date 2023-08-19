@@ -31,3 +31,30 @@
     color: red;
   }
 }
+
+.popover_flip {
+  :global {
+    .ant-popover-arrow {
+      display: none;
+    }
+
+    .ant-popover-inner {
+      padding: 8px 0;
+    }
+
+    .ant-popover-title {
+      margin: 0;
+    }
+  }
+}
+
+.flip_option_item {
+  padding: 10px 12px;
+  font-size: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #e5e7eb;
+  }
+}
