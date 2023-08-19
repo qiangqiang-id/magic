@@ -1,4 +1,4 @@
-import { useState, CSSProperties, useMemo, useEffect } from 'react';
+import { useState, useRef, useMemo, useEffect, CSSProperties } from 'react';
 import { observer } from 'mobx-react';
 import { Button } from 'antd';
 import {
@@ -28,6 +28,8 @@ function Crop(props: CropProps) {
   const layer = activedLayers[0] as ImageStruc;
 
   const [rectInfo, setRectInfo] = useState<RectData | null>(null);
+
+  const cropRef = useRef<HTMLDivElement>(null);
 
   /**
    *  转换数据，处理缩放和锚点位置
@@ -197,6 +199,10 @@ function Crop(props: CropProps) {
     const updateData = calcCropRectData(rectData, maskData);
 
     layer?.update(updateData);
+    closeCrop();
+  };
+
+  const closeCrop = () => {
     setting.closeImageCrop();
   };
 
@@ -204,10 +210,26 @@ function Crop(props: CropProps) {
     initRectInfo();
   }, [transformData]);
 
+  /**
+   * 注册监听事件，关闭裁剪模式
+   */
+  useEffect(() => {
+    const handleMouseDown = (e: MouseEvent) => {
+      if (e.target && !cropRef.current?.contains(e.target as Node)) {
+        closeCrop();
+      }
+    };
+
+    document.addEventListener('mousedown', handleMouseDown);
+    return () => {
+      document.removeEventListener('mousedown', handleMouseDown);
+    };
+  }, []);
+
   if (activedLayers.length !== 1 || !layer.isImage || !rectInfo) return null;
 
   return (
-    <div className={Style.crop}>
+    <div className={Style.crop} ref={cropRef}>
       <div className={Style.editor_area} style={canvasStyle}>
         {/* 裁剪图像 */}
         <div
@@ -249,7 +271,7 @@ function Crop(props: CropProps) {
       </div>
 
       <div className={Style.btn_box}>
-        <Button>取消</Button>
+        <Button onClick={closeCrop}>取消</Button>
         <Button onClick={confirmCrop} className={Style.confirm} type="primary">
           确定
         </Button>

@@ -1,11 +1,13 @@
 import { observer } from 'mobx-react';
+import cls from 'classnames';
 import { MagneticLine, MagneticLineType } from '@p/EditorTools';
 import EditorControl from './EditorControl';
 import { LayerStrucType } from '@/types/model';
-import Style from './Editor.module.less';
 import Hover from './Hover';
 import RichText from './RichText';
 import { TextStruc } from '@/models/LayerStruc';
+import { setting } from '@/store';
+import Style from './Editor.module.less';
 
 interface EditorProps {
   isMultiple?: boolean;
@@ -36,7 +38,9 @@ function Editor(props: EditorProps) {
 
   return (
     <div
-      className={Style.editor}
+      className={cls(Style.editor, {
+        [Style.hidden]: setting.isOpenImageCrop,
+      })}
       onMouseDown={e => {
         e.stopPropagation();
       }}

@@ -19,7 +19,7 @@ export interface EditorControlProps {
 
 function EditorControl(props: EditorControlProps) {
   const { model, zoomLevel = 1 } = props;
-  const { OS } = useStores();
+  const { OS, setting } = useStores();
 
   const [points, setPoints] = useState(ALL_POINTS);
 
@@ -63,6 +63,7 @@ function EditorControl(props: EditorControlProps) {
       y = 0,
       rotate = 0,
       anchor = { x: 0, y: 0 },
+      scale,
     } = model;
 
     const rectData: RectData = {
@@ -72,6 +73,7 @@ function EditorControl(props: EditorControlProps) {
       y,
       anchor,
       rotate,
+      scale,
     };
 
     if (model.isImage) {
@@ -179,7 +181,9 @@ function EditorControl(props: EditorControlProps) {
   };
 
   const onDoubleClick = () => {
-    if (model.isText && !model.isLock) (model as TextStruc).onEdit();
+    if (model.isLock) return;
+    if (model.isText) (model as TextStruc).onEdit();
+    if (model.isImage) setting.openImageCrop();
   };
 
   const rectInfo = getRectInfo();

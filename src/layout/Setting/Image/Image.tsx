@@ -42,7 +42,11 @@ function Image(props: ImageProps) {
 
       <div className={Style.feature_wrapper}>
         <div>
-          <div className={Style.feature_item} onClick={onCrop}>
+          <div
+            className={Style.feature_item}
+            onClick={onCrop}
+            onMouseDown={e => e.stopPropagation()}
+          >
             <i
               className={cls('iconfont icon-image-crop', Style.feature_icon)}
             />
