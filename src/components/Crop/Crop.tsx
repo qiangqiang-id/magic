@@ -6,12 +6,15 @@ import {
   POINT_TYPE,
   RectData,
   ScaleHandlerOptions,
+  dragAction,
   valuesToMultiply,
 } from '@p/EditorTools';
 import { magic, OS } from '@/store';
 import Style from './Crop.module.less';
 import { ImageStruc } from '@/models/LayerStruc';
 import { calcMaxWidthAndMaxHeight } from '@/helpers/Crop';
+import { getCanvasRectInfo } from '@/helpers/Node';
+import CropMove from '@/core/Tools/CropMove';
 
 interface CropProps {
   canvasStyle: CSSProperties;
@@ -107,10 +110,47 @@ function Crop(props: CropProps) {
     e.stopPropagation();
   };
 
-  const handleMove = () => {
-    console.log('handleMove');
+  /**
+   * 移动
+   */
+  const handleMove = (e: React.MouseEvent) => {
+    const canvasRectInfo = getCanvasRectInfo();
+
+    if (!canvasRectInfo || !transformData || !rectInfo) return;
+
+    const mouseData = {
+      x: e.clientX - canvasRectInfo.x,
+      y: e.clientY - canvasRectInfo.y,
+    };
+
+    const cropMove = new CropMove(
+      transformData,
+      rectInfo,
+      transformData?.rotate || 0,
+      mouseData
+    );
+
+    dragAction(e.nativeEvent, {
+      move: e => {
+        const currentMouseData = {
+          x: e.clientX - canvasRectInfo.x,
+          y: e.clientY - canvasRectInfo.y,
+        };
+
+        const poi = cropMove.moveHandler(currentMouseData);
+        setRectInfo(oldValues => {
+          if (!oldValues) return null;
+          return { ...oldValues, ...poi };
+        });
+      },
+    });
   };
 
+  /**
+   * 拉伸之前，需要计算根据拉伸点计算，最大的拉伸宽高
+   * @param point 当前拉伸的点
+   * @returns {ScaleHandlerOptions} 拉伸配置项目
+   */
   const handleStartScale = (
     point: POINT_TYPE
   ): ScaleHandlerOptions | undefined => {
@@ -175,13 +215,12 @@ function Crop(props: CropProps) {
 
         {/* 编辑框 */}
         <EditorBox
+          className={Style.editor_box}
           onMouseDown={handleMove}
           rectInfo={rectInfo}
           isShowRotate={false}
           onStartScale={handleStartScale}
           onScale={handleScale}
-          minHeight={5}
-          minWidth={5}
         />
       </div>
 
