@@ -48,6 +48,34 @@ export default function LayerPosition(props: LayerLevelProps) {
     setLevelPopoverOpen(value);
   };
 
+  const toTop = () => {
+    model.toTopInCanvas();
+  };
+
+  const toLeft = () => {
+    model.toLeftInCanvas();
+  };
+
+  const toBottom = () => {
+    model.toBottomInCanvas();
+  };
+
+  const toRight = () => {
+    model.toRightInCanvas();
+  };
+
+  const toVerticalCenterAlign = () => {
+    model.toVerticalCenterAlignInCanvas();
+  };
+
+  const toHorizontalCenterAlign = () => {
+    model.toHorizontalCenterAlignInCanvas();
+  };
+
+  const toCenterAlign = () => {
+    model.toCenterAlignInCanvas();
+  };
+
   const popoverContent = (
     <div className={Style.popover_content}>
       <div className={Style.header}>
@@ -57,33 +85,48 @@ export default function LayerPosition(props: LayerLevelProps) {
 
       <div className={Style.body}>
         <div className={Style.btn_box}>
-          <div className={Style.btn}>水平居中</div>
-          <div className={Style.btn}>垂直居中</div>
+          <div onClick={toHorizontalCenterAlign} className={Style.btn}>
+            水平居中
+          </div>
+          <div onClick={toVerticalCenterAlign} className={Style.btn}>
+            垂直居中
+          </div>
         </div>
 
         <div className={Style.edit_control}>
           <Tooltip title="贴顶部">
-            <VerticalAlignTopOutlined className={Style.edit_item} />
+            <VerticalAlignTopOutlined
+              className={Style.edit_item}
+              onClick={toTop}
+            />
           </Tooltip>
           <div>
             <Tooltip title="贴左侧" placement="left">
               <VerticalAlignTopOutlined
+                onClick={toLeft}
                 className={cls(Style.edit_item, Style.ratote_flip90)}
               />
             </Tooltip>
             <Tooltip title="画布中心">
-              <AimOutlined className={cls(Style.edit_item, Style.center)} />
+              <AimOutlined
+                onClick={toCenterAlign}
+                className={cls(Style.edit_item, Style.center)}
+              />
             </Tooltip>
 
             <Tooltip title="贴右侧" placement="right">
               <VerticalAlignTopOutlined
+                onClick={toRight}
                 className={cls(Style.edit_item, Style.ratote90)}
               />
             </Tooltip>
           </div>
 
           <Tooltip title="贴底部" placement="bottom">
-            <VerticalAlignBottomOutlined className={Style.edit_item} />
+            <VerticalAlignBottomOutlined
+              onClick={toBottom}
+              className={Style.edit_item}
+            />
           </Tooltip>
         </div>
 

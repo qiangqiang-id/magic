@@ -1,6 +1,11 @@
 import { makeObservable, observable, computed, action } from 'mobx';
 import { cloneDeep } from 'lodash';
-import { pointToTopLeft } from '@p/EditorTools';
+import {
+  pointToTopLeft,
+  getRectRotatedRange,
+  RectData,
+  getMaskInCanvasRectData,
+} from '@p/EditorTools';
 import GroupStruc from './GroupStruc';
 import SceneStruc from '../SceneStruc';
 import { LayerTypeEnum } from '@/constants/LayerTypeEnum';
@@ -10,6 +15,7 @@ import CreateLayerStruc from '../FactoryStruc/LayerFactory';
 import { LayerStrucType } from '@/types/model';
 import { ScaleDefault } from '@/config/DefaultValues';
 import { COPY_OFFSET_RATIO } from '@/constants/LayerRatio';
+import { magic } from '@/store';
 
 export default class LayerStruc implements LayerModel.Base {
   id!: string;
@@ -202,6 +208,94 @@ export default class LayerStruc implements LayerModel.Base {
   }
 
   /**
+   * 位置贴顶部
+   */
+  toTopInCanvas() {
+    const rectData = this.getRectData();
+    const { yRange } = getRectRotatedRange(rectData);
+    const moveY = yRange[0];
+    this.update({ y: this.getSafetyModalData().y - moveY });
+  }
+
+  /**
+   * 位置贴底部
+   * 逻辑：获取到旋转矩形的最大包围盒，因旋转中心相同，可直接加减偏移位置
+   */
+  toBottomInCanvas() {
+    const { activedScene } = magic;
+    const templateHeight = activedScene?.height || 0;
+    const rectData = this.getRectData();
+    const { yRange } = getRectRotatedRange(rectData);
+    const moveY = yRange[1] - templateHeight;
+    this.update({ y: this.getSafetyModalData().y - moveY });
+  }
+
+  /**
+   * 位置贴左部
+   */
+  toLeftInCanvas() {
+    const rectData = this.getRectData();
+    const { xRange } = getRectRotatedRange(rectData);
+    const moveX = xRange[0];
+    this.update({ x: this.getSafetyModalData().x - moveX });
+  }
+
+  /**
+   * 位置贴右部
+   */
+  toRightInCanvas() {
+    const { activedScene } = magic;
+    const templateWidth = activedScene?.width || 0;
+    const rectData = this.getRectData();
+    const { xRange } = getRectRotatedRange(rectData);
+    const moveX = xRange[1] - templateWidth;
+    this.update({ x: this.getSafetyModalData().x - moveX });
+  }
+
+  /**
+   * 垂直居中
+   * */
+  toVerticalCenterAlignInCanvas(update = false) {
+    const { activedScene } = magic;
+    const templateHeight = activedScene?.height || 0;
+    const rectData = this.getRectData();
+    const { yRange } = getRectRotatedRange(rectData);
+    /** 范围的高度 */
+    const height = yRange[1] - yRange[0];
+    /** 移动距离 */
+    const moveY = yRange[1] - templateHeight / 2 - height / 2;
+    const updateData = { y: this.getSafetyModalData().y - moveY };
+    update && this.update(updateData);
+    return updateData;
+  }
+
+  /**
+   * 水平居中
+   * */
+  toHorizontalCenterAlignInCanvas(update = true) {
+    const { activedScene } = magic;
+    const templateWidht = activedScene?.width || 0;
+    const rectData = this.getRectData();
+    const { xRange } = getRectRotatedRange(rectData);
+    /** 范围的宽度 */
+    const width = xRange[1] - xRange[0];
+    /** 移动距离 */
+    const moveX = xRange[1] - templateWidht / 2 - width / 2;
+    const updateData = { x: this.getSafetyModalData().x - moveX };
+    update && this.update(updateData);
+    return updateData;
+  }
+
+  /**
+   * 居中
+   */
+  toCenterAlignInCanvas() {
+    const horizontalData = this.toHorizontalCenterAlignInCanvas(false);
+    const verticalData = this.toVerticalCenterAlignInCanvas(false);
+    this.update({ ...horizontalData, ...verticalData });
+  }
+
+  /**
    * 解锁
    *  */
   unlock() {
@@ -209,10 +303,30 @@ export default class LayerStruc implements LayerModel.Base {
   }
 
   /**
-   * 返回父级：场景或者组合
+   * 获取模块的安全数据
    */
-  getParent() {
-    return this.scene || this.group;
+  getSafetyModalData() {
+    const {
+      x = 0,
+      y = 0,
+      width = 0,
+      height = 0,
+      rotate = 0,
+      anchor = { x: 0, y: 0 },
+      scale = { x: 1, y: 1 },
+      mask = { x: 0, y: 0, width: 0, height: 0 },
+    } = this;
+
+    return {
+      x,
+      y,
+      width,
+      height,
+      anchor,
+      scale,
+      rotate,
+      mask,
+    };
   }
 
   /**
@@ -220,8 +334,30 @@ export default class LayerStruc implements LayerModel.Base {
    * 因为位置储存的是基于锚点的位置，不能进行计算
    *  */
   getPointAtTopLeft() {
-    const { width = 0, height = 0, x = 0, y = 0, anchor } = this;
+    const { width, height, x, y, anchor } = this.getSafetyModalData();
     return pointToTopLeft({ width, height, x, y, anchor });
+  }
+
+  /**
+   * 获取矩形数据，定位移动到了左上角，并且合并了mask 框数据
+   * @returns {RectData} 矩形数据
+   */
+  getRectData() {
+    let rectData: RectData = {
+      ...this.getSafetyModalData(),
+      ...this.getPointAtTopLeft(),
+    };
+    if (this.isImage) {
+      rectData = getMaskInCanvasRectData(rectData);
+    }
+    return rectData;
+  }
+
+  /**
+   * 返回父级：场景或者组合
+   */
+  getParent() {
+    return this.scene || this.group;
   }
 
   /**
