@@ -1,4 +1,4 @@
-import { CSSProperties } from 'react';
+import { CSSProperties, forwardRef, Ref } from 'react';
 import { observer } from 'mobx-react';
 import Renderer from '@/components/Renderer';
 import Editor from '@/components/Editor';
@@ -13,7 +13,7 @@ interface CanvasProps {
   style?: CSSProperties;
 }
 
-function Canvas(props: CanvasProps) {
+function Canvas(props: CanvasProps, ref: Ref<HTMLDivElement>) {
   const { canvasWidth, canvasHeight, style } = props;
 
   const { OS, magic } = useStores();
@@ -29,7 +29,7 @@ function Canvas(props: CanvasProps) {
   };
 
   return (
-    <section className={Style.canvas} style={style}>
+    <section ref={ref} className={Style.canvas} style={style}>
       <div
         className={Style.renderer_wrapper}
         ref={CANVAS_REF}
@@ -54,4 +54,4 @@ function Canvas(props: CanvasProps) {
   );
 }
 
-export default observer(Canvas);
+export default observer(forwardRef(Canvas));

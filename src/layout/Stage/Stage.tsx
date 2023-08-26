@@ -1,4 +1,4 @@
-import { useEffect, MouseEvent, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { observer } from 'mobx-react';
 import Canvas from './Canvas';
 import Scenes from './Scenes/Scenes';
@@ -18,6 +18,9 @@ function Stage() {
   const { zoomLevel } = OS;
 
   const { isOpenImageCrop } = setting;
+
+  const cropRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
 
   const [entry] = useResizeObserver(CANVAS_WRAPPER);
 
@@ -41,11 +44,11 @@ function Stage() {
 
   const handleStageMousedown = (e: React.MouseEvent) => {
     if (e.button !== 0 || !activedLayers.length) return;
-    magic.releaseAllLayers();
-  };
+    /** 尽量不使用阻止冒泡 */
+    if (cropRef.current?.contains(e.target as Node)) return;
+    if (canvasRef.current?.contains(e.target as Node)) return;
 
-  const handleCropMousedown = (e: MouseEvent) => {
-    e.stopPropagation();
+    magic.releaseAllLayers();
   };
 
   useEffect(() => {
@@ -63,13 +66,14 @@ function Stage() {
         ref={CANVAS_WRAPPER}
       >
         <Canvas
+          ref={canvasRef}
           canvasWidth={templateWidth}
           canvasHeight={templateHeight}
           style={canvasStyle}
         />
 
         {isOpenImageCrop && (
-          <div onMouseDown={handleCropMousedown} className={Style.crop_wrapper}>
+          <div ref={cropRef} className={Style.crop_wrapper}>
             <Crop canvasStyle={canvasStyle} />
           </div>
         )}

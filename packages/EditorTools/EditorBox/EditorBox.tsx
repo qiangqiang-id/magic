@@ -218,7 +218,6 @@ export default function EditorBox(props: EditorBoxProps) {
           key={point}
           style={styles}
           onMouseDown={e => {
-            e.stopPropagation();
             handleScale(point, e);
           }}
           className={cx('editor-grip', `editor-grip-${className}`)}

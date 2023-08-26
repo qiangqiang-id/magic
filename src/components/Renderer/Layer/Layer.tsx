@@ -48,7 +48,6 @@ function Layer<M extends LayerStrucType = LayerStrucType>(
    * 鼠标按下时触发
    */
   const handleMouseDown = (e: React.MouseEvent) => {
-    e.stopPropagation();
     if (e.button !== 0 || model.actived) return;
     magic.activeLayer(model, e.shiftKey);
     if (model.isLock) return;

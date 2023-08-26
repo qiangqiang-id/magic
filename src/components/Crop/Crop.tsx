@@ -107,13 +107,6 @@ function Crop(props: CropProps) {
   };
 
   /**
-   * 阻止冒泡
-   */
-  const stopPropagation = (e: React.MouseEvent | MouseEvent) => {
-    e.stopPropagation();
-  };
-
-  /**
    * 移动
    */
   const handleMove = (e: React.MouseEvent) => {
@@ -232,11 +225,7 @@ function Crop(props: CropProps) {
     <div className={Style.crop} ref={cropRef}>
       <div className={Style.editor_area} style={canvasStyle}>
         {/* 裁剪图像 */}
-        <div
-          className={Style.img_box}
-          style={picStyle}
-          onMouseDown={stopPropagation}
-        >
+        <div className={Style.img_box} style={picStyle}>
           <img src={layer?.url} alt="" className={Style.img} />
         </div>
 

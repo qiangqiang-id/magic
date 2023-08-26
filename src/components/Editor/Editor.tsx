@@ -41,9 +41,6 @@ function Editor(props: EditorProps) {
       className={cls(Style.editor, {
         [Style.hidden]: setting.isOpenImageCrop,
       })}
-      onMouseDown={e => {
-        e.stopPropagation();
-      }}
     >
       {/* 编辑框 */}
       {getEditorControl()}
