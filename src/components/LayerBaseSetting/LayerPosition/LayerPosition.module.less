@@ -1,0 +1,147 @@
+.popover_layer_level {
+  :global {
+    .ant-popover-arrow {
+      display: none;
+    }
+
+    .ant-popover-inner {
+      width: 260px;
+      padding: 0;
+    }
+  }
+}
+
+.popover_content {
+  position: relative;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 48px;
+    padding: 0 16px;
+  }
+
+  .close_icon {
+    cursor: pointer;
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 16px;
+  }
+
+  .btn_box {
+    display: flex;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .btn {
+    flex: 1;
+    height: 38px;
+    padding: 0 16px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 38px;
+    text-align: center;
+    background-color: #f1f2f4;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &:hover {
+      color: #222529;
+      background-color: #e8eaec;
+    }
+  }
+
+  .edit_control {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    width: 108px;
+    height: 108px;
+    margin: 12px 0;
+    border: 1px solid #e8eaec;
+    border-radius: 8px;
+  }
+
+  .edit_item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    font-size: 25px;
+    cursor: pointer;
+    opacity: 0.5;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .center {
+    margin: 0 4px;
+  }
+
+  .ratote_flip90 {
+    transform: rotate(-90deg);
+  }
+
+  .ratote90 {
+    transform: rotate(90deg);
+  }
+
+  .layer_level_title {
+    width: 100%;
+  }
+
+  .layer_level_wrapper {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .slider {
+    flex: 1;
+
+    :global {
+      .ant-slider-dot {
+        display: none;
+      }
+
+      .ant-slider-handle::after {
+        width: 12px;
+        height: 12px;
+        border: 1px solid #1677ff;
+        box-shadow: unset;
+        inset-inline-start: 0;
+        inset-block-start: 0;
+      }
+    }
+  }
+
+  .layer_level_icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    margin-top: -18px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      color: #222529;
+      background-color: #e8eaec;
+    }
+  }
+}

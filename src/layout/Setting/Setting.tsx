@@ -29,7 +29,7 @@ function Setting() {
   const { activedLayers, isMultiple } = magic;
 
   const getSetingRender = () => {
-    if (activedLayers.length === 0) return <CanvasSetting />;
+    if (!activedLayers.length) return <CanvasSetting />;
 
     /** 选中多个图层 */
     if (isMultiple) {

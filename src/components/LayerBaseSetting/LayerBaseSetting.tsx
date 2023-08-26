@@ -3,7 +3,7 @@ import { Tooltip } from 'antd';
 import { observer } from 'mobx-react';
 import { LayerStrucType } from '@/types/model';
 import Flip from './Flip';
-import LayerLevel from './LayerLevel';
+import LayerPosition from './LayerPosition';
 import Style from './LayerBaseSetting.module.less';
 
 interface LayerBaseSettingProps {
@@ -27,9 +27,9 @@ function LayerBaseSetting(props: LayerBaseSettingProps) {
 
   return (
     <div className={cls(Style.layer_base_setting, 'setting-row')}>
-      <Tooltip title="图层顺序">
+      <Tooltip title="图层位置">
         <span>
-          <LayerLevel
+          <LayerPosition
             model={model}
             className={cls(Style.icon_item, {
               locked: isLock,
