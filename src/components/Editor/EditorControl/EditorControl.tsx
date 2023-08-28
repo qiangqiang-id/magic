@@ -56,15 +56,8 @@ function EditorControl(props: EditorControlProps) {
    * 获取矩形的信息
    */
   const getRectInfo = () => {
-    const {
-      height = 0,
-      width = 0,
-      x = 0,
-      y = 0,
-      rotate = 0,
-      anchor = { x: 0, y: 0 },
-      scale,
-    } = model;
+    const { height, width, x, y, rotate, anchor, scale } =
+      model.getSafetyModalData();
 
     const rectData: RectData = {
       height,

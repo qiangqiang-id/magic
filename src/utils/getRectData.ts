@@ -7,15 +7,8 @@ import { LayerStrucType } from '@/types/model';
  * @returns RectData
  */
 export function getRectDataForLayer(layer: LayerStrucType): RectData {
-  const {
-    x = 0,
-    y = 0,
-    width = 0,
-    height = 0,
-    anchor = { x: 0, y: 0 },
-    rotate = 0,
-    mask,
-  } = layer;
+  const { x, y, width, height, anchor, rotate, mask } =
+    layer.getSafetyModalData();
 
   const rectData: RectData = { x, y, width, height, anchor, rotate };
 

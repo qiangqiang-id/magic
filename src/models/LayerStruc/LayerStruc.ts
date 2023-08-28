@@ -343,12 +343,12 @@ export default class LayerStruc implements LayerModel.Base {
    * @returns {RectData} 矩形数据
    */
   public getRectData() {
-    let rectData: RectData = {
+    let rectData: Required<RectData> = {
       ...this.getSafetyModalData(),
       ...this.getPointAtTopLeft(),
     };
     if (this.isImage) {
-      rectData = getMaskInCanvasRectData(rectData);
+      rectData = getMaskInCanvasRectData(rectData) as Required<RectData>;
     }
     return rectData;
   }

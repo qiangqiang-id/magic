@@ -36,14 +36,8 @@ function Crop(props: CropProps) {
    */
   const transformData = useMemo(() => {
     if (!layer) return null;
-    const {
-      width = 0,
-      height = 0,
-      anchor = { x: 0, y: 0 },
-      mask = { x: 0, y: 0, height: 0, width: 0 },
-      scale = { x: 1, y: 1 },
-      rotate = 0,
-    } = layer;
+    const { width, height, anchor, mask, scale, rotate } =
+      layer.getSafetyModalData();
     const cmpData = valuesToMultiply(
       { width, height, ...layer.getPointAtTopLeft() },
       zoomLevel

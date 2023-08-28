@@ -1,5 +1,4 @@
 import { CSSProperties } from 'react';
-import { getMaskInCanvasRectData, pointToTopLeft } from '@p/EditorTools';
 import { LayerStrucType } from '@/types/model';
 
 /**
@@ -63,45 +62,14 @@ export function getLayerRectStyles<M extends LayerStrucType = LayerStrucType>(
   model: M,
   zoomLevel = 1
 ): CSSProperties {
-  const {
-    x = 0,
-    y = 0,
-    rotate = 0,
-    width = 0,
-    height = 0,
-    anchor = { x: 0, y: 0 },
-    mask,
-    scale = { x: 1, y: 1 },
-  } = model;
-
-  const topLeftPoint = pointToTopLeft({ x, y, width, height, anchor });
-  let layerWidth = width;
-  let layerHeight = height;
-  let layerLeft = topLeftPoint.x;
-  let layerTop = topLeftPoint.y;
-
-  /** 处理图片蒙层 */
-  if (model.isImage) {
-    const maskInCanvasRectData = getMaskInCanvasRectData({
-      ...topLeftPoint,
-      width,
-      height,
-      mask,
-    });
-    layerWidth = maskInCanvasRectData.width;
-    layerHeight = maskInCanvasRectData.height;
-    layerLeft = maskInCanvasRectData.x;
-    layerTop = maskInCanvasRectData.y;
-  }
-
-  const { x: scaleX, y: scaleY } = scale || {};
+  const { x, y, rotate, width, height, scale } = model.getRectData();
 
   return {
-    width: layerWidth * zoomLevel,
-    height: layerHeight * zoomLevel,
-    transform: `translate(${layerLeft * zoomLevel}px,${
-      layerTop * zoomLevel
-    }px) rotate(${rotate}deg) scale(${scaleX},${scaleY}) `,
+    width: width * zoomLevel,
+    height: height * zoomLevel,
+    transform: `translate(${x * zoomLevel}px,${
+      y * zoomLevel
+    }px) rotate(${rotate}deg) scale(${scale.x},${scale.y}) `,
   };
 }
 
