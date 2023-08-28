@@ -4,6 +4,8 @@ import { LayerStrucType } from '@/types/model';
 import { createSceneData } from '@/core/FormatData/Scene';
 import { CreateScene } from '../FactoryStruc/SceneFactory';
 import LayerStruc from '../LayerStruc';
+import { OBB, Vector2d } from '@/helpers/Obb';
+import { isCollision } from '@/utils/collision';
 
 export default class MagicStruc implements MagicModel {
   id!: string | null;
@@ -183,6 +185,41 @@ export default class MagicStruc implements MagicModel {
     /** 加入到当前场景的后一位 */
     this.handleAddScene(newScene, index + 1);
     this.activeScene(newScene);
+  }
+
+  /**
+   * 获取重叠层
+   * @param targerLayer 目标图层，与目标图层有重叠的即满足条件
+   * @returns {LayerStruc[]} 重叠图层
+   */
+  public getOverlayLayer(targerLayer: LayerStrucType) {
+    const { x, y, width, height, rotate } = targerLayer.getRectData();
+
+    const targerLayerObb = new OBB(
+      new Vector2d(x + width / 2, y + height / 2),
+      width,
+      height,
+      rotate
+    );
+
+    const layers = this.activedScene?.layers || [];
+    return layers.reduce(
+      (layerList: LayerStrucType[], layer: LayerStrucType) => {
+        if (layer.isBack) return layerList;
+
+        const { x, y, width, height, rotate } = layer.getRectData();
+        const layerObb = new OBB(
+          new Vector2d(x + width / 2, y + height / 2),
+          width,
+          height,
+          rotate
+        );
+        const collision = isCollision(targerLayerObb, layerObb);
+        if (collision) layerList.push(layer);
+        return layerList;
+      },
+      []
+    );
   }
 
   /** 是否多选 */

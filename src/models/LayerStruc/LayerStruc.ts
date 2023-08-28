@@ -117,7 +117,7 @@ export default class LayerStruc implements LayerModel.Base {
     };
   }
 
-  update<T extends Partial<LayerModel.Base> = Partial<LayerModel.Base>>(
+  public update<T extends Partial<LayerModel.Base> = Partial<LayerModel.Base>>(
     data: T
   ) {
     this.handleUpdate(data);
@@ -126,14 +126,14 @@ export default class LayerStruc implements LayerModel.Base {
   /**
    * 激活/选中组件
    */
-  active() {
+  public active() {
     this.actived = true;
   }
 
   /**
    * 取消选中
    */
-  inactive() {
+  public inactive() {
     this.actived = false;
   }
 
@@ -155,7 +155,7 @@ export default class LayerStruc implements LayerModel.Base {
   /**
    * 复制
    */
-  clone(): LayerStrucType {
+  public clone(): LayerStrucType {
     const { width: parentWidth = 0, height: parentHeight = 0 } =
       this.getParent() ?? {};
     const model = cloneDeep(this.model());
@@ -169,7 +169,7 @@ export default class LayerStruc implements LayerModel.Base {
   /**
    * 删除
    */
-  remove() {
+  public remove() {
     const parent = this.getParent();
     parent?.removeLayer(this);
   }
@@ -177,7 +177,7 @@ export default class LayerStruc implements LayerModel.Base {
   /**
    * 复制
    */
-  copy() {
+  public copy() {
     const parent = this.getParent();
     parent?.copyLayer(this);
   }
@@ -185,7 +185,7 @@ export default class LayerStruc implements LayerModel.Base {
   /**
    * 翻转X
    *  */
-  flipX() {
+  public flipX() {
     const scale = { ...ScaleDefault, ...this.scale };
     scale.x *= -1;
     this.update({ scale });
@@ -194,7 +194,7 @@ export default class LayerStruc implements LayerModel.Base {
   /**
    * 翻转Y
    *  */
-  flipY() {
+  public flipY() {
     const scale = { ...ScaleDefault, ...this.scale };
     scale.y *= -1;
     this.update({ scale });
@@ -203,14 +203,14 @@ export default class LayerStruc implements LayerModel.Base {
   /**
    * 锁
    *  */
-  lock() {
+  public lock() {
     this.update({ isLock: true });
   }
 
   /**
    * 位置贴顶部
    */
-  toTopInCanvas() {
+  public toTopInCanvas() {
     const rectData = this.getRectData();
     const { yRange } = getRectRotatedRange(rectData);
     const moveY = yRange[0];
@@ -221,7 +221,7 @@ export default class LayerStruc implements LayerModel.Base {
    * 位置贴底部
    * 逻辑：获取到旋转矩形的最大包围盒，因旋转中心相同，可直接加减偏移位置
    */
-  toBottomInCanvas() {
+  public toBottomInCanvas() {
     const { activedScene } = magic;
     const templateHeight = activedScene?.height || 0;
     const rectData = this.getRectData();
@@ -233,7 +233,7 @@ export default class LayerStruc implements LayerModel.Base {
   /**
    * 位置贴左部
    */
-  toLeftInCanvas() {
+  public toLeftInCanvas() {
     const rectData = this.getRectData();
     const { xRange } = getRectRotatedRange(rectData);
     const moveX = xRange[0];
@@ -243,7 +243,7 @@ export default class LayerStruc implements LayerModel.Base {
   /**
    * 位置贴右部
    */
-  toRightInCanvas() {
+  public toRightInCanvas() {
     const { activedScene } = magic;
     const templateWidth = activedScene?.width || 0;
     const rectData = this.getRectData();
@@ -255,7 +255,7 @@ export default class LayerStruc implements LayerModel.Base {
   /**
    * 垂直居中
    * */
-  toVerticalCenterAlignInCanvas(update = false) {
+  public toVerticalCenterAlignInCanvas(update = true) {
     const { activedScene } = magic;
     const templateHeight = activedScene?.height || 0;
     const rectData = this.getRectData();
@@ -272,7 +272,7 @@ export default class LayerStruc implements LayerModel.Base {
   /**
    * 水平居中
    * */
-  toHorizontalCenterAlignInCanvas(update = true) {
+  public toHorizontalCenterAlignInCanvas(update = true) {
     const { activedScene } = magic;
     const templateWidht = activedScene?.width || 0;
     const rectData = this.getRectData();
@@ -289,7 +289,7 @@ export default class LayerStruc implements LayerModel.Base {
   /**
    * 居中
    */
-  toCenterAlignInCanvas() {
+  public toCenterAlignInCanvas() {
     const horizontalData = this.toHorizontalCenterAlignInCanvas(false);
     const verticalData = this.toVerticalCenterAlignInCanvas(false);
     this.update({ ...horizontalData, ...verticalData });
@@ -298,14 +298,14 @@ export default class LayerStruc implements LayerModel.Base {
   /**
    * 解锁
    *  */
-  unlock() {
+  public unlock() {
     this.update({ isLock: false });
   }
 
   /**
    * 获取模块的安全数据
    */
-  getSafetyModalData() {
+  public getSafetyModalData() {
     const {
       x = 0,
       y = 0,
@@ -333,7 +333,7 @@ export default class LayerStruc implements LayerModel.Base {
    * 获取左上角位置
    * 因为位置储存的是基于锚点的位置，不能进行计算
    *  */
-  getPointAtTopLeft() {
+  public getPointAtTopLeft() {
     const { width, height, x, y, anchor } = this.getSafetyModalData();
     return pointToTopLeft({ width, height, x, y, anchor });
   }
@@ -342,7 +342,7 @@ export default class LayerStruc implements LayerModel.Base {
    * 获取矩形数据，定位移动到了左上角，并且合并了mask 框数据
    * @returns {RectData} 矩形数据
    */
-  getRectData() {
+  public getRectData() {
     let rectData: RectData = {
       ...this.getSafetyModalData(),
       ...this.getPointAtTopLeft(),
@@ -356,14 +356,14 @@ export default class LayerStruc implements LayerModel.Base {
   /**
    * 返回父级：场景或者组合
    */
-  getParent() {
+  public getParent() {
     return this.scene || this.group;
   }
 
   /**
    * 获取根父节点
    */
-  getRootParent() {
+  public getRootParent() {
     let parent = this.getParent();
     while (parent && !(parent instanceof SceneStruc)) {
       parent = parent.getParent();
