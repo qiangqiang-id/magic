@@ -1,4 +1,4 @@
-import { makeObservable, observable, computed, action } from 'mobx';
+import { makeObservable, observable, action } from 'mobx';
 import { cloneDeep } from 'lodash';
 import {
   pointToTopLeft,
@@ -16,6 +16,10 @@ import { LayerStrucType } from '@/types/model';
 import { ScaleDefault } from '@/config/DefaultValues';
 import { COPY_OFFSET_RATIO } from '@/constants/LayerRatio';
 import { magic } from '@/store';
+import ImageStruc from './ImageStruc';
+import ShapeStruc from './ShapeStruc';
+import BackgroundStruc from './BackgroundStruc';
+import TextStruc from './TextStruc';
 
 export default class LayerStruc implements LayerModel.Base {
   id!: string;
@@ -75,11 +79,6 @@ export default class LayerStruc implements LayerModel.Base {
       disabled: observable,
       opacity: observable,
       mask: observable,
-      isBack: computed,
-      isImage: computed,
-      isShape: computed,
-      isText: computed,
-      isGroup: computed,
       handleUpdate: action,
     });
 
@@ -347,7 +346,7 @@ export default class LayerStruc implements LayerModel.Base {
       ...this.getSafetyModalData(),
       ...this.getPointAtTopLeft(),
     };
-    if (this.isImage) {
+    if (this.isImage()) {
       rectData = getMaskInCanvasRectData(rectData) as Required<RectData>;
     }
     return rectData;
@@ -376,7 +375,7 @@ export default class LayerStruc implements LayerModel.Base {
    * @readonly
    * @memberof LayerStruc
    */
-  get isBack() {
+  isBack(): this is BackgroundStruc {
     return this.type === LayerTypeEnum.BACKGROUND;
   }
 
@@ -385,7 +384,7 @@ export default class LayerStruc implements LayerModel.Base {
    * @readonly
    * @memberof LayerStruc
    */
-  get isImage() {
+  isImage(): this is ImageStruc {
     return this.type === LayerTypeEnum.IMAGE;
   }
 
@@ -394,7 +393,7 @@ export default class LayerStruc implements LayerModel.Base {
    * @readonly
    * @memberof LayerStruc
    */
-  get isShape() {
+  isShape(): this is ShapeStruc {
     return this.type === LayerTypeEnum.SHAPE;
   }
 
@@ -403,7 +402,7 @@ export default class LayerStruc implements LayerModel.Base {
    * @readonly
    * @memberof LayerStruc
    */
-  get isText() {
+  isText(): this is TextStruc {
     return this.type === LayerTypeEnum.TEXT;
   }
 
@@ -412,7 +411,7 @@ export default class LayerStruc implements LayerModel.Base {
    * @readonly
    * @memberof LayerStruc
    */
-  get isGroup() {
+  isGroup(): this is GroupStruc {
     return this.type === LayerTypeEnum.GROUP;
   }
 }

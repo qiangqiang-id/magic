@@ -12,7 +12,7 @@ export function getRectDataForLayer(layer: LayerStrucType): RectData {
 
   const rectData: RectData = { x, y, width, height, anchor, rotate };
 
-  if (layer.isImage) {
+  if (layer.isImage()) {
     rectData.mask = mask;
   }
 

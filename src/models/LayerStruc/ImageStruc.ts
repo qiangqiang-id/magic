@@ -47,16 +47,10 @@ export default class ImageStruc extends LayerStruc implements LayerModel.Image {
     let updateDate: Partial<LayerModel.Image> = { url };
 
     if (size) {
-      const { mask, anchor } = this;
-
       const { x, y } = this.getPointAtTopLeft();
 
-      const {
-        width: maskW = 0,
-        height: maskH = 0,
-        x: maskX = 0,
-        y: maskY = 0,
-      } = mask || {};
+      const { mask, anchor } = this.getSafetyModalData();
+      const { width: maskW, height: maskH, x: maskX, y: maskY } = mask;
 
       const ratioW = size.width / maskW;
       const ratioH = size.height / maskH;

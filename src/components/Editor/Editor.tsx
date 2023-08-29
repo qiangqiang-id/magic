@@ -52,7 +52,7 @@ function Editor(props: EditorProps) {
       <MagneticLine lines={magneticLines} />
 
       {/* 富文本 */}
-      {model?.isText && (
+      {model?.isText() && (
         <RichText
           zoomLevel={zoomLevel}
           isMultiple={isMultiple}

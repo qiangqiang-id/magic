@@ -213,7 +213,7 @@ function Crop(props: CropProps) {
     };
   }, []);
 
-  if (activedLayers.length !== 1 || !layer.isImage || !rectInfo) return null;
+  if (activedLayers.length !== 1 || !layer.isImage() || !rectInfo) return null;
 
   return (
     <div className={Style.crop} ref={cropRef}>

@@ -9,7 +9,6 @@ import { ALL_POINTS, TEXT_POINTS } from '@/constants/PointList';
 
 import Style from './EditorControl.module.less';
 import { getPreviewSizePosition } from '@/utils/getPreviewSizePosition';
-import { ImageStruc, TextStruc } from '@/models/LayerStruc';
 import { MAX_FONT_SIZE, MIN_FONT_SIZE } from '@/constants/FontSize';
 
 export interface EditorControlProps {
@@ -38,7 +37,7 @@ function EditorControl(props: EditorControlProps) {
    * */
   const setPointsByCmpTag = () => {
     if (!model) return;
-    setPoints(model.isText ? TEXT_POINTS : ALL_POINTS);
+    setPoints(model.isText() ? TEXT_POINTS : ALL_POINTS);
   };
 
   useEffect(() => {
@@ -46,7 +45,7 @@ function EditorControl(props: EditorControlProps) {
   }, [model]);
 
   const scaleType = useMemo(() => {
-    if (model.isImage) {
+    if (model.isImage()) {
       return 'mask-cover';
     }
     return 'default';
@@ -69,8 +68,8 @@ function EditorControl(props: EditorControlProps) {
       scale,
     };
 
-    if (model.isImage) {
-      rectData.mask = (model as ImageStruc).mask;
+    if (model.isImage()) {
+      rectData.mask = model.mask;
     }
 
     return rectData;
@@ -104,8 +103,8 @@ function EditorControl(props: EditorControlProps) {
     const ratio = updateData.width / preWidth;
 
     /** 如果是文字组件，并且拉伸的是顶点，一些属性需要做同比例缩放 */
-    if (model.isText && !isCenterPoint(point)) {
-      const { fontSize = 12 } = model as TextStruc;
+    if (model.isText() && !isCenterPoint(point)) {
+      const { fontSize = 12 } = model;
       const newFontSize = Math.min(
         MAX_FONT_SIZE,
         Math.max(MIN_FONT_SIZE, +fontSize * ratio)
@@ -119,7 +118,7 @@ function EditorControl(props: EditorControlProps) {
      * 如果是文字，并拉伸的是左右改变宽度时，这里不改变文字的高度，富文本会改变文字的高度
      * */
     if (
-      model.isText &&
+      model.isText() &&
       [POINT_TYPE.RIGHT_CENTER, POINT_TYPE.LEFT_CENTER].includes(point)
     ) {
       Reflect.deleteProperty(updateData, 'height');
@@ -175,8 +174,8 @@ function EditorControl(props: EditorControlProps) {
 
   const onDoubleClick = () => {
     if (model.isLock) return;
-    if (model.isText) (model as TextStruc).onEdit();
-    if (model.isImage) setting.openImageCrop();
+    if (model.isText()) model.onEdit();
+    if (model.isImage()) setting.openImageCrop();
   };
 
   const rectInfo = getRectInfo();
@@ -192,7 +191,7 @@ function EditorControl(props: EditorControlProps) {
     <>
       <EditorBox
         className={cls({
-          [Style.pointer_events_none]: model.isBack,
+          [Style.pointer_events_none]: model.isBack(),
           [Style.editor_control]: !model.isLock,
         })}
         points={points}

@@ -205,7 +205,7 @@ export default class MagicStruc implements MagicModel {
     const layers = this.activedScene?.layers || [];
     return layers.reduce(
       (layerList: LayerStrucType[], layer: LayerStrucType) => {
-        if (layer.isBack) return layerList;
+        if (layer.isBack()) return layerList;
 
         const { x, y, width, height, rotate } = layer.getRectData();
         const layerObb = new OBB(

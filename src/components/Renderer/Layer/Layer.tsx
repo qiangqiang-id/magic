@@ -58,7 +58,7 @@ function Layer<M extends LayerStrucType = LayerStrucType>(
    *  鼠标进入时触发
    */
   const handleMouseEnter = () => {
-    if (OS.isEditing || model.isBack) return;
+    if (OS.isEditing || model.isBack()) return;
     magic.hoverLayer(model);
   };
 
@@ -66,7 +66,7 @@ function Layer<M extends LayerStrucType = LayerStrucType>(
    * 鼠标离开时触发
    */
   const handleMouseLeave = () => {
-    if (OS.isEditing || model.isBack) return;
+    if (OS.isEditing || model.isBack()) return;
     magic.hoverLayer(null);
   };
 

@@ -93,7 +93,7 @@ export function getLayerInnerStyles<M extends LayerStrucType = LayerStrucType>(
     return styles;
   }, {});
 
-  if (model.isImage) {
+  if (model.isImage()) {
     styles = {
       ...styles,
       ...getMaskStyle(model, zoomLevel),
