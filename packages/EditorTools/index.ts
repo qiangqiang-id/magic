@@ -37,6 +37,6 @@ export type { EditorBoxProps } from './EditorBox/props';
 export type { ScaleHandlerOptions } from './core/ScaleHandler';
 export type { MagneticLineType, LineData, Range } from './types/MagneticLine';
 
-// =========== component =============
+// =========== components =============
 export { default as EditorBox } from './EditorBox';
 export { default as MagneticLine } from './MagneticLine';

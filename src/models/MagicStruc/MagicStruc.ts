@@ -192,7 +192,7 @@ export default class MagicStruc implements MagicModel {
    * @param targerLayer 目标图层，与目标图层有重叠的即满足条件
    * @returns {LayerStruc[]} 重叠图层
    */
-  public getOverlayLayer(targerLayer: LayerStrucType) {
+  public getOverlayLayers(targerLayer: LayerStrucType) {
     const { x, y, width, height, rotate } = targerLayer.getRectData();
 
     const targerLayerObb = new OBB(

@@ -58,7 +58,7 @@ function LayerPosition(props: LayerLevelProps) {
   };
 
   const initMarks = () => {
-    const list = magic.getOverlayLayer(model);
+    const list = magic.getOverlayLayers(model);
     const newMarks = list.reduce((marks: SliderMarks, _item, index: number) => {
       const markList = { ...marks, [index]: mark };
       return markList;
@@ -87,7 +87,7 @@ function LayerPosition(props: LayerLevelProps) {
       layers[index1ByLayers] = layer2;
       layers[index2ByLayers] = layer1;
       activedScene?.update({ layers });
-      overlayLayerRef.current = magic.getOverlayLayer(model);
+      overlayLayerRef.current = magic.getOverlayLayers(model);
     }
   };
 

@@ -5,7 +5,6 @@ import EditorControl from './EditorControl';
 import { LayerStrucType } from '@/types/model';
 import Hover from './Hover';
 import RichText from './RichText';
-import { TextStruc } from '@/models/LayerStruc';
 import { setting } from '@/store';
 import Style from './Editor.module.less';
 
@@ -53,11 +52,7 @@ function Editor(props: EditorProps) {
 
       {/* 富文本 */}
       {model?.isText() && (
-        <RichText
-          zoomLevel={zoomLevel}
-          isMultiple={isMultiple}
-          model={model as TextStruc}
-        />
+        <RichText zoomLevel={zoomLevel} isMultiple={isMultiple} model={model} />
       )}
     </div>
   );
