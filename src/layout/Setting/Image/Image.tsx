@@ -33,12 +33,10 @@ function Image(props: ImageProps) {
 
   return (
     <SettingContainer title="图片">
-      <LayerBaseSetting model={model} />
-
       <UploadBtn
         onChange={handleChange}
         btnTitle="替换图片"
-        className={cls('setting-row', Style.replace_image_btn)}
+        className={cls('setting-row')}
       />
 
       <div className={Style.feature_wrapper}>
@@ -57,6 +55,8 @@ function Image(props: ImageProps) {
           </div>
         </div>
       </div>
+
+      <LayerBaseSetting model={model} />
     </SettingContainer>
   );
 }

@@ -91,7 +91,7 @@ export function getTextDefaultValues(): Required<LayerModel.Text> {
     isEditing: false,
     fontFamily: '',
     color: 'black',
-    opacity: 100,
+    opacity: 1,
     strokes: [],
     fontSize: 45,
     height: 1.2 * 45,
