@@ -13,7 +13,7 @@ import {
 
 import { randomString } from '@/utils/random';
 import { CreateScene } from '../FactoryStruc/SceneFactory';
-import LayerStruc from '../LayerStruc';
+import LayerStruc, { BackgroundStruc } from '../LayerStruc';
 
 export default class SceneStruc implements SceneModel {
   id!: string;
@@ -98,8 +98,11 @@ export default class SceneStruc implements SceneModel {
    * @return {Back} 背景图层
    * @memberof SceneStruc
    */
-  public getBackLayer() {
-    return this.layers?.find(layer => layer.isBack());
+  public getBackLayer(): BackgroundStruc | null {
+    const layer = this.layers?.find(layer => layer.isBack());
+    if (layer) return layer as BackgroundStruc;
+
+    return null;
   }
 
   /**

@@ -25,10 +25,10 @@ function Canvas() {
     const { fillType, color } = backgroundLayer;
     if (fillType === 'Color') return color;
     return '';
-  }, [backgroundLayer.color, backgroundLayer.fillType]);
+  }, [backgroundLayer?.color, backgroundLayer?.fillType]);
 
   const onChangeColor = (color: Color) => {
-    backgroundLayer.update<Partial<BackgroundStruc>>({
+    backgroundLayer?.update<Partial<BackgroundStruc>>({
       fillType: 'Color',
       color: color.toRgbString(),
     });
