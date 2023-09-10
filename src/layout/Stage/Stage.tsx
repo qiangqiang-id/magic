@@ -5,7 +5,6 @@ import Scenes from './Scenes/Scenes';
 import Crop from '@/components/Crop';
 import useResizeObserver from '@/hooks/useResizeObserver';
 import { CANVAS_WRAPPER } from '@/constants/Refs';
-import { TEMPLATE_HEIGHT, TEMPLATE_WIDTH } from '@/constants/TemplateSize';
 import { NodeNameplate } from '@/constants/NodeNamePlate';
 import { useStores } from '@/store';
 import Style from './Stage.module.less';
@@ -53,7 +52,7 @@ function Stage() {
 
   useEffect(() => {
     entry && adaptZoomLevel(entry);
-  }, [entry, TEMPLATE_HEIGHT, TEMPLATE_WIDTH]);
+  }, [entry, templateHeight, templateWidth]);
 
   if (!activedScene) return null;
 

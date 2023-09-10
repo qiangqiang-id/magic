@@ -353,6 +353,83 @@ export default class LayerStruc implements LayerModel.Base {
   }
 
   /**
+   * 层级是否第一个
+   *  */
+  get isFirstLayer() {
+    const index = this.getIndex();
+    /** 背景应该是在最下面，背景的索引永远是0 */
+    return index < 1;
+  }
+
+  /**
+   * 层级是否是最后一个
+   *  */
+  get isLastLayer() {
+    const { scene } = this;
+    if (!scene?.layers) return false;
+    const index = this.getIndex();
+    return index === scene.layers.length - 1;
+  }
+
+  /**
+   * 获取索引
+   */
+  getIndex(): number {
+    return this.scene?.layers?.findIndex(cmps => cmps.id === this.id) || -1;
+  }
+
+  /**
+   * 下一级
+   *  */
+  toDown(targetLayer?: LayerStrucType) {
+    const { scene } = this;
+    if (!scene || this.isFirstLayer) return;
+    const currentIndex = this.getIndex();
+    const targetIndex = targetLayer?.getIndex() || currentIndex - 1;
+    const layers = [...(scene?.layers || [])];
+    layers.splice(targetIndex, 0, ...layers.splice(currentIndex, 1));
+    scene.update({ layers });
+  }
+
+  /**
+   * 置底
+   *  */
+  toBottom() {
+    const { scene } = this;
+    if (!scene || this.isFirstLayer) return;
+    const currentIndex = this.getIndex();
+    const layers = [...(scene?.layers || [])];
+    layers.splice(1, 0, ...layers.splice(currentIndex, 1));
+    scene.update({ layers });
+  }
+
+  /**
+   * 上一级
+   *  */
+  toUp(targetLayer?: LayerStrucType) {
+    const { scene } = this;
+    if (!scene || this.isFirstLayer) return;
+    const currentIndex = this.getIndex();
+    const targetIndex = targetLayer?.getIndex() || currentIndex;
+    const layers = [...(scene?.layers || [])];
+    /** 活动图层索引在前，先删除后插入，正好插入目标图层后面，不需要 索引 +1 */
+    layers.splice(targetIndex, 0, ...layers.splice(currentIndex, 1));
+    scene.update({ layers });
+  }
+
+  /**
+   * 置顶
+   *  */
+  toTop() {
+    const { scene } = this;
+    if (!scene || this.isFirstLayer) return;
+    const currentIndex = this.getIndex();
+    const layers = [...(scene?.layers || [])];
+    layers.push(...layers.splice(currentIndex, 1));
+    scene.update({ layers });
+  }
+
+  /**
    * 返回父级：场景或者组合
    */
   public getParent() {

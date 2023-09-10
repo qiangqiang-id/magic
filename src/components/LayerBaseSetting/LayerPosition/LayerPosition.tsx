@@ -45,7 +45,7 @@ function LayerPosition(props: LayerLevelProps) {
   const disableMoveUp = activeMark >= maxMark;
   const disableMoveDown = activeMark <= MIN_MARK;
 
-  const overlayLayerRef = useRef<LayerStrucType[]>([]);
+  const overlayLayersRef = useRef<LayerStrucType[]>([]);
 
   const closePopover = () => {
     setLevelPopoverOpen(false);
@@ -59,86 +59,99 @@ function LayerPosition(props: LayerLevelProps) {
 
   const initMarks = () => {
     const list = magic.getOverlayLayers(model);
-    const newMarks = list.reduce((marks: SliderMarks, _item, index: number) => {
-      const markList = { ...marks, [index]: mark };
-      return markList;
-    }, {});
-    setMarks(newMarks);
+    const sliderMarks = list.reduce(
+      (marks: SliderMarks, _item, index: number) => {
+        const markList = { ...marks, [index]: { ...mark } };
+        return markList;
+      },
+      {}
+    );
+    setMarks(sliderMarks);
     setMaxMark(list.length - 1);
     const defaualActiveMark = list.findIndex(item => item.id === model.id);
     setActiveMark(defaualActiveMark);
-    overlayLayerRef.current = list;
+    overlayLayersRef.current = list;
   };
 
   const changeMark = (mark: number) => {
-    changeLayers(model, overlayLayerRef.current[mark]);
+    changeLayers(overlayLayersRef.current[mark].id);
     setActiveMark(mark);
   };
 
-  // todo: 替换两元素的位置，需要优化写法
-  const changeLayers = (layer1: LayerStrucType, layer2: LayerStrucType) => {
-    if (layer1.id === layer2.id) return;
-    const layers = [...(activedScene?.layers || [])];
-    /** 调换layer位置 */
-    const index1ByLayers = layers.findIndex(item => item.id === layer1.id);
-    const index2ByLayers = layers.findIndex(item => item.id === layer2.id);
+  /**
+   *  调整层级
+   * @param targetLayerId 活动图层调整位置的目标图层
+   * @returns
+   */
+  const changeLayers = (targetLayerId: string) => {
+    const activeLayerId = model.id;
+    if (!activeLayerId || !targetLayerId || activeLayerId === targetLayerId)
+      return;
 
-    if (index1ByLayers > -1 && index2ByLayers > -1) {
-      layers[index1ByLayers] = layer2;
-      layers[index2ByLayers] = layer1;
-      activedScene?.update({ layers });
-      overlayLayerRef.current = magic.getOverlayLayers(model);
+    const layers = activedScene?.layers;
+    /** 调换layer位置 */
+    const activeLayerByLayers = layers?.find(item => item.id === activeLayerId);
+    const targetLayerByLayers = layers?.find(item => item.id === targetLayerId);
+    if (activeLayerByLayers && targetLayerByLayers) {
+      /**
+       * 如果活动图层的位置大于 目标图层的位置，说明为向下调整，小于则取反。
+       */
+      if (activeLayerByLayers.getIndex() > targetLayerByLayers.getIndex()) {
+        model.toDown(targetLayerByLayers);
+      } else {
+        model.toUp(targetLayerByLayers);
+      }
     }
+    overlayLayersRef.current = magic.getOverlayLayers(model);
   };
 
   const moveUp = () => {
     if (disableMoveUp) return;
-
-    changeLayers(
-      overlayLayerRef.current[activeMark],
-      overlayLayerRef.current[activeMark + 1]
-    );
-
-    setActiveMark(activeMark + 1);
+    const mark = activeMark + 1;
+    changeLayers(overlayLayersRef.current[mark].id);
+    setActiveMark(mark);
   };
 
   const moveDown = () => {
     if (disableMoveDown) return;
-
-    changeLayers(
-      overlayLayerRef.current[activeMark],
-      overlayLayerRef.current[activeMark - 1]
-    );
-
-    setActiveMark(activeMark - 1);
+    const mark = activeMark - 1;
+    changeLayers(overlayLayersRef.current[mark].id);
+    setActiveMark(mark);
   };
 
   const toTop = () => {
     model.toTopInCanvas();
+    initMarks();
   };
 
   const toLeft = () => {
     model.toLeftInCanvas();
+    initMarks();
   };
 
   const toBottom = () => {
     model.toBottomInCanvas();
+    initMarks();
   };
 
   const toRight = () => {
     model.toRightInCanvas();
+    initMarks();
   };
 
   const toVerticalCenterAlign = () => {
     model.toVerticalCenterAlignInCanvas();
+    initMarks();
   };
 
   const toHorizontalCenterAlign = () => {
     model.toHorizontalCenterAlignInCanvas();
+    initMarks();
   };
 
   const toCenterAlign = () => {
     model.toCenterAlignInCanvas();
+    initMarks();
   };
 
   const popoverContent = (
