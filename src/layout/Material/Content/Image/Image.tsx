@@ -4,6 +4,8 @@ import UploadBtn from '@/components/UploadBtn';
 import { makeImage } from '@/utils/image';
 import { magic } from '@/store';
 
+import { MIME_TYPES } from '@/constants/MimeTypes';
+
 function Image() {
   const { activedScene } = magic;
   const addImage = async (files: File[]) => {
@@ -11,12 +13,23 @@ function Image() {
     if (!file) return;
     const url = await fileToBase64(file);
     const { width, height } = await makeImage(url);
-    activedScene?.addImage({ name: file.name, width, height, url });
+
+    activedScene?.addImage({
+      name: file.name,
+      width,
+      height,
+      url,
+      mimeType: file.type,
+    });
   };
 
   return (
     <div>
-      <UploadBtn onChange={addImage} btnTitle="添加图片" />
+      <UploadBtn
+        onChange={addImage}
+        btnTitle="添加图片"
+        accept={Object.values(MIME_TYPES).join(',')}
+      />
     </div>
   );
 }

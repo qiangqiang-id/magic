@@ -9,7 +9,7 @@ export default class ImageStruc extends LayerStruc implements LayerModel.Image {
 
   originalHeight?: number;
 
-  fileType?: string;
+  mimeType?: string;
 
   constructor(data: LayerModel.Image) {
     super(data);
@@ -17,13 +17,13 @@ export default class ImageStruc extends LayerStruc implements LayerModel.Image {
       url: observable,
       originalWidth: observable,
       originalHeight: observable,
-      fileType: observable,
+      mimeType: observable,
     });
 
     this.url = data.url;
     this.originalWidth = data.originalWidth;
     this.originalHeight = data.originalHeight;
-    this.fileType = data?.fileType;
+    this.mimeType = data?.mimeType;
   }
 
   model(): LayerModel.Image {
@@ -34,7 +34,7 @@ export default class ImageStruc extends LayerStruc implements LayerModel.Image {
       url: this.url,
       originalWidth: this.originalWidth,
       originalHeight: this.originalHeight,
-      fileType: this.fileType,
+      mimeType: this.mimeType,
     };
   }
 

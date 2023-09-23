@@ -1,5 +1,6 @@
 import { LayerTypeEnum } from '@/constants/LayerTypeEnum';
 import { TEMPLATE_HEIGHT, TEMPLATE_WIDTH } from '@/constants/TemplateSize';
+import { FontStyleEnum, FontWeightEnum, TextAlignEnum } from '@/constants/Font';
 import { randomString } from '@/utils/random';
 
 /** 默认缩放值 */
@@ -65,7 +66,7 @@ export function getImageDefaultValues(): Required<LayerModel.Image> {
     url: '',
     originalHeight: 0,
     originalWidth: 0,
-    fileType: '',
+    mimeType: '',
   };
 }
 
@@ -107,6 +108,9 @@ export function getTextDefaultValues(): Required<LayerModel.Text> {
       bottom: 0,
     },
     verticalAlign: 'top',
+    fontStyle: FontStyleEnum.Normal,
+    textDecoration: FontWeightEnum.Normal,
+    textAlign: TextAlignEnum.Left,
   };
 }
 

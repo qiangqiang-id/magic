@@ -39,3 +39,15 @@ export function getCanvasWrapRectInfo(): DOMRect | null {
   if (!node) return null;
   return node.getBoundingClientRect();
 }
+
+/**
+ * 返回相对于画布的坐标
+ * @param point 相对的可视坐标
+ * @returns {Point}
+ */
+export function toCanvasPoint(point: Point): Point {
+  const cnavasNode = getCanvasNode();
+  if (!cnavasNode) return point;
+  const { left, top } = cnavasNode.getBoundingClientRect();
+  return { x: point.x - left, y: point.y - top };
+}

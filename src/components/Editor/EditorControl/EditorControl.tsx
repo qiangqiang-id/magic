@@ -10,6 +10,9 @@ import { ALL_POINTS, TEXT_POINTS } from '@/constants/PointList';
 import Style from './EditorControl.module.less';
 import { getPreviewSizePosition } from '@/utils/getPreviewSizePosition';
 import { MAX_FONT_SIZE, MIN_FONT_SIZE } from '@/constants/FontSize';
+import { toCanvasPoint } from '@/helpers/Node';
+import { getLayersByPoint } from '@/utils/layers';
+import { getPenetrationLayer } from '@/utils/penetration';
 
 export interface EditorControlProps {
   zoomLevel?: number;
@@ -18,7 +21,9 @@ export interface EditorControlProps {
 
 function EditorControl(props: EditorControlProps) {
   const { model, zoomLevel = 1 } = props;
-  const { OS, setting } = useStores();
+  const { OS, setting, magic } = useStores();
+
+  const { layers = [] } = magic.activedScene || {};
 
   const [points, setPoints] = useState(ALL_POINTS);
 
@@ -163,13 +168,41 @@ function EditorControl(props: EditorControlProps) {
    * 鼠标按下：移动
    */
   const onMouseDown = (e: React.MouseEvent) => {
+    isMouseEventFormEditor.current = true;
     if (!model || model?.isLock) return;
     moveHandle(e.nativeEvent, model, zoomLevel);
   };
 
-  const onMouseUp = () => {
+  /**
+   * 鼠标抬起：切换活动图层
+   */
+  const onMouseUp = async (e: React.MouseEvent) => {
     if (OS.isEditing || !isMouseEventFormEditor.current) return;
     isMouseEventFormEditor.current = false;
+
+    /**
+     *  如果没有发生过移动，判断是否需要切换活动组件
+     *  需要对透明图片做透传选择
+     * */
+    const pointInCanvas = toCanvasPoint({
+      x: e.clientX,
+      y: e.clientY,
+    });
+
+    pointInCanvas.x /= zoomLevel;
+    pointInCanvas.y /= zoomLevel;
+
+    /** 鼠标坐标下的图层 */
+    const layersInPoint = getLayersByPoint(layers, {
+      x: pointInCanvas.x,
+      y: pointInCanvas.y,
+    });
+
+    if (!layersInPoint.length) return;
+
+    const layer = await getPenetrationLayer(pointInCanvas, layersInPoint);
+
+    layer && magic.activeLayer(layer, e.shiftKey);
   };
 
   const onDoubleClick = () => {

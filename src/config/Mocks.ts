@@ -4,6 +4,7 @@ import {
   getTextDefaultValues,
 } from './DefaultValues';
 import { LayerTypeEnum } from '@/constants/LayerTypeEnum';
+import { MIME_TYPES } from '@/constants/MimeTypes';
 import { TEMPLATE_HEIGHT, TEMPLATE_WIDTH } from '@/constants/TemplateSize';
 import { randomString } from '@/utils/random';
 
@@ -52,6 +53,25 @@ const layer2: LayerModel.Image = {
   },
 };
 
+const layer3: LayerModel.Image = {
+  ...getImageDefaultValues(),
+  name: '第二张图片',
+  type: LayerTypeEnum.IMAGE,
+  width: 800,
+  height: 450,
+  x: 500,
+  y: 1000,
+  rotate: 0,
+  url: 'https://img.shanjian.tv/common/mtv/2022/05/25/11/b33674519d8e5dcf6fd5aa7addd00d74.png',
+  mimeType: MIME_TYPES.png,
+  mask: {
+    x: 0,
+    y: 0,
+    width: 800,
+    height: 450,
+  },
+};
+
 const textLayer: LayerModel.Text = {
   ...getTextDefaultValues(),
   width: 700,
@@ -62,7 +82,7 @@ const textLayer: LayerModel.Text = {
 const scene1: SceneModel = {
   id: randomString(),
   name: '第一个页面',
-  layers: [backLayer, layer1, layer2, textLayer],
+  layers: [backLayer, layer1, layer2, layer3, textLayer],
   width: TEMPLATE_WIDTH,
   height: TEMPLATE_HEIGHT,
 };

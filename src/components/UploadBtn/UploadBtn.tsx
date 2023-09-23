@@ -7,10 +7,11 @@ interface UploadBtnProps {
   className?: string;
   btnTitle?: string;
   onChange?: (files: File[]) => void;
+  accept?: string;
 }
 
 export default function UploadBtn(props: UploadBtnProps) {
-  const { className, btnTitle = '上传按钮', onChange } = props;
+  const { className, btnTitle = '上传按钮', onChange, accept } = props;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -36,6 +37,7 @@ export default function UploadBtn(props: UploadBtnProps) {
         type="file"
         ref={inputRef}
         style={{ display: 'none' }}
+        accept={accept}
         onChange={handleChange}
       />
     </>

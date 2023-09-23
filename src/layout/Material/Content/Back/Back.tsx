@@ -4,6 +4,7 @@ import UploadBtn from '@/components/UploadBtn';
 import { BackColorList } from '@/config/ColorList';
 import { fileToBase64 } from '@/utils/file';
 import { useStores } from '@/store';
+import { MIME_TYPES } from '@/constants/MimeTypes';
 import Style from './Back.module.less';
 
 interface BackContentProps {
@@ -57,7 +58,11 @@ function Back() {
       </BackContent>
 
       <BackContent className={Style.picture_wrapper} title="图片背景">
-        <UploadBtn onChange={addBackImage} btnTitle="添加图片背景" />
+        <UploadBtn
+          onChange={addBackImage}
+          btnTitle="添加图片背景"
+          accept={Object.values(MIME_TYPES).join(',')}
+        />
       </BackContent>
     </div>
   );
