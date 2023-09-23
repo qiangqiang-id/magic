@@ -84,7 +84,13 @@ declare namespace LayerModel {
     /** 字间距 */
     letterSpacing?: number;
     /** 字体粗细 */
-    fontWeight?: number;
+    fontWeight?: number | string;
+    /** 文字风格 斜体 */
+    fontStyle?: string;
+    /** 字体装饰 下划线 删除线 */
+    textDecoration?: string;
+    /** 文字对齐 */
+    textAlign?: string;
     /** 背景颜色 */
     backgroundColor?: string;
     /** 背景透明度 0-100 */

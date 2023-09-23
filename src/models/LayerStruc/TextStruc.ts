@@ -22,7 +22,13 @@ export default class TextStruc extends LayerStruc implements LayerModel.Text {
   letterSpacing?: number;
 
   /** 字体粗细 */
-  fontWeight?: number;
+  fontWeight?: number | string;
+
+  fontStyle?: string;
+
+  textDecoration?: string;
+
+  textAlign?: string;
 
   /** 背景颜色 */
   backgroundColor?: string;
@@ -47,6 +53,9 @@ export default class TextStruc extends LayerStruc implements LayerModel.Text {
       strokes: observable,
       letterSpacing: observable,
       fontWeight: observable,
+      fontStyle: observable,
+      textDecoration: observable,
+      textAlign: observable,
       backgroundColor: observable,
       verticalAlign: observable,
 
@@ -64,6 +73,9 @@ export default class TextStruc extends LayerStruc implements LayerModel.Text {
     this.strokes = data?.strokes;
     this.letterSpacing = data?.letterSpacing;
     this.fontWeight = data?.fontWeight;
+    this.fontStyle = data?.fontStyle;
+    this.textDecoration = data?.textDecoration;
+    this.textAlign = data?.textAlign;
     this.backgroundColor = data?.backgroundColor;
     this.backgroundAlpha = data?.backgroundAlpha;
     this.padding = data?.padding;
@@ -85,6 +97,9 @@ export default class TextStruc extends LayerStruc implements LayerModel.Text {
       strokes: this.strokes,
       letterSpacing: this.letterSpacing,
       fontWeight: this.fontWeight,
+      fontStyle: this.fontStyle,
+      textDecoration: this.textDecoration,
+      textAlign: this.textAlign,
       backgroundColor: this.backgroundColor,
       backgroundAlpha: this.backgroundAlpha,
       padding: this.padding,

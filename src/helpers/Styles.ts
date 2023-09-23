@@ -16,6 +16,9 @@ const onLayerKeys = [
   'lineHeight',
   'letterSpacing',
   'fontWeight',
+  'fontStyle',
+  'textDecoration',
+  'textAlign',
   'backgroundColor',
 ];
 

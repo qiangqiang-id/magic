@@ -15,8 +15,8 @@ export default function Text(props: TextProps) {
       <>
         <TextFamilyWithSize model={model} />
 
-        <TextStyle />
-        <TextAlign />
+        <TextStyle model={model} />
+        <TextAlign model={model} />
         <LayerBaseSetting model={model} />
       </>
     </SettingContainer>
