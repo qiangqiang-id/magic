@@ -1,7 +1,7 @@
 import CmdEnum from '@/constants/CmdEnum';
 import HotKeyScope from '@/constants/HotKeyScope';
 import KeyCodeMap from '@/constants/KeyCode';
-import cmdMaps, { CmdItem } from './cmd';
+import cmdMaps, { CmdItem } from './Cmd';
 
 export interface HotKey extends CmdItem {
   /** 作用范围分组 */

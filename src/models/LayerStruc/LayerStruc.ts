@@ -117,7 +117,7 @@ export default class LayerStruc implements LayerModel.Base {
   }
 
   public update<T extends Partial<LayerModel.Base> = Partial<LayerModel.Base>>(
-    data: T
+    data: Partial<T>
   ) {
     this.handleUpdate(data);
   }

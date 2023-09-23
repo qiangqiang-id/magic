@@ -37,7 +37,7 @@ function LayerBaseSetting(props: LayerBaseSettingProps) {
 
   return (
     <div className={Style.layer_base_setting}>
-      <div className={cls(Style.layer_base_row, 'setting-row')}>
+      <div className={cls('attribute-row', 'setting-row')}>
         <SliderNumberInput
           prefixIcon={<i className="iconfont icon-icon204" />}
           value={opacityNum}
@@ -45,12 +45,12 @@ function LayerBaseSetting(props: LayerBaseSettingProps) {
         />
       </div>
 
-      <div className={cls(Style.layer_base_row, 'setting-row')}>
+      <div className={cls('attribute-row', 'setting-row')}>
         <Tooltip title="图层位置">
           <span>
             <LayerPosition
               model={model}
-              className={cls(Style.icon_item, {
+              className={cls('icon-item', {
                 locked: isLock,
               })}
             />
@@ -59,7 +59,7 @@ function LayerBaseSetting(props: LayerBaseSettingProps) {
 
         <Tooltip title="删除">
           <i
-            className={cls('iconfont icon-del', Style.icon_item, {
+            className={cls('iconfont icon-del', 'icon-item', {
               locked: isLock,
             })}
             onClick={handleRemove}
@@ -68,7 +68,7 @@ function LayerBaseSetting(props: LayerBaseSettingProps) {
 
         <Tooltip title="复制">
           <i
-            className={cls('iconfont icon-copy', Style.icon_item, {
+            className={cls('iconfont icon-copy', 'icon-item', {
               locked: isLock,
             })}
             onClick={handleCopy}
@@ -79,7 +79,7 @@ function LayerBaseSetting(props: LayerBaseSettingProps) {
           <span>
             <Flip
               model={model}
-              className={cls(Style.icon_item, {
+              className={cls('icon-item', {
                 locked: model.isLock,
               })}
             />
@@ -92,7 +92,7 @@ function LayerBaseSetting(props: LayerBaseSettingProps) {
             className={cls(
               'iconfont',
               isLock ? 'icon-linshimima' : 'icon-kaisuo',
-              Style.icon_item,
+              'icon-item',
               {
                 [Style.locked_icon]: isLock,
               }

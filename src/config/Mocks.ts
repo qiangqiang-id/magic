@@ -52,10 +52,10 @@ const layer2: LayerModel.Image = {
   },
 };
 
-const textLayer = {
+const textLayer: LayerModel.Text = {
   ...getTextDefaultValues(),
-  width: 400,
-  x: 400,
+  width: 700,
+  x: 300,
   y: 1300,
 };
 
