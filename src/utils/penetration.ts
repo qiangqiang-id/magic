@@ -7,6 +7,9 @@ import { TRANSPARENT_PICTURE_MIME_TYPES } from '@/constants/MimeTypes';
 let canvas: HTMLCanvasElement | null = null;
 let ctx: CanvasRenderingContext2D | null = null;
 
+/** 穿透透明度 透明度小于 0.1 就算穿透 */
+const PENETRATION_OPACITY = 0.1;
+
 /**
  * 获取图片下鼠标点击的不透明度
  * @param point 坐标点，在图片内部的坐标
@@ -82,7 +85,9 @@ async function getLayer(
   }
   const opacity = await getMousePointOpacityInImage(pointInLayer, layer);
 
-  if (opacity === 0) return getLayer(mousePointInCanvas, layerList);
+  /** 透明度小于 0.1 就算穿透 */
+  if (opacity < PENETRATION_OPACITY)
+    return getLayer(mousePointInCanvas, layerList);
   return layer;
 }
 
