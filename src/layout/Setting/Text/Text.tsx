@@ -5,6 +5,7 @@ import { SettingProps } from '../Setting';
 import TextStyle from './TextStyle';
 import TextAlign from './TextAlign';
 import TextFamilyWithSize from './TextFamilyWithSize';
+import TextColor from './TextColor';
 
 export interface TextProps extends SettingProps<TextStruc> {}
 
@@ -17,6 +18,7 @@ export default function Text(props: TextProps) {
 
         <TextStyle model={model} />
         <TextAlign model={model} />
+        <TextColor model={model} />
         <LayerBaseSetting model={model} />
       </>
     </SettingContainer>
