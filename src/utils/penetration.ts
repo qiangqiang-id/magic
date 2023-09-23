@@ -23,11 +23,21 @@ export async function getMousePointOpacityInImage(
   }
   ctx?.clearRect(0, 0, canvas.width, canvas.height);
   const { url = '' } = imageLayer;
-  const { width, height } = imageLayer.getRectData();
+  /** 这里的宽高是真实的 图层宽高 */
+  const { mask, width, height, scale } = imageLayer.getSafetyModalData();
+  /** 这里的宽高是 计算了mask 的宽高，肉眼可见的编辑框宽高*/
+  const { width: canvasWidth, height: canvasHeight } = imageLayer.getRectData();
   const image = await makeImage(url, width, height);
-  canvas.width = +width;
-  canvas.height = +height;
-  ctx?.drawImage(image, 0, 0, +width, +height);
+
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
+  /** 处理翻转 */
+  ctx?.scale(scale.x, scale.y);
+  const translateX = scale.x < 0 ? canvasWidth * scale.x : 0;
+  const translateY = scale.y < 0 ? canvasHeight * scale.y : 0;
+  ctx?.translate(translateX, translateY);
+
+  ctx?.drawImage(image, -mask.x, -mask.y, width, height);
   const data = ctx?.getImageData(point.x, point.y, 1, 1).data;
   if (!data) return 1;
   /** 透明度的值为0 - 255， 除以255得到 0 - 1 */
@@ -71,6 +81,7 @@ async function getLayer(
     };
   }
   const opacity = await getMousePointOpacityInImage(pointInLayer, layer);
+
   if (opacity === 0) return getLayer(mousePointInCanvas, layerList);
   return layer;
 }
