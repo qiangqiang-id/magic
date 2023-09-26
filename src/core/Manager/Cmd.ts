@@ -1,11 +1,12 @@
 import CmdEnum from '@/constants/CmdEnum';
 import MagicStore from '@/store/Magic';
 import OSStore from '@/store/OS';
+import ClipboardManager from './Clipboard';
 
 export type CmdHandler = (data?: any) => void;
 
 export default class CmdManager {
-  // 命令集合
+  /** 命令集合 */
   private static cmds: Map<CmdEnum, CmdHandler[]> = new Map();
 
   /**
@@ -50,52 +51,53 @@ function registerCmds(cmds: Record<string, CmdHandler>) {
 
 /**
  * 注册作品相关动作命令
- * @param app 作品数据
+ * @param magic 作品数据
  */
 export function registerAppActions(magic: MagicStore) {
-  console.log('registerAppActions', magic);
   const cmdToAction: Record<string, CmdHandler> = {
     [CmdEnum.SAVE]() {
-      console.log('SAVE');
+      magic.save();
     },
     [CmdEnum.COPY]() {
-      console.log('COPY');
+      magic.copyLayers();
+      ClipboardManager.copyToClipboard();
     },
     [CmdEnum.CUT]() {
-      console.log('CUT');
+      magic.cutLayers();
+      ClipboardManager.copyToClipboard();
     },
     [CmdEnum.PASTE]() {
-      console.log('PASTE');
+      magic.pasteLayers();
     },
     [CmdEnum.DELETE]() {
-      console.log('DELETE');
+      magic.removeLayer(magic.activedLayers);
     },
     [CmdEnum['SELECT ALL']]() {
       console.log('SELECT ALL');
     },
     [CmdEnum['TO UP']]() {
-      console.log(-1, 'top');
+      magic.moveCmpBy(-1, 'y');
     },
     [CmdEnum['TO BUTTOM']]() {
-      console.log(1, 'top');
+      magic.moveCmpBy(1, 'y');
     },
     [CmdEnum['TO UP 10PX']]() {
-      console.log(-10, 'top');
+      magic.moveCmpBy(-10, 'y');
     },
     [CmdEnum['TO BUTTOM 10PX']]() {
-      console.log(10, 'top');
+      magic.moveCmpBy(10, 'y');
     },
     [CmdEnum['TO LEFT']]() {
-      console.log(-1, 'left');
+      magic.moveCmpBy(-1, 'x');
     },
     [CmdEnum['TO RIGHT']]() {
-      console.log(1, 'left');
+      magic.moveCmpBy(1, 'x');
     },
     [CmdEnum['TO LEFT 10PX']]() {
-      console.log(-10, 'left');
+      magic.moveCmpBy(-10, 'x');
     },
     [CmdEnum['TO RIGHT 10PX']]() {
-      console.log(10, 'left');
+      magic.moveCmpBy(10, 'x');
     },
   };
 
@@ -109,11 +111,9 @@ export function registerAppActions(magic: MagicStore) {
 export function registerOSSActions(OS: OSStore) {
   const cmdToAction: Record<string, CmdHandler> = {
     [CmdEnum['ZOOM IN']]() {
-      console.log('ZOOM IN');
       OS.zoomIn();
     },
     [CmdEnum['ZOOM OUT']]() {
-      console.log('ZOOM OUT');
       OS.zoomOut();
     },
   };

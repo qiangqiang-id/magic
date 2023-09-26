@@ -1,6 +1,7 @@
 import { makeObservable, observable } from 'mobx';
 import LayerStruc from './LayerStruc';
 import { magic } from '@/store';
+import { LayerStrucType } from '@/types/model';
 
 export default class GroupStruc extends LayerStruc implements LayerModel.Group {
   layers?: LayerModel.Layer[];
@@ -51,5 +52,15 @@ export default class GroupStruc extends LayerStruc implements LayerModel.Group {
    */
   getLayerIndex(layer: LayerStruc): number {
     return this.layers?.findIndex(item => item.id === layer.id) || -1;
+  }
+
+  addLayer(layer: LayerStrucType, index?: number) {
+    const i = this.getLayerIndex(layer);
+    if (i >= 0) return;
+    layer.group = this;
+
+    typeof index === 'number'
+      ? this.layers?.splice(index, 0, layer)
+      : this.layers?.push(layer);
   }
 }

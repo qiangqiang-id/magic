@@ -3,9 +3,10 @@ import SceneStruc from '../SceneStruc';
 import { LayerStrucType } from '@/types/model';
 import { createSceneData } from '@/core/FormatData/Scene';
 import { CreateScene } from '../FactoryStruc/SceneFactory';
-import LayerStruc from '../LayerStruc';
+import LayerStruc, { GroupStruc } from '../LayerStruc';
 import { OBB, Vector2d } from '@/helpers/Obb';
 import { isCollision } from '@/utils/collision';
+import { Axis } from '@/types/canvas';
 
 export default class MagicStruc implements MagicModel {
   id!: string | null;
@@ -24,8 +25,16 @@ export default class MagicStruc implements MagicModel {
   /** 当前鼠标悬浮图层  */
   hoveredLayer: LayerStrucType | null = null;
 
+  clipboard?: LayerStrucType[] | null;
+
   constructor() {
-    makeObservable<this, 'handleAddScene' | 'handleRemoveScene'>(this, {
+    makeObservable<
+      this,
+      | 'handleAddScene'
+      | 'handleRemoveScene'
+      | 'handleRemoveLayer'
+      | 'handleAddLayer'
+    >(this, {
       name: observable,
       scenes: observable,
       activedScene: observable,
@@ -41,6 +50,8 @@ export default class MagicStruc implements MagicModel {
       handleAddScene: action,
       hoverLayer: action,
       handleRemoveScene: action,
+      handleRemoveLayer: action,
+      handleAddLayer: action,
     });
   }
 
@@ -125,12 +136,6 @@ export default class MagicStruc implements MagicModel {
     this.activeScene(scene);
   }
 
-  protected handleAddScene(scene: SceneStruc, index?: number) {
-    typeof index === 'number'
-      ? this.scenes.splice(index, 0, scene)
-      : this.scenes.push(scene);
-  }
-
   public setScenes(scenes: SceneStruc[]) {
     this.update({
       scenes,
@@ -160,18 +165,6 @@ export default class MagicStruc implements MagicModel {
   public removeScene(scene?: SceneStruc) {
     if (!scene) return;
     this.handleRemoveScene(scene);
-  }
-
-  protected handleRemoveScene(scene: SceneStruc) {
-    const index = this.scenes.findIndex(s => s.id === scene.id);
-    if (index === -1) return;
-    this.scenes.splice(index, 1);
-    // 删除的恰好是选中的场景，则选中下一个场景
-    if (scene.id === this.activedScene?.id) {
-      const nextScene =
-        this.scenes[index] || this.scenes[this.scenes.length - 1];
-      nextScene && this.activeScene(nextScene);
-    }
   }
 
   /**
@@ -220,6 +213,177 @@ export default class MagicStruc implements MagicModel {
       },
       []
     );
+  }
+
+  /**
+   * 键盘移动组件
+   * @param value 移动的量
+   * @param axis 坐标轴
+   */
+  moveCmpBy(value: number, axis: Axis) {
+    this.activedLayers.forEach(layer => {
+      if (layer.isLock) return;
+      layer.addPixel(value, axis);
+    });
+  }
+
+  /**
+   * 删除图层
+   * @param layer 选中的图层
+   */
+  // todo 增加历史记录
+  removeLayer(layer: LayerStrucType | LayerStrucType[]) {
+    this.handleRemoveLayer(layer);
+  }
+
+  /**
+   * 添加图层
+   * @param layer 新添加的图层
+   * @param parent 父级
+   * @param index 插入的位置
+   */
+  // todo 增加历史记录
+  addLayer(
+    layer: LayerStrucType | LayerStrucType[],
+    parent?: SceneStruc | GroupStruc | null,
+    index?: number
+  ) {
+    this.handleAddLayer(layer, parent, index);
+  }
+
+  /**
+   * 粘贴组件
+   * @param layers 剪贴板的组件
+   */
+  handlePasteLayers(layers: LayerStrucType[]) {
+    const newLayers = layers.map(layer => layer.clone());
+    const activedLayer =
+      this.activedLayers.length === 1 ? this.activedLayers[0] : null;
+    const parent = activedLayer?.isGroup() ? activedLayer : null;
+    this.updatePastedLayersPosition(newLayers);
+    this.addLayer(newLayers, parent);
+  }
+
+  /**
+   * 更新粘贴后的组件位置
+   * @param layers 更新的组件
+   */
+  private updatePastedLayersPosition(layers: LayerStrucType[]) {
+    console.log('粘贴更新位置', layers);
+    // const maxRect = getCmpsMaxRect(layers);
+    // if (!maxRect) return;
+    // const updatePosition = (axis: Axis) => {
+    //   const min = layers[0].getNumPixel(axis);
+    //   const sorted = sortCmps(layers, axis, min);
+    //   const prop = axis === 'x' ? 'left' : 'bottom';
+    //   const offset = maxRect[prop] - min;
+    //   sorted.forEach(cmp => {
+    //     if (cmp.style) cmp.style[axis] = cmp.toPixelBy(offset, axis);
+    //   });
+    // };
+    // updatePosition('x');
+    // updatePosition('y');
+  }
+
+  /**
+   * 是否是激活图层
+   * @param layer 图层或图层的id
+   * @returns {boolean}
+   */
+  isActiveLayer(layer: LayerStrucType | string): boolean {
+    const id = typeof layer === 'string' ? layer : layer.id;
+    return !!this.activedLayers.find(item => item.id === id);
+  }
+
+  /**
+   * 复制组件，通过剪贴板实现跨作品复制
+   */
+  copyLayers() {
+    this.clipboard = [];
+    this.activedLayers.forEach(layer => {
+      if (!layer.isCanCopy) return;
+      const newLayer = layer.clone();
+      newLayer.resetParnth();
+      newLayer.isLock = false;
+      this.clipboard?.push(newLayer);
+    });
+  }
+
+  /**
+   * 粘贴组件，通过剪贴板实现跨作品复制
+   */
+  pasteLayers() {
+    if (!this.clipboard || !this.clipboard.length) return;
+    this.handlePasteLayers(this.clipboard);
+  }
+
+  /**
+   * 剪切组件，通过剪贴板实现跨作品复制
+   */
+  cutLayers() {
+    this.copyLayers();
+    this.activedLayers.forEach(cmp => {
+      if (!cmp.isCanCopy) return;
+      if (cmp.isLock) return;
+      this.removeLayer(cmp);
+    });
+  }
+
+  /**
+   * 添加场景
+   *  */
+  protected handleAddScene(scene: SceneStruc, index?: number) {
+    typeof index === 'number'
+      ? this.scenes.splice(index, 0, scene)
+      : this.scenes.push(scene);
+  }
+
+  /**
+   * 删除场景
+   * @param scene
+   */
+  protected handleRemoveScene(scene: SceneStruc) {
+    const index = this.scenes.findIndex(s => s.id === scene.id);
+    if (index === -1) return;
+    this.scenes.splice(index, 1);
+    /** 删除的恰好是选中的场景，则选中下一个场景 */
+    if (scene.id === this.activedScene?.id) {
+      const nextScene =
+        this.scenes[index] || this.scenes[this.scenes.length - 1];
+      nextScene && this.activeScene(nextScene);
+    }
+  }
+
+  /**
+   * 添加图层
+   * @param layer
+   * @param parent
+   * @param index
+   */
+  protected handleAddLayer(
+    layer: LayerStrucType | LayerStrucType[],
+    parent?: SceneStruc | GroupStruc | null,
+    index?: number
+  ) {
+    if (!parent) parent = this.activedScene;
+    const layers = Array.isArray(layer) ? layer : [layer];
+    for (const item of layers) {
+      parent?.addLayer(item, index);
+    }
+  }
+
+  /**
+   * 删除图层
+   * @param layer
+   */
+  protected handleRemoveLayer(layer: LayerStrucType | LayerStrucType[]) {
+    const layers = Array.isArray(layer) ? layer : [layer];
+    layers.forEach(item => {
+      if (item.isLock) return;
+      const parent = item.getParent() || this.activedScene;
+      parent?.removeLayer(item);
+      if (this.isActiveLayer(item)) this.removeActivedLayer(item);
+    });
   }
 
   /** 是否多选 */

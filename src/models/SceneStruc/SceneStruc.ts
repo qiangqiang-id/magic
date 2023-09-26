@@ -162,8 +162,8 @@ export default class SceneStruc implements SceneModel {
    * @param layer 图层
    * @param index 添加的位置
    */
-  protected addLayer(layer: LayerStrucType, index?: number) {
-    index !== undefined
+  addLayer(layer: LayerStrucType, index?: number) {
+    typeof index === 'number'
       ? this.layers?.splice(index, 0, layer)
       : this.layers?.push(layer);
   }

@@ -44,4 +44,8 @@ export default class MagicStore extends MagicStruc {
   hasChange(data: MagicModel) {
     return !isEquals(this.rawAppModel, data);
   }
+
+  save() {
+    console.log('保存数据');
+  }
 }

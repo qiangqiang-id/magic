@@ -20,6 +20,7 @@ import ImageStruc from './ImageStruc';
 import ShapeStruc from './ShapeStruc';
 import BackgroundStruc from './BackgroundStruc';
 import TextStruc from './TextStruc';
+import { PixelKey } from '@/types/canvas';
 
 export default class LayerStruc implements LayerModel.Base {
   id!: string;
@@ -329,6 +330,14 @@ export default class LayerStruc implements LayerModel.Base {
   }
 
   /**
+   * 解除父级所属
+   */
+  resetParnth() {
+    this.scene = null;
+    this.group = null;
+  }
+
+  /**
    * 获取左上角位置
    * 因为位置储存的是基于锚点的位置，不能进行计算
    *  */
@@ -374,14 +383,14 @@ export default class LayerStruc implements LayerModel.Base {
   /**
    * 获取索引
    */
-  getIndex(): number {
+  public getIndex(): number {
     return this.scene?.layers?.findIndex(cmps => cmps.id === this.id) || -1;
   }
 
   /**
    * 下一级
    *  */
-  toDown(targetLayer?: LayerStrucType) {
+  public toDown(targetLayer?: LayerStrucType) {
     const { scene } = this;
     if (!scene || this.isFirstLayer) return;
     const currentIndex = this.getIndex();
@@ -394,7 +403,7 @@ export default class LayerStruc implements LayerModel.Base {
   /**
    * 置底
    *  */
-  toBottom() {
+  public toBottom() {
     const { scene } = this;
     if (!scene || this.isFirstLayer) return;
     const currentIndex = this.getIndex();
@@ -406,7 +415,7 @@ export default class LayerStruc implements LayerModel.Base {
   /**
    * 上一级
    *  */
-  toUp(targetLayer?: LayerStrucType) {
+  public toUp(targetLayer?: LayerStrucType) {
     const { scene } = this;
     if (!scene || this.isFirstLayer) return;
     const currentIndex = this.getIndex();
@@ -420,7 +429,7 @@ export default class LayerStruc implements LayerModel.Base {
   /**
    * 置顶
    *  */
-  toTop() {
+  public toTop() {
     const { scene } = this;
     if (!scene || this.isFirstLayer) return;
     const currentIndex = this.getIndex();
@@ -448,11 +457,41 @@ export default class LayerStruc implements LayerModel.Base {
   }
 
   /**
+   * 在当前位置上增加偏移
+   * @param value 偏移值
+   * @param styleKey 方向属性key
+   */
+  public addPixel(value: number, styleKey: PixelKey) {
+    const px = this.getNumPixel(styleKey);
+    this.setNumPixel(px + value, styleKey);
+  }
+
+  /**
+   * 获取数字像素
+   * @param styleKey 属性
+   * @returns {number}
+   */
+  public getNumPixel(styleKey: PixelKey): number {
+    const safetyModalData = this.getSafetyModalData();
+    const pixel = safetyModalData[styleKey];
+    return pixel;
+  }
+
+  /**
+   * 设置方位的具体数值
+   * @param value 偏离值
+   * @param styleKey 方向属性key
+   */
+  public setNumPixel(value: number, styleKey: PixelKey) {
+    this.update({ [styleKey]: value });
+  }
+
+  /**
    * 是否是背景
    * @readonly
    * @memberof LayerStruc
    */
-  isBack(): this is BackgroundStruc {
+  public isBack(): this is BackgroundStruc {
     return this.type === LayerTypeEnum.BACKGROUND;
   }
 
@@ -461,7 +500,7 @@ export default class LayerStruc implements LayerModel.Base {
    * @readonly
    * @memberof LayerStruc
    */
-  isImage(): this is ImageStruc {
+  public isImage(): this is ImageStruc {
     return this.type === LayerTypeEnum.IMAGE;
   }
 
@@ -470,7 +509,7 @@ export default class LayerStruc implements LayerModel.Base {
    * @readonly
    * @memberof LayerStruc
    */
-  isShape(): this is ShapeStruc {
+  public isShape(): this is ShapeStruc {
     return this.type === LayerTypeEnum.SHAPE;
   }
 
@@ -479,7 +518,7 @@ export default class LayerStruc implements LayerModel.Base {
    * @readonly
    * @memberof LayerStruc
    */
-  isText(): this is TextStruc {
+  public isText(): this is TextStruc {
     return this.type === LayerTypeEnum.TEXT;
   }
 
@@ -488,7 +527,12 @@ export default class LayerStruc implements LayerModel.Base {
    * @readonly
    * @memberof LayerStruc
    */
-  isGroup(): this is GroupStruc {
+  public isGroup(): this is GroupStruc {
     return this.type === LayerTypeEnum.GROUP;
+  }
+
+  /** 是否可copy, 默认可copy，再由子类重写 */
+  get isCanCopy() {
+    return true;
   }
 }

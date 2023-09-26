@@ -7,6 +7,8 @@ import {
   registerOSSActions,
   registerHistoryActions,
 } from './core/Manager/Cmd';
+import ClipboardManager from './core/Manager/Clipboard';
+
 import { useStores } from '@/store';
 import './utils/logo';
 
@@ -15,6 +17,7 @@ function App() {
 
   const registerInfo = () => {
     HistoryManager.register(history);
+    ClipboardManager.register(magic);
 
     registerAppActions(magic);
     registerOSSActions(OS);

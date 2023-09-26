@@ -4,8 +4,6 @@
  * @param b 被对比项
  * @returns {boolean}
  */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 function isEqualsObject(a: Record<string, any>, b: Record<string, any>) {
   const keys1 = Object.keys(a);
   const keys2 = Object.keys(b);

@@ -19,11 +19,11 @@ export default function KeyboardManager() {
     const keyCode = e.keyCode || e.which;
     const { shiftKey, ctrlKey, altKey, metaKey } = e;
 
-    // 兼容win和mac
+    /** 兼容win和mac */
     const ctrl = metaKey || ctrlKey;
 
     for (const keyBoard of hotKeyMaps) {
-      // 键值未注册
+      /** 键值未注册 */
       if (!keyBoard) continue;
 
       const code = keyBoard.keyCode;
@@ -48,9 +48,8 @@ export default function KeyboardManager() {
       )
         return;
 
-      // 保留系统粘贴
+      /** 保留系统粘贴 */
       if (keyBoard.name !== CmdEnum.PASTE) e.preventDefault();
-
       pressHotKey(keyBoard);
       break;
     }
