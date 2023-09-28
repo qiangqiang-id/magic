@@ -14,6 +14,7 @@ import {
 import { randomString } from '@/utils/random';
 import { CreateScene } from '../FactoryStruc/SceneFactory';
 import LayerStruc, { BackgroundStruc } from '../LayerStruc';
+import { LayerTypeEnum } from '@/constants/LayerTypeEnum';
 
 export default class SceneStruc implements SceneModel {
   id!: string;
@@ -31,7 +32,7 @@ export default class SceneStruc implements SceneModel {
   actived?: boolean | null;
 
   constructor(data?: Partial<SceneModel> | null) {
-    makeObservable<this, 'addLayer' | 'addLayerStruc' | 'handleUpdate'>(this, {
+    makeObservable<this, 'handleUpdate'>(this, {
       name: observable,
       layers: observable,
       cover: observable,
@@ -42,9 +43,7 @@ export default class SceneStruc implements SceneModel {
       isVerticalTemplate: computed,
       backgroundLayer: computed,
 
-      setSceneBack: action,
-      addLayer: action,
-      addLayerStruc: action,
+      updateSceneBack: action,
       handleUpdate: action,
     });
 
@@ -74,23 +73,21 @@ export default class SceneStruc implements SceneModel {
   }
 
   /**
+   * 更新数据
+   * @param data
+   */
+  public update(data: Partial<SceneModel>) {
+    this.handleUpdate(data);
+  }
+
+  /**
    * 复制
    */
-  clone() {
+  public clone() {
     const model = cloneDeep(this.model());
     model.id = randomString();
     model.actived = false;
     return CreateScene(model);
-  }
-
-  update(data: Partial<SceneModel>) {
-    this.handleUpdate(data);
-  }
-
-  protected handleUpdate(data: Partial<SceneModel>) {
-    for (const key in data) {
-      this[key] = data[key];
-    }
   }
 
   /**
@@ -101,18 +98,17 @@ export default class SceneStruc implements SceneModel {
   public getBackLayer(): BackgroundStruc | null {
     const layer = this.layers?.find(layer => layer.isBack());
     if (layer) return layer as BackgroundStruc;
-
     return null;
   }
 
   /**
-   * 设置背景
+   * 更新背景
    * @param {Partial<LayerModel.Background>} data
    * @memberof SceneStruc
    */
-  public setSceneBack(data: Partial<LayerModel.Background>) {
-    const backModel = this.getBackLayer();
-    backModel?.update<Partial<LayerModel.Background>>(data);
+  public updateSceneBack(data: Partial<LayerModel.Background>) {
+    const backLayer = this.getBackLayer();
+    backLayer?.update<LayerModel.Background>(data);
   }
 
   /**
@@ -121,8 +117,7 @@ export default class SceneStruc implements SceneModel {
    * @memberof SceneStruc
    */
   public addText(data?: Partial<LayerModel.Text>) {
-    const textData = createTextData(this, data);
-    this.addLayerStruc(textData);
+    this.createAndAddLayer(LayerTypeEnum.TEXT, data);
   }
 
   /**
@@ -131,8 +126,7 @@ export default class SceneStruc implements SceneModel {
    * @memberof SceneStruc
    */
   public addImage(data?: Partial<LayerModel.Image>) {
-    const imageData = createImageData(this, data);
-    this.addLayerStruc(imageData);
+    this.createAndAddLayer(LayerTypeEnum.IMAGE, data);
   }
 
   /**
@@ -141,20 +135,58 @@ export default class SceneStruc implements SceneModel {
    * @memberof SceneStruc
    */
   public addShape(data?: Partial<LayerModel.Shape>) {
-    const shapeData = createShapeData(this, data);
-    this.addLayerStruc(shapeData);
+    this.createAndAddLayer(LayerTypeEnum.SHAPE, data);
   }
 
   /**
-   * 添加图层 构造
-   * @protected
-   * @param {LayerModel.Layer} model
-   * @memberof SceneStruc
+   * 创建并且增加图层
+   * @param type 类型
+   * @param data 数据
+   * @param index 添加的位置
+   * @returns
    */
-  protected addLayerStruc(model: LayerModel.Layer) {
-    const layer = CreateLayerStruc(model.type, model, this);
+  public createAndAddLayer(
+    type?: LayerModel.LayerType,
+    data?: Partial<LayerModel.Layer>
+  ) {
+    if (!type) return;
+    const layerDataMap: Record<LayerTypeEnum, (() => LayerModel.Layer) | null> =
+      {
+        [LayerTypeEnum.TEXT]: () => createTextData(this, data),
+        [LayerTypeEnum.IMAGE]: () => createImageData(this, data),
+        [LayerTypeEnum.SHAPE]: () => createShapeData(this, data),
+        [LayerTypeEnum.BACKGROUND]: null,
+        [LayerTypeEnum.GROUP]: null,
+        [LayerTypeEnum.UNKNOWN]: null,
+      };
+    const createData = layerDataMap[type];
+    if (!createData) return;
+    const layerData = createData();
+    const layer = CreateLayerStruc(type, layerData, this);
     this.addLayer(layer);
-    magic.activeLayer(layer);
+  }
+
+  /**
+   * 复制图层
+   * @param layer选中的图层
+   */
+  public copyLayer(layer: LayerStruc) {
+    const newLayer = layer.clone();
+    this.addLayer(newLayer);
+  }
+
+  /**
+   * 删除图层
+   * @param layer 图层
+   */
+  public removeLayer(layer?: LayerStruc) {
+    if (!layer) return;
+    const index = this.getLayerIndex(layer);
+    if (index < 0) return;
+    magic.removeActivedLayer(layer);
+    const layers = this.layers?.filter(item => item.id !== layer.id);
+    layer.scene = null;
+    this.update({ layers });
   }
 
   /**
@@ -162,32 +194,14 @@ export default class SceneStruc implements SceneModel {
    * @param layer 图层
    * @param index 添加的位置
    */
-  addLayer(layer: LayerStrucType, index?: number) {
+  public addLayer(layer: LayerStrucType, index?: number) {
+    const layers = [...(this.layers || [])];
     typeof index === 'number'
-      ? this.layers?.splice(index, 0, layer)
-      : this.layers?.push(layer);
-  }
+      ? layers.splice(index, 0, layer)
+      : layers.push(layer);
 
-  /**
-   * 删除组件
-   * @param layer选中的图层
-   */
-  public removeLayer(layer: LayerStruc) {
-    const index = this.getLayerIndex(layer);
-    if (index < 0) return;
-    magic.removeActivedLayer(layer);
-    this.layers?.splice(index, 1);
-    layer.scene = null;
-  }
-
-  /**
-   * 复制组件
-   * @param layer选中的图层
-   */
-  public copyLayer(layer: LayerStruc) {
-    const newLayer = layer.clone();
-    this.layers?.push(newLayer);
-    magic.activeLayer(newLayer);
+    magic.activeLayer(layer);
+    this.update({ layers });
   }
 
   /**
@@ -197,6 +211,15 @@ export default class SceneStruc implements SceneModel {
    */
   public getLayerIndex(layer: LayerStruc): number {
     return this.layers?.findIndex(item => item.id === layer.id) || -1;
+  }
+
+  /**
+   *  更新数据
+   */
+  protected handleUpdate(data: Partial<SceneModel>) {
+    for (const key in data) {
+      this[key] = data[key];
+    }
   }
 
   /**

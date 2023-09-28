@@ -4,9 +4,8 @@ import { LayerStrucType } from '@/types/model';
 import { createSceneData } from '@/core/FormatData/Scene';
 import { CreateScene } from '../FactoryStruc/SceneFactory';
 import LayerStruc, { GroupStruc } from '../LayerStruc';
-import { OBB, Vector2d } from '@/helpers/Obb';
-import { isCollision } from '@/utils/collision';
 import { Axis } from '@/types/canvas';
+import ClipboardManager from '@/core/Manager/Clipboard';
 
 export default class MagicStruc implements MagicModel {
   id!: string | null;
@@ -25,21 +24,17 @@ export default class MagicStruc implements MagicModel {
   /** 当前鼠标悬浮图层  */
   hoveredLayer: LayerStrucType | null = null;
 
-  clipboard?: LayerStrucType[] | null;
+  /** 是否打开图像裁剪 */
+  isOpenImageCrop = false;
 
   constructor() {
-    makeObservable<
-      this,
-      | 'handleAddScene'
-      | 'handleRemoveScene'
-      | 'handleRemoveLayer'
-      | 'handleAddLayer'
-    >(this, {
+    makeObservable<this, 'handleRemoveLayer' | 'handleAddLayer'>(this, {
       name: observable,
       scenes: observable,
       activedScene: observable,
       activedLayers: observable,
       hoveredLayer: observable,
+      isOpenImageCrop: observable,
 
       isMultiple: computed,
 
@@ -47,11 +42,12 @@ export default class MagicStruc implements MagicModel {
       releaseAllLayers: action,
       activeLayer: action,
       activeScene: action,
-      handleAddScene: action,
       hoverLayer: action,
-      handleRemoveScene: action,
       handleRemoveLayer: action,
       handleAddLayer: action,
+      openImageCrop: action,
+      closeImageCrop: action,
+      removeActivedLayer: action,
     });
   }
 
@@ -59,10 +55,18 @@ export default class MagicStruc implements MagicModel {
     this.handleUpdate(data);
   }
 
-  protected handleUpdate(data: Partial<MagicModel>) {
-    for (const key in data) {
-      this[key] = data[key];
-    }
+  /**
+   * 开启裁剪
+   */
+  public openImageCrop() {
+    this.isOpenImageCrop = true;
+  }
+
+  /**
+   * 关闭裁剪
+   */
+  public closeImageCrop() {
+    this.isOpenImageCrop = false;
   }
 
   /**
@@ -108,7 +112,6 @@ export default class MagicStruc implements MagicModel {
     });
     scene.actived = true;
     this.activedScene = scene;
-
     this.releaseAllLayers();
   }
 
@@ -129,26 +132,25 @@ export default class MagicStruc implements MagicModel {
     return this.scenes.findIndex(sc => sc.id === id);
   }
 
-  public addScene(data?: Partial<SceneModel> | null, index?: number) {
+  /**
+   * 创建并添加场景
+   * @param data 场景数据
+   * @param index 添加的位置
+   */
+  public createAndAddScene(data?: Partial<SceneModel> | null, index?: number) {
     const sceneData = createSceneData(data);
     const scene = CreateScene(sceneData);
-    this.handleAddScene(scene, index);
+    this.addScene(scene, index);
     this.activeScene(scene);
-  }
-
-  public setScenes(scenes: SceneStruc[]) {
-    this.update({
-      scenes,
-    });
   }
 
   /**
    * 移除激活组件
    *  */
   public removeActivedLayer(layer: LayerStruc) {
-    const index = this.activedLayers.findIndex(item => item.id === layer.id);
-    if (index < 0) return;
-    this.activedLayers.splice(index, 1);
+    this.activedLayers = this.activedLayers.filter(
+      item => item.id !== layer.id
+    );
   }
 
   /**
@@ -164,7 +166,16 @@ export default class MagicStruc implements MagicModel {
    */
   public removeScene(scene?: SceneStruc) {
     if (!scene) return;
-    this.handleRemoveScene(scene);
+    const scenes = [...this.scenes];
+    const index = scenes.findIndex(s => s.id === scene.id);
+    if (index === -1) return;
+    scenes.splice(index, 1);
+    this.update({ scenes });
+    /** 删除的恰好是选中的场景，则选中下一个场景 */
+    if (scene.id === this.activedScene?.id) {
+      const nextScene = scenes[index] || scenes[scenes.length - 1];
+      nextScene && this.activeScene(nextScene);
+    }
   }
 
   /**
@@ -176,43 +187,8 @@ export default class MagicStruc implements MagicModel {
     const index = this.getSceneIndex(scene);
     const newScene = scene.clone();
     /** 加入到当前场景的后一位 */
-    this.handleAddScene(newScene, index + 1);
+    this.addScene(newScene, index + 1);
     this.activeScene(newScene);
-  }
-
-  /**
-   * 获取重叠层
-   * @param targerLayer 目标图层，与目标图层有重叠的即满足条件
-   * @returns {LayerStruc[]} 重叠图层
-   */
-  public getOverlayLayers(targerLayer: LayerStrucType) {
-    const { x, y, width, height, rotate } = targerLayer.getRectData();
-
-    const targerLayerObb = new OBB(
-      new Vector2d(x + width / 2, y + height / 2),
-      width,
-      height,
-      rotate
-    );
-
-    const layers = this.activedScene?.layers || [];
-    return layers.reduce(
-      (layerList: LayerStrucType[], layer: LayerStrucType) => {
-        if (layer.isBack()) return layerList;
-
-        const { x, y, width, height, rotate } = layer.getRectData();
-        const layerObb = new OBB(
-          new Vector2d(x + width / 2, y + height / 2),
-          width,
-          height,
-          rotate
-        );
-        const collision = isCollision(targerLayerObb, layerObb);
-        if (collision) layerList.push(layer);
-        return layerList;
-      },
-      []
-    );
   }
 
   /**
@@ -220,7 +196,7 @@ export default class MagicStruc implements MagicModel {
    * @param value 移动的量
    * @param axis 坐标轴
    */
-  moveCmpBy(value: number, axis: Axis) {
+  public moveCmpBy(value: number, axis: Axis) {
     this.activedLayers.forEach(layer => {
       if (layer.isLock) return;
       layer.addPixel(value, axis);
@@ -231,8 +207,7 @@ export default class MagicStruc implements MagicModel {
    * 删除图层
    * @param layer 选中的图层
    */
-  // todo 增加历史记录
-  removeLayer(layer: LayerStrucType | LayerStrucType[]) {
+  public removeLayer(layer: LayerStrucType | LayerStrucType[]) {
     this.handleRemoveLayer(layer);
   }
 
@@ -242,8 +217,7 @@ export default class MagicStruc implements MagicModel {
    * @param parent 父级
    * @param index 插入的位置
    */
-  // todo 增加历史记录
-  addLayer(
+  public addLayer(
     layer: LayerStrucType | LayerStrucType[],
     parent?: SceneStruc | GroupStruc | null,
     index?: number
@@ -255,34 +229,12 @@ export default class MagicStruc implements MagicModel {
    * 粘贴组件
    * @param layers 剪贴板的组件
    */
-  handlePasteLayers(layers: LayerStrucType[]) {
+  public handlePasteLayers(layers: LayerStrucType[]) {
     const newLayers = layers.map(layer => layer.clone());
     const activedLayer =
       this.activedLayers.length === 1 ? this.activedLayers[0] : null;
     const parent = activedLayer?.isGroup() ? activedLayer : null;
-    this.updatePastedLayersPosition(newLayers);
     this.addLayer(newLayers, parent);
-  }
-
-  /**
-   * 更新粘贴后的组件位置
-   * @param layers 更新的组件
-   */
-  private updatePastedLayersPosition(layers: LayerStrucType[]) {
-    console.log('粘贴更新位置', layers);
-    // const maxRect = getCmpsMaxRect(layers);
-    // if (!maxRect) return;
-    // const updatePosition = (axis: Axis) => {
-    //   const min = layers[0].getNumPixel(axis);
-    //   const sorted = sortCmps(layers, axis, min);
-    //   const prop = axis === 'x' ? 'left' : 'bottom';
-    //   const offset = maxRect[prop] - min;
-    //   sorted.forEach(cmp => {
-    //     if (cmp.style) cmp.style[axis] = cmp.toPixelBy(offset, axis);
-    //   });
-    // };
-    // updatePosition('x');
-    // updatePosition('y');
   }
 
   /**
@@ -290,7 +242,7 @@ export default class MagicStruc implements MagicModel {
    * @param layer 图层或图层的id
    * @returns {boolean}
    */
-  isActiveLayer(layer: LayerStrucType | string): boolean {
+  public isActiveLayer(layer: LayerStrucType | string): boolean {
     const id = typeof layer === 'string' ? layer : layer.id;
     return !!this.activedLayers.find(item => item.id === id);
   }
@@ -298,59 +250,62 @@ export default class MagicStruc implements MagicModel {
   /**
    * 复制组件，通过剪贴板实现跨作品复制
    */
-  copyLayers() {
-    this.clipboard = [];
-    this.activedLayers.forEach(layer => {
-      if (!layer.isCanCopy) return;
-      const newLayer = layer.clone();
-      newLayer.resetParnth();
-      newLayer.isLock = false;
-      this.clipboard?.push(newLayer);
-    });
+  public copyLayers() {
+    const layers = this.activedLayers.reduce(
+      (list: LayerStrucType[], layer: LayerStrucType) => {
+        if (!layer.isCanCopy) return list;
+        const newLayer = layer.clone();
+        newLayer.resetParnth();
+        newLayer.isLock = false;
+        return [...list, newLayer];
+      },
+      []
+    );
+
+    ClipboardManager.copyToClipboard(layers);
   }
 
   /**
    * 粘贴组件，通过剪贴板实现跨作品复制
    */
-  pasteLayers() {
-    if (!this.clipboard || !this.clipboard.length) return;
-    this.handlePasteLayers(this.clipboard);
+  public pasteLayers(layers?: LayerStrucType[]) {
+    if (!layers?.length) return;
+    const newLayers = layers.map(layer => layer.clone());
+    const activedLayer =
+      this.activedLayers.length === 1 ? this.activedLayers[0] : null;
+    const parent = activedLayer?.isGroup() ? activedLayer : null;
+    this.addLayer(newLayers, parent);
   }
 
   /**
    * 剪切组件，通过剪贴板实现跨作品复制
    */
-  cutLayers() {
+  public cutLayers() {
     this.copyLayers();
-    this.activedLayers.forEach(cmp => {
-      if (!cmp.isCanCopy) return;
-      if (cmp.isLock) return;
-      this.removeLayer(cmp);
+    this.activedLayers.forEach(layer => {
+      if (!layer.isCanCopy) return;
+      if (layer.isLock) return;
+      this.removeLayer(layer);
     });
   }
 
   /**
    * 添加场景
    *  */
-  protected handleAddScene(scene: SceneStruc, index?: number) {
+  public addScene(scene: SceneStruc, index?: number) {
+    const scenes = [...this.scenes];
     typeof index === 'number'
-      ? this.scenes.splice(index, 0, scene)
-      : this.scenes.push(scene);
+      ? scenes.splice(index, 0, scene)
+      : scenes.push(scene);
+    this.update({ scenes });
   }
 
   /**
-   * 删除场景
-   * @param scene
+   * 更新数据
    */
-  protected handleRemoveScene(scene: SceneStruc) {
-    const index = this.scenes.findIndex(s => s.id === scene.id);
-    if (index === -1) return;
-    this.scenes.splice(index, 1);
-    /** 删除的恰好是选中的场景，则选中下一个场景 */
-    if (scene.id === this.activedScene?.id) {
-      const nextScene =
-        this.scenes[index] || this.scenes[this.scenes.length - 1];
-      nextScene && this.activeScene(nextScene);
+  protected handleUpdate(data: Partial<MagicModel>) {
+    for (const key in data) {
+      this[key] = data[key];
     }
   }
 

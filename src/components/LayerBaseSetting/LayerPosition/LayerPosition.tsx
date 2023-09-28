@@ -13,6 +13,7 @@ import { SliderMarks } from 'antd/es/slider';
 import { LayerStrucType } from '@/types/model';
 import { magic } from '@/store';
 import Style from './LayerPosition.module.less';
+import { getOverlayLayers } from '@/utils/layers';
 
 interface LayerLevelProps {
   model: LayerStrucType;
@@ -36,6 +37,7 @@ function LayerPosition(props: LayerLevelProps) {
   const { model, className } = props;
   const { isLock } = model;
   const { activedScene } = magic;
+  const layers = activedScene?.layers || [];
 
   const [levelPopoverOpen, setLevelPopoverOpen] = useState(false);
   const [maxMark, setMaxMark] = useState(MIN_MARK);
@@ -58,7 +60,7 @@ function LayerPosition(props: LayerLevelProps) {
   };
 
   const initMarks = () => {
-    const list = magic.getOverlayLayers(model);
+    const list = getOverlayLayers(model, layers);
     const sliderMarks = list.reduce(
       (marks: SliderMarks, _item, index: number) => {
         const markList = { ...marks, [index]: { ...mark } };
@@ -88,10 +90,9 @@ function LayerPosition(props: LayerLevelProps) {
     if (!activeLayerId || !targetLayerId || activeLayerId === targetLayerId)
       return;
 
-    const layers = activedScene?.layers;
     /** 调换layer位置 */
-    const activeLayerByLayers = layers?.find(item => item.id === activeLayerId);
-    const targetLayerByLayers = layers?.find(item => item.id === targetLayerId);
+    const activeLayerByLayers = layers.find(item => item.id === activeLayerId);
+    const targetLayerByLayers = layers.find(item => item.id === targetLayerId);
     if (activeLayerByLayers && targetLayerByLayers) {
       /**
        * 如果活动图层的位置大于 目标图层的位置，说明为向下调整，小于则取反。
@@ -102,7 +103,7 @@ function LayerPosition(props: LayerLevelProps) {
         model.toUp(targetLayerByLayers);
       }
     }
-    overlayLayersRef.current = magic.getOverlayLayers(model);
+    overlayLayersRef.current = getOverlayLayers(model, layers);
   };
 
   const moveUp = () => {

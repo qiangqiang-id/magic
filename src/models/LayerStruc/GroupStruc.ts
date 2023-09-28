@@ -54,13 +54,21 @@ export default class GroupStruc extends LayerStruc implements LayerModel.Group {
     return this.layers?.findIndex(item => item.id === layer.id) || -1;
   }
 
-  addLayer(layer: LayerStrucType, index?: number) {
+  /**
+   * 添加图层
+   */
+  addLayer(layer?: LayerStrucType, index?: number) {
+    if (!layer) return;
+
     const i = this.getLayerIndex(layer);
     if (i >= 0) return;
     layer.group = this;
+    const layers = [...(this.layers || [])];
 
     typeof index === 'number'
-      ? this.layers?.splice(index, 0, layer)
-      : this.layers?.push(layer);
+      ? layers.splice(index, 0, layer)
+      : layers.push(layer);
+
+    this.update<LayerModel.Group>({ layers });
   }
 }

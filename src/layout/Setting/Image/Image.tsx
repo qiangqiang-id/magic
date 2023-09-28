@@ -6,7 +6,7 @@ import UploadBtn from '@/components/UploadBtn';
 import { ImageStruc } from '@/models/LayerStruc';
 import { makeImage } from '@/utils/image';
 import { fileToBase64 } from '@/utils/file';
-import { setting } from '@/store';
+import { magic } from '@/store';
 
 import { SettingProps } from '../Setting';
 
@@ -16,7 +16,7 @@ interface ImageProps extends SettingProps<ImageStruc> {}
 
 function Image(props: ImageProps) {
   const { model } = props;
-  const { isOpenImageCrop } = setting;
+  const { isOpenImageCrop } = magic;
 
   const handleChange = async (files: File[]) => {
     const file = files[0];
@@ -28,7 +28,7 @@ function Image(props: ImageProps) {
 
   const onCrop = () => {
     if (model.isLock) return;
-    isOpenImageCrop ? setting.closeImageCrop() : setting.openImageCrop();
+    isOpenImageCrop ? magic.closeImageCrop() : magic.openImageCrop();
   };
 
   return (

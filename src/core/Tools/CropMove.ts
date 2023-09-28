@@ -3,6 +3,7 @@ import {
   RectData,
   Coordinate,
   BaseRectData,
+  toRadian,
 } from '@p/EditorTools';
 import { calcPhysicsPonitByFlip } from '@/helpers/Crop';
 
@@ -62,7 +63,7 @@ export default class CropMove {
 
     const { startMaskCenter, startRectCenter } = this.getStartCenter();
 
-    // 图片移动的位置信息
+    /** 图片移动的位置信息 */
     const newMaskPhysicsPoint = {
       x: this.maskPhysicsPoint.x + diffX,
       y: this.maskPhysicsPoint.y + diffY,
@@ -77,13 +78,14 @@ export default class CropMove {
       startRectCenter,
       -this.angle
     );
-    // 转弧度
-    const radian = this.angle * (Math.PI / 180);
+
+    /** 转弧度 */
+    const radian = toRadian(this.angle);
 
     const list = [newMaskPhysicsPoint, newMaskCenter];
     const { x: physicsX, y: physicsY } = calcPhysicsPonitByFlip(this.rectData);
 
-    // 控制mask 的x，y 在原图的范围内部
+    /** 控制mask 的x，y 在原图的范围内部 */
     let projectionX = newMaskPoint.x - physicsX;
     if (projectionX < minLeft || projectionX > maxLeft) {
       projectionX = (projectionX < minLeft ? minLeft : maxLeft) - projectionX;
@@ -105,7 +107,7 @@ export default class CropMove {
     return calcRotatedPoint(newMaskPhysicsPoint, newMaskCenter, -this.angle);
   }
 
-  // 获取开始原图和mask的中心点
+  /** 获取开始原图和mask的中心点 */
   private getStartCenter(): StartCenter {
     const {
       x: rectX,

@@ -33,11 +33,11 @@ function Back() {
     const file = files[0];
     if (!file) return;
     const dataUrl = await fileToBase64(file);
-    activedScene?.setSceneBack({ fillType: 'Image', url: dataUrl });
+    activedScene?.updateSceneBack({ fillType: 'Image', url: dataUrl });
   };
 
   const addBackColor = (color: string) => {
-    activedScene?.setSceneBack({ fillType: 'Color', color });
+    activedScene?.updateSceneBack({ fillType: 'Color', color });
   };
 
   return (

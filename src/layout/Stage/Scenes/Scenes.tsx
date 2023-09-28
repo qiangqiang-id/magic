@@ -70,7 +70,9 @@ function Scenes() {
       const oldIndex = magic.getSceneIndex(active.id as string);
       const newIndex = magic.getSceneIndex(over.id as string);
       const newScenes = arrayMove(scenes, oldIndex, newIndex);
-      magic.setScenes(newScenes);
+      magic.update({
+        scenes: newScenes,
+      });
     }
   };
 
@@ -81,7 +83,7 @@ function Scenes() {
   /** 增加空白场景 */
   const addEmptyScene = (i?: number) => {
     const index = typeof i === 'number' ? i + 1 : scenes.length;
-    magic.addScene(null, index);
+    magic.createAndAddScene(null, index);
   };
 
   const removeScene = (scene: SceneStruc) => {

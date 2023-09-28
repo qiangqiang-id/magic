@@ -5,7 +5,7 @@ import EditorControl from './EditorControl';
 import { LayerStrucType } from '@/types/model';
 import Hover from './Hover';
 import RichText from './RichText';
-import { setting } from '@/store';
+import { magic } from '@/store';
 import Style from './Editor.module.less';
 
 interface EditorProps {
@@ -38,7 +38,7 @@ function Editor(props: EditorProps) {
   return (
     <div
       className={cls(Style.editor, {
-        [Style.hidden]: setting.isOpenImageCrop,
+        [Style.hidden]: magic.isOpenImageCrop,
       })}
     >
       {/* 编辑框 */}

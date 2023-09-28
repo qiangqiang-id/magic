@@ -73,9 +73,6 @@ enum CmdEnum {
 
   /** 预览 */
   'PREVIEW',
-
-  /** 发布 */
-  'PUBLISH',
 }
 
 export default CmdEnum;

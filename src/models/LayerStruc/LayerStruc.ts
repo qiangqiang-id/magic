@@ -138,21 +138,6 @@ export default class LayerStruc implements LayerModel.Base {
   }
 
   /**
-   * 更新组件数据
-   * @param data 组件当前数据
-   */
-  protected handleUpdate<
-    T extends Partial<LayerModel.Base> = Partial<LayerModel.Base>
-  >(data: T) {
-    const updateData = filterSameData(this.model(), data);
-    if (Object.keys(updateData).length === 0) return;
-
-    Object.keys(updateData).forEach(key => {
-      this[key] = updateData[key];
-    });
-  }
-
-  /**
    * 复制
    */
   public clone(): LayerStrucType {
@@ -362,25 +347,6 @@ export default class LayerStruc implements LayerModel.Base {
   }
 
   /**
-   * 层级是否第一个
-   *  */
-  get isFirstLayer() {
-    const index = this.getIndex();
-    /** 背景应该是在最下面，背景的索引永远是0 */
-    return index < 1;
-  }
-
-  /**
-   * 层级是否是最后一个
-   *  */
-  get isLastLayer() {
-    const { scene } = this;
-    if (!scene?.layers) return false;
-    const index = this.getIndex();
-    return index === scene.layers.length - 1;
-  }
-
-  /**
    * 获取索引
    */
   public getIndex(): number {
@@ -487,6 +453,19 @@ export default class LayerStruc implements LayerModel.Base {
   }
 
   /**
+   * 更新组件数据
+   * @param data 组件当前数据
+   */
+  protected handleUpdate<
+    T extends Partial<LayerModel.Base> = Partial<LayerModel.Base>
+  >(data: T) {
+    const updateData = filterSameData(this.model(), data);
+    Object.keys(updateData).forEach(key => {
+      this[key] = updateData[key];
+    });
+  }
+
+  /**
    * 是否是背景
    * @readonly
    * @memberof LayerStruc
@@ -534,5 +513,24 @@ export default class LayerStruc implements LayerModel.Base {
   /** 是否可copy, 默认可copy，再由子类重写 */
   get isCanCopy() {
     return true;
+  }
+
+  /**
+   * 层级是否第一个
+   *  */
+  get isFirstLayer() {
+    const index = this.getIndex();
+    /** 背景应该是在最下面，背景的索引永远是0 */
+    return index < 1;
+  }
+
+  /**
+   * 层级是否是最后一个
+   *  */
+  get isLastLayer() {
+    const { scene } = this;
+    if (!scene?.layers) return false;
+    const index = this.getIndex();
+    return index === scene.layers.length - 1;
   }
 }

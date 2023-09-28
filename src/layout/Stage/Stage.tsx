@@ -10,13 +10,11 @@ import { useStores } from '@/store';
 import Style from './Stage.module.less';
 
 function Stage() {
-  const { OS, magic, setting } = useStores();
+  const { OS, magic } = useStores();
 
-  const { activedLayers, activedScene } = magic;
+  const { activedLayers, activedScene, isOpenImageCrop } = magic;
 
   const { zoomLevel } = OS;
-
-  const { isOpenImageCrop } = setting;
 
   const cropRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);

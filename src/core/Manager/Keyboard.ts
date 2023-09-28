@@ -50,6 +50,7 @@ export default function KeyboardManager() {
 
       /** 保留系统粘贴 */
       if (keyBoard.name !== CmdEnum.PASTE) e.preventDefault();
+
       pressHotKey(keyBoard);
       break;
     }

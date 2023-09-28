@@ -1,6 +1,7 @@
 import { MAGIC_PREFIX } from '@/constants/CacheKeys';
 import CreateLayerStruc from '@/models/FactoryStruc/LayerFactory';
 import MagicStore from '@/store/Magic';
+import { LayerStrucType } from '@/types/model';
 import copyText from '@/utils/copyText';
 
 export default class ClipboardManager {
@@ -23,8 +24,7 @@ export default class ClipboardManager {
   /**
    * 复制到剪切板
    */
-  static copyToClipboard() {
-    const layers = this.magic.clipboard;
+  static copyToClipboard(layers: LayerStrucType[]) {
     if (!layers || !layers.length) return;
     const text = JSON.stringify(layers.map(layer => layer.model()));
     copyText(this.formatText(text));
@@ -44,11 +44,10 @@ export default class ClipboardManager {
    * @param text 剪贴板内容
    */
   private static parseLayersFromText(text: string) {
-    const { key, models = [] } = this.parseText(text) || {};
-    const host = key ? decodeURIComponent(key) : '';
-    if (host === window.location.href || !models.length) return;
+    const { models = [] } = this.parseText(text) || {};
+    if (!models.length) return;
     const layers = models.map(model => CreateLayerStruc(model.type, model));
-    this.magic.handlePasteLayers(layers);
+    this.magic.pasteLayers(layers);
   }
 
   /**

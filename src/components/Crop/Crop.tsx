@@ -10,7 +10,7 @@ import {
   valuesToDivide,
   valuesToMultiply,
 } from '@p/EditorTools';
-import { magic, OS, setting } from '@/store';
+import { magic, OS } from '@/store';
 import Style from './Crop.module.less';
 import { ImageStruc } from '@/models/LayerStruc';
 import { calcCropRectData, calcMaxWidthAndMaxHeight } from '@/helpers/Crop';
@@ -190,7 +190,7 @@ function Crop(props: CropProps) {
   };
 
   const closeCrop = () => {
-    setting.closeImageCrop();
+    magic.closeImageCrop();
   };
 
   useEffect(() => {

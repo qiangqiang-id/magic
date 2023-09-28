@@ -4,7 +4,6 @@ import MaterialStore from './Material';
 import OSStore from './OS';
 import MagicStore from './Magic';
 import HistoryStore from './History';
-import SettingStore from './Setting';
 import FontStore from './Font';
 
 interface Store {
@@ -12,7 +11,6 @@ interface Store {
   OS: OSStore;
   magic: MagicStore;
   history: HistoryStore;
-  setting: SettingStore;
   font: FontStore;
 }
 
@@ -20,7 +18,6 @@ export const material = new MaterialStore();
 export const OS = new OSStore();
 export const magic = new MagicStore();
 export const history = new HistoryStore();
-export const setting = new SettingStore();
 export const font = new FontStore();
 
 const storeContext = createContext<Store>({
@@ -28,7 +25,6 @@ const storeContext = createContext<Store>({
   OS,
   magic,
   history,
-  setting,
   font,
 });
 

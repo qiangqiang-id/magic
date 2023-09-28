@@ -21,7 +21,7 @@ export interface EditorControlProps {
 
 function EditorControl(props: EditorControlProps) {
   const { model, zoomLevel = 1 } = props;
-  const { OS, setting, magic } = useStores();
+  const { OS, magic } = useStores();
 
   const { layers = [] } = magic.activedScene || {};
 
@@ -208,7 +208,7 @@ function EditorControl(props: EditorControlProps) {
   const onDoubleClick = () => {
     if (model.isLock) return;
     if (model.isText()) model.onEdit();
-    if (model.isImage()) setting.openImageCrop();
+    if (model.isImage()) magic.openImageCrop();
   };
 
   const rectInfo = getRectInfo();
