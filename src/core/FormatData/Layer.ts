@@ -18,7 +18,7 @@ const ADD_TEXT_HEIGHT_FONT_RATE = 1.2;
  * 获取layer自适应画布的比例
  * @param {Size} layerSize
  * @param {SceneStruc} scene
- * @return {*} ratio 比例
+ * @return {ratio} ratio 比例
  */
 function getRatioCanvasWithLayer(layerSize: Size, scene: SceneStruc) {
   const { width, height } = layerSize;
@@ -38,7 +38,7 @@ function getRatioCanvasWithLayer(layerSize: Size, scene: SceneStruc) {
  * 获取自适应画布的rect 数据，将元素同比例缩放，居中显示
  * @param {LayerModel.Layer} layer
  * @param {SceneStruc} scene
- * @return {*} RectData 矩形数据
+ * @return {RectData} 矩形数据
  */
 function getAdaptRectData(layer: LayerModel.Layer, scene: SceneStruc) {
   const { width = 0, height = 0, anchor = { x: 0, y: 0 } } = layer;
@@ -64,7 +64,7 @@ function getAdaptRectData(layer: LayerModel.Layer, scene: SceneStruc) {
  * 创建图片数据
  * @param {SceneStruc} scene
  * @param {Partial<LayerModel.Image>} [data]
- * @return {*}  {LayerModel.Image}
+ * @return {LayerModel.Image}
  */
 export function createImageData(
   scene: SceneStruc,
@@ -91,7 +91,7 @@ export function createImageData(
  * 创建文字数据
  * @param {SceneStruc} scene
  * @param {Partial<LayerModel.Text>} [data]
- * @return {*}  {LayerModel.Text}
+ * @return {LayerModel.Text}
  */
 export function createTextData(
   scene: SceneStruc,
@@ -126,7 +126,7 @@ export function createTextData(
  * 创建背景数据
  * @param {SceneModel} scene
  * @param {Partial<LayerModel.Background>} [data]
- * @return {*}  {LayerModel.Background}
+ * @return {LayerModel.Background}
  */
 export function createBackData(
   scene: SceneModel,
@@ -151,7 +151,7 @@ export function createBackData(
  * 创建图形数据
  * @param {SceneStruc} scene
  * @param {Partial<LayerModel.Shape>} [data]
- * @return {*}  {LayerModel.Shape}
+ * @return {LayerModel.Shape}
  */
 export function createShapeData(
   scene: SceneStruc,

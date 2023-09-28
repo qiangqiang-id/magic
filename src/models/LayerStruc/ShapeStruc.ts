@@ -1,7 +1,10 @@
 import { makeObservable, observable } from 'mobx';
 import LayerStruc from './LayerStruc';
 
-export default class ShapeStruc extends LayerStruc implements LayerModel.Shape {
+export default class ShapeStruc
+  extends LayerStruc<LayerModel.Shape>
+  implements LayerModel.Shape
+{
   shapeType!: 'rect';
 
   rx?: number;

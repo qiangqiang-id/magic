@@ -118,7 +118,7 @@ function RichText(props: RichTextProps) {
       // const style = quillRef.current?.getFormat(selectedRange.current);
       // model.setSelectedStyle(style);
     }
-    model.update<Partial<TextStruc>>({ content });
+    model.update({ content });
   };
 
   /**

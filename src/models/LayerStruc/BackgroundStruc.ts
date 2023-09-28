@@ -2,7 +2,7 @@ import { computed, makeObservable, observable } from 'mobx';
 import LayerStruc from './LayerStruc';
 
 export default class BackgroundStruc
-  extends LayerStruc
+  extends LayerStruc<LayerModel.Background>
   implements LayerModel.Background
 {
   /** 背景填充类型 */

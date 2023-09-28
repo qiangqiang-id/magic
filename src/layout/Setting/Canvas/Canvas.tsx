@@ -9,7 +9,6 @@ import SettingContainer from '@/components/SettingContainer';
 import { magic } from '@/store';
 import Style from './Canvas.module.less';
 import { BackColorList } from '@/config/ColorList';
-import { BackgroundStruc } from '@/models/LayerStruc';
 
 // interface CanvasProps extends SettingProps<BackgroundStruc | null> {}
 
@@ -28,7 +27,7 @@ function Canvas() {
   }, [backgroundLayer?.color, backgroundLayer?.fillType]);
 
   const onChangeColor = (color: Color) => {
-    backgroundLayer?.update<Partial<BackgroundStruc>>({
+    backgroundLayer?.update({
       fillType: 'Color',
       color: color.toRgbString(),
     });

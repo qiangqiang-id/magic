@@ -2,7 +2,10 @@ import { makeObservable, observable } from 'mobx';
 import { pointToAnchor } from '@p/EditorTools';
 import LayerStruc from './LayerStruc';
 
-export default class ImageStruc extends LayerStruc implements LayerModel.Image {
+export default class ImageStruc
+  extends LayerStruc<LayerModel.Image>
+  implements LayerModel.Image
+{
   url?: string;
 
   originalWidth?: number;

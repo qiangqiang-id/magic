@@ -3,7 +3,10 @@ import LayerStruc from './LayerStruc';
 import { magic } from '@/store';
 import { LayerStrucType } from '@/types/model';
 
-export default class GroupStruc extends LayerStruc implements LayerModel.Group {
+export default class GroupStruc
+  extends LayerStruc<LayerModel.Group>
+  implements LayerModel.Group
+{
   layers?: LayerModel.Layer[];
 
   constructor(data: LayerModel.Group) {
@@ -69,6 +72,6 @@ export default class GroupStruc extends LayerStruc implements LayerModel.Group {
       ? layers.splice(index, 0, layer)
       : layers.push(layer);
 
-    this.update<LayerModel.Group>({ layers });
+    this.update({ layers });
   }
 }

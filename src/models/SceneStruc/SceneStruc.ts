@@ -108,7 +108,7 @@ export default class SceneStruc implements SceneModel {
    */
   public updateSceneBack(data: Partial<LayerModel.Background>) {
     const backLayer = this.getBackLayer();
-    backLayer?.update<LayerModel.Background>(data);
+    backLayer?.update(data);
   }
 
   /**

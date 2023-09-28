@@ -11,12 +11,12 @@ function TextFamilyWithSize(props: TextProps) {
   const { model } = props;
 
   const changeFamily = (family: string) => {
-    model.update<LayerModel.Text>({ fontFamily: family });
+    model.update({ fontFamily: family });
   };
 
   const changeFontsize = (fontSize: number | null) => {
     if (fontSize === null) return;
-    model.update<LayerModel.Text>({ fontSize });
+    model.update({ fontSize });
   };
 
   return (

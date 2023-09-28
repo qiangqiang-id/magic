@@ -1,7 +1,10 @@
 import { makeObservable, observable, action } from 'mobx';
 import LayerStruc from './LayerStruc';
 
-export default class TextStruc extends LayerStruc implements LayerModel.Text {
+export default class TextStruc
+  extends LayerStruc<LayerModel.Text>
+  implements LayerModel.Text
+{
   content?: string;
 
   charAttrs?: Record<string, any>[];

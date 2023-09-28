@@ -21,8 +21,11 @@ import ShapeStruc from './ShapeStruc';
 import BackgroundStruc from './BackgroundStruc';
 import TextStruc from './TextStruc';
 import { PixelKey } from '@/types/canvas';
+// import { layerHistoryDecorator } from '@/core/Decorator/History';
 
-export default class LayerStruc implements LayerModel.Base {
+export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
+  implements LayerModel.Base
+{
   id!: string;
 
   name?: string;
@@ -63,7 +66,7 @@ export default class LayerStruc implements LayerModel.Base {
 
   mask?: Rect;
 
-  constructor(data?: Partial<LayerModel.Base> & Record<string, any>) {
+  constructor(data?: Partial<T> & Record<string, any>) {
     makeObservable<this, 'handleUpdate'>(this, {
       name: observable,
       type: observable,
@@ -117,9 +120,7 @@ export default class LayerStruc implements LayerModel.Base {
     };
   }
 
-  public update<T extends Partial<LayerModel.Base> = Partial<LayerModel.Base>>(
-    data: Partial<T>
-  ) {
+  public update(data: Partial<T> | Partial<LayerModel.Base>) {
     this.handleUpdate(data);
   }
 
@@ -456,9 +457,7 @@ export default class LayerStruc implements LayerModel.Base {
    * 更新组件数据
    * @param data 组件当前数据
    */
-  protected handleUpdate<
-    T extends Partial<LayerModel.Base> = Partial<LayerModel.Base>
-  >(data: T) {
+  protected handleUpdate(data: Partial<T> | Partial<LayerModel.Base>) {
     const updateData = filterSameData(this.model(), data);
     Object.keys(updateData).forEach(key => {
       this[key] = updateData[key];

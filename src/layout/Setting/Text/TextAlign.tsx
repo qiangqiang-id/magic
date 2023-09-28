@@ -12,7 +12,7 @@ function TextAlign(props: TextProps) {
   const { textAlign } = model;
 
   const setTextAlign = (textAlign: TextAlignEnum) => {
-    model.update<LayerModel.Text>({ textAlign });
+    model.update({ textAlign });
   };
 
   return (

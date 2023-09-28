@@ -8,7 +8,7 @@ function TextColor(props: TextProps) {
   const { model } = props;
 
   const changeColor = (_value, color: string) => {
-    model.update<LayerModel.Text>({ color });
+    model.update({ color });
   };
 
   return (

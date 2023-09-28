@@ -20,7 +20,7 @@ function TextStyle(props: TextProps) {
       fontWeight === FontWeightEnum.Bold
         ? FontWeightEnum.Normal
         : FontWeightEnum.Bold;
-    model.update<LayerModel.Text>({ fontWeight: newFontWeight });
+    model.update({ fontWeight: newFontWeight });
   };
 
   const setFontStyle = () => {
@@ -28,14 +28,14 @@ function TextStyle(props: TextProps) {
       fontStyle === FontStyleEnum.Italic
         ? FontStyleEnum.Normal
         : FontStyleEnum.Italic;
-    model.update<LayerModel.Text>({ fontStyle: newFontStyle });
+    model.update({ fontStyle: newFontStyle });
   };
 
   const setTextDecoration = (type: TextDecorationEnum) => {
     const newTextDecoration =
       textDecoration !== type ? type : TextDecorationEnum.None;
 
-    model.update<LayerModel.Text>({ textDecoration: newTextDecoration });
+    model.update({ textDecoration: newTextDecoration });
   };
 
   return (
