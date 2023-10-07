@@ -134,7 +134,7 @@ function RichText(props: RichTextProps) {
   const blurChange = () => {
     isFocus.current = false;
     if (!model.content) {
-      // model.remove();
+      model.remove();
     }
   };
 
@@ -187,9 +187,12 @@ function RichText(props: RichTextProps) {
   const uploadHeight = (entry: ResizeObserverEntry) => {
     const offsetHeight = (entry.target as HTMLDivElement).offsetHeight;
     const height = offsetHeight || model.height;
-    model.update({
-      height,
-    });
+    model.update(
+      {
+        height,
+      },
+      { ignore: true }
+    );
   };
 
   /** 获取文字 */

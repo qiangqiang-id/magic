@@ -54,6 +54,10 @@ declare namespace LayerModel {
     loading?: boolean;
     /** 透明度 */
     opacity?: number;
+    /** 所在的组合 */
+    group?: GroupStruc | null = null;
+    /** 所在的场景 */
+    scene?: SceneStruc | null = null;
     /** 蒙层 */
     mask?: {
       x: number;

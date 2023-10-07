@@ -65,10 +65,6 @@ const cmdMaps: Record<CmdEnum, CmdItem> = {
     name: CmdEnum.PREVIEW,
     label: '预览',
   },
-  [CmdEnum.PUBLISH]: {
-    name: CmdEnum.PUBLISH,
-    label: '发布',
-  },
   [CmdEnum['TO UP']]: {
     name: CmdEnum['TO UP'],
     label: '上移',

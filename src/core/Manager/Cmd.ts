@@ -1,6 +1,7 @@
 import CmdEnum from '@/constants/CmdEnum';
 import MagicStore from '@/store/Magic';
 import OSStore from '@/store/OS';
+import HistoryManager from './History';
 
 export type CmdHandler = (data?: any) => void;
 
@@ -124,12 +125,10 @@ export function registerOSSActions(OS: OSStore) {
 export function registerHistoryActions() {
   const cmdToAction: Record<string, CmdHandler> = {
     [CmdEnum.UNDO]() {
-      // HistoryManager.undo()
-      console.log('UNDO');
+      HistoryManager.undo();
     },
     [CmdEnum.REDO]() {
-      // HistoryManager.redo();
-      console.log('REDO');
+      HistoryManager.redo();
     },
   };
 

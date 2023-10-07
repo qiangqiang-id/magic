@@ -21,7 +21,13 @@ import ShapeStruc from './ShapeStruc';
 import BackgroundStruc from './BackgroundStruc';
 import TextStruc from './TextStruc';
 import { PixelKey } from '@/types/canvas';
-// import { layerHistoryDecorator } from '@/core/Decorator/History';
+import { layerHistoryDecorator } from '@/core/Decorator/History';
+import { UpdateOptions } from '@/types/updateOptions';
+
+/**
+ * 连续的操作记录集合
+ */
+const continuousMaps = new Map<string, any>();
 
 export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
   implements LayerModel.Base
@@ -66,7 +72,7 @@ export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
 
   mask?: Rect;
 
-  constructor(data?: Partial<T> & Record<string, any>) {
+  constructor(data?: Partial<LayerModel.Base>) {
     makeObservable<this, 'handleUpdate'>(this, {
       name: observable,
       type: observable,
@@ -96,7 +102,7 @@ export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
   /**
    * 输出组件model结构
    */
-  model(): LayerModel.Base & Record<string, any> {
+  model(): LayerModel.Base {
     return {
       id: this.id,
       type: this.type,
@@ -109,7 +115,6 @@ export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
       y: this.y,
       scale: this.scale,
       rotate: this.rotate,
-      actived: this.actived,
       visible: this.visible,
       isLock: this.isLock,
       loading: this.loading,
@@ -120,7 +125,26 @@ export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
     };
   }
 
-  public update(data: Partial<T> | Partial<LayerModel.Base>) {
+  @layerHistoryDecorator(function (_data: Partial<T>, options?: UpdateOptions) {
+    const { ignore = false, isContinuous = false } = options || {};
+    if (ignore) return null;
+
+    if (isContinuous) {
+      if (!continuousMaps.get(this.id)) {
+        continuousMaps.set(this.id, this.model());
+      }
+      return null;
+    }
+
+    const last = continuousMaps.get(this.id) || this.model();
+    continuousMaps.delete(this.id);
+
+    return () => this.handleUpdate(last);
+  })
+  public update(
+    data: Partial<T> | Partial<LayerModel.Base>,
+    _options?: UpdateOptions
+  ) {
     this.handleUpdate(data);
   }
 

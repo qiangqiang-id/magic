@@ -104,7 +104,7 @@ function EditorControl(props: EditorControlProps) {
 
     const updateData = { ...data };
 
-    const preWidth = +(model?.width ?? 0);
+    const preWidth = model?.width ?? 0;
     const ratio = updateData.width / preWidth;
 
     /** 如果是文字组件，并且拉伸的是顶点，一些属性需要做同比例缩放 */
@@ -128,8 +128,7 @@ function EditorControl(props: EditorControlProps) {
     ) {
       Reflect.deleteProperty(updateData, 'height');
     }
-
-    model?.update(updateData);
+    model?.update(updateData, { isContinuous: true });
   };
 
   /**
@@ -137,6 +136,17 @@ function EditorControl(props: EditorControlProps) {
    */
   const onEndScale = () => {
     OS.setScaleState(false);
+    /** 储存历史记录 */
+    const { x, y, width, height, mask, anchor } = model;
+    if (model.isText()) {
+      const { fontSize } = model;
+      model?.update({ x, y, width, height, fontSize }, { isContinuous: false });
+    } else {
+      model?.update(
+        { x, y, width, height, mask, anchor },
+        { isContinuous: false }
+      );
+    }
   };
 
   /**
@@ -154,7 +164,7 @@ function EditorControl(props: EditorControlProps) {
       rotate = 0;
     }
 
-    model?.update({ rotate });
+    model?.update({ rotate }, { isContinuous: true });
   };
 
   /**
@@ -162,6 +172,7 @@ function EditorControl(props: EditorControlProps) {
    */
   const onRotateEnd = () => {
     OS.setRotateState(false);
+    model?.update({ rotate: model.rotate }, { isContinuous: false });
   };
 
   /**

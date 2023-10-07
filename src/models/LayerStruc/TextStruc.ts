@@ -128,7 +128,7 @@ export default class TextStruc
    * 取消选中
    */
   inactive() {
-    this.actived = false;
+    super.inactive();
     this.unEdit();
   }
 }

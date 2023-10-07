@@ -1,6 +1,6 @@
 import { HistoryRecord } from '@/types/history';
 import HistoryManager from '../Manager/History';
-import { LayerStrucType } from '@/types/model';
+import LayerStruc from '@/models/LayerStruc';
 
 type ReverseAction<T> = (this: T, ...rest: any[]) => void;
 
@@ -27,6 +27,7 @@ export function createDecorator<T>() {
       desc.value = function decotatorAction(this: T, ...rest: any[]) {
         /**  获取逆向动作，若返回`null`，则不记录，传入的参数 callback 的返回值 */
         const reverse = reverseAction.apply(this, rest);
+
         if (typeof reverse === 'function') {
           /** 重做动作，则取原始动作 */
           const obverse = () => originalAction.apply(this, rest);
@@ -58,4 +59,4 @@ export const sceneHistoryDecorator = createDecorator<SceneModel>();
 /**
  * 图层操作历史记录
  */
-export const layerHistoryDecorator = createDecorator<LayerStrucType>();
+export const layerHistoryDecorator = createDecorator<LayerStruc>();

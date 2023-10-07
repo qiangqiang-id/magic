@@ -56,6 +56,8 @@ export function getLayerDefaultValues(): Required<LayerModel.Base> {
     disabled: false,
     opacity: 1,
     loading: false,
+    group: null,
+    scene: null,
   };
 }
 

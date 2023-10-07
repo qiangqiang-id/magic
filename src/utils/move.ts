@@ -50,10 +50,12 @@ export const moveHandle = (
       };
       const { x, y, magneticLines } =
         magneticLineHandler.calcAlignmentLine(moveDistance);
-      model.update({ x, y });
+      model.update({ x, y }, { isContinuous: true });
       OS.setMagneticLine(magneticLines);
     },
     end: () => {
+      /** 历史记录 */
+      model.update({ x: model.x, y: model.y }, { isContinuous: false });
       OS.clearMagneticLines();
       OS.setMoveState(false);
     },

@@ -50,6 +50,7 @@ function Layer<M extends LayerStrucType = LayerStrucType>(
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0 || model.actived) return;
     magic.activeLayer(model, e.shiftKey);
+
     if (model.isLock) return;
     moveHandle(e.nativeEvent, model, zoomLevel);
   };
