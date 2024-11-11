@@ -20,10 +20,8 @@ function Canvas() {
   const { width, height, backgroundLayer } = activedScene;
 
   const colorValue = useMemo(() => {
-    if (!backgroundLayer) return '';
-    const { fillType, color } = backgroundLayer;
-    if (fillType === 'Color') return color;
-    return '';
+    if (!backgroundLayer || backgroundLayer.fillType !== 'Color') return '';
+    return backgroundLayer.color;
   }, [backgroundLayer?.color, backgroundLayer?.fillType]);
 
   const onChangeColor = (color: Color) => {

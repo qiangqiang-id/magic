@@ -7,7 +7,7 @@ import { randomString } from '@/utils/random';
 export const ScaleDefault = { x: 1, y: 1 };
 
 /** 默认锚点值 */
-export const AnchorDefault = { x: 0.5, y: 0.5 };
+export const AnchorDefault = { x: 0, y: 0 };
 
 export function getCreateMagicDefaultValues(): MagicModel {
   return {
