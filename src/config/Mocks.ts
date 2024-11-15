@@ -15,7 +15,6 @@ const backLayer: LayerModel.Background = {
   width: TEMPLATE_WIDTH,
   height: TEMPLATE_HEIGHT,
   isLock: true,
-  url: 'https://img.miaotui.com//common/mtv/2022/04/11/09/b3f91154c7c43ff71c8afbb27b93bc42.webp',
 };
 
 const layer1: LayerModel.Text = {
@@ -66,8 +65,20 @@ const scene1: SceneModel = {
   height: TEMPLATE_HEIGHT,
 };
 
+const backLayer2: LayerModel.Background = {
+  ...backLayer,
+  color: '#F9CCAD',
+};
+const scene2: SceneModel = {
+  id: randomString(),
+  name: '第一个页面',
+  layers: [backLayer2, layer1, layer2, layer3],
+  width: TEMPLATE_WIDTH,
+  height: TEMPLATE_HEIGHT,
+};
+
 export const product1: MagicModel = {
   id: randomString(),
   name: '第一个作品',
-  scenes: [scene1],
+  scenes: [scene1, scene2],
 };

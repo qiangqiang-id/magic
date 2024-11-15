@@ -122,6 +122,8 @@ export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
       group: this.group,
       scene: this.scene,
       mask: this.mask,
+      /** todo 导出数据默认为false，外部暂时不需要这个状态 */
+      actived: false,
     };
   }
 

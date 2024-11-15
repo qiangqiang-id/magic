@@ -64,7 +64,7 @@ export default class SceneStruc implements SceneModel {
     return {
       id: this.id,
       name: this.name,
-      layers: this.layers,
+      layers: this.layers?.map(layer => layer.model()),
       cover: this.cover,
       width: this.width,
       height: this.height,

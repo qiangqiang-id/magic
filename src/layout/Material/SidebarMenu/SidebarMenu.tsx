@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import MaterialStore from '@/store/Material';
 import { MenuItemModel } from '@/types/material';
 
-import Style from './SidabarMenu.module.less';
+import Style from './SidebarMenu.module.less';
 
 interface MenuProps {
   /** 侧边栏store */
@@ -14,7 +14,7 @@ interface MenuProps {
   options: MenuItemModel[];
 }
 
-function SidabarMenu(props: MenuProps) {
+function SidebarMenu(props: MenuProps) {
   const { options = [], materialStore } = props;
 
   const { activeMenu } = materialStore;
@@ -52,7 +52,7 @@ function SidabarMenu(props: MenuProps) {
   );
 
   return (
-    <div className={Style.sidabar_menu}>
+    <div className={Style.sidebar_menu}>
       {/* 菜单区域 */}
       <div className={Style.menu}>
         <Tabs
@@ -70,4 +70,4 @@ function SidabarMenu(props: MenuProps) {
   );
 }
 
-export default observer(SidabarMenu);
+export default observer(SidebarMenu);

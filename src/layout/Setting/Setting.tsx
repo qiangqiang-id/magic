@@ -28,7 +28,7 @@ function Setting() {
   const { magic } = useStores();
   const { activedLayers, isMultiple } = magic;
 
-  const getSetingRender = () => {
+  const getSettingRender = () => {
     if (!activedLayers.length) return <CanvasSetting />;
 
     /** 选中多个图层 */
@@ -46,7 +46,7 @@ function Setting() {
     return <LayerSetting model={layer} />;
   };
 
-  return <div className={Style.setting}>{getSetingRender()}</div>;
+  return <div className={Style.setting}>{getSettingRender()}</div>;
 }
 
 export default observer(Setting);
