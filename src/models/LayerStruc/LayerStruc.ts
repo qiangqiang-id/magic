@@ -383,9 +383,10 @@ export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
   /**
    * 移动位置
    */
-  public onMove(currentIndex: number, targetIndex: number) {
+  public onMove(targetIndex: number) {
     const { scene } = this;
     if (!scene) return;
+    const currentIndex = this.getIndex();
     const layers = [...(scene.layers || [])];
     layers.splice(targetIndex, 0, ...layers.splice(currentIndex, 1));
     scene.update({ layers });
@@ -396,9 +397,8 @@ export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
    *  */
   public toDown() {
     if (this.isFirstLayer) return;
-    const currentIndex = this.getIndex();
-    const targetIndex = currentIndex - 1;
-    this.onMove(targetIndex, currentIndex);
+    const targetIndex = this.getIndex() - 1;
+    this.onMove(targetIndex);
   }
 
   /**
@@ -406,8 +406,7 @@ export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
    *  */
   public toBottom() {
     if (this.isFirstLayer) return;
-    const currentIndex = this.getIndex();
-    this.onMove(1, currentIndex);
+    this.onMove(1);
   }
 
   /**
@@ -415,10 +414,9 @@ export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
    *  */
   public toUp() {
     if (this.isFirstLayer) return;
-    const currentIndex = this.getIndex();
     /** 活动图层索引在前，先删除后插入，正好插入目标图层后面，不需要 索引 +1 */
-    const targetIndex = currentIndex;
-    this.onMove(targetIndex, currentIndex);
+    const targetIndex = this.getIndex();
+    this.onMove(targetIndex);
   }
 
   /**
@@ -426,9 +424,8 @@ export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
    *  */
   public toTop() {
     if (this.isFirstLayer) return;
-    const currentIndex = this.getIndex();
     const targetIndex = Math.max((this.scene?.layers || []).length - 1, 0);
-    this.onMove(targetIndex, currentIndex);
+    this.onMove(targetIndex);
   }
 
   /**

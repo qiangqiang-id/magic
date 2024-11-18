@@ -72,10 +72,6 @@ function LayerPosition(props: LayerLevelProps) {
     setLevelPopoverOpen(value);
   };
 
-  useEffect(() => {
-    initMarks();
-  }, [layers, model.x, model.y, model.width, model.height]);
-
   const initMarks = () => {
     const list = getOverlayLayers(model, layers);
     const sliderMarks = list.reduce(
@@ -104,8 +100,7 @@ function LayerPosition(props: LayerLevelProps) {
     const target = overlayLayers[markIndex];
     if (!target) return;
     const targetIndex = target.getIndex();
-    const currentIndex = model.getIndex();
-    model.onMove(targetIndex, currentIndex);
+    model.onMove(targetIndex);
     /** 调换layer位置 */
     setOverlayLayers(getOverlayLayers(model, layers));
   };
@@ -151,6 +146,10 @@ function LayerPosition(props: LayerLevelProps) {
   const toCenterAlign = () => {
     model.toCenterAlignInCanvas();
   };
+
+  useEffect(() => {
+    initMarks();
+  }, [layers, model.x, model.y, model.width, model.height]);
 
   const popoverContent = (
     <div className={Style.popover_content}>
