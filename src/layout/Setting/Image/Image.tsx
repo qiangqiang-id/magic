@@ -1,8 +1,9 @@
 import cls from 'classnames';
 import { observer } from 'mobx-react';
+import { Button } from 'antd';
 import SettingContainer from '@/components/SettingContainer';
 import LayerBaseSetting from '@/components/LayerBaseSetting';
-import UploadBtn from '@/components/UploadBtn';
+import Upload from '@/components/Upload';
 import { ImageStruc } from '@/models/LayerStruc';
 import { makeImage } from '@/utils/image';
 import { fileToBase64 } from '@/utils/file';
@@ -33,11 +34,11 @@ function Image(props: ImageProps) {
 
   return (
     <SettingContainer title="图片">
-      <UploadBtn
-        onChange={handleChange}
-        btnTitle="替换图片"
-        className={cls('setting-row')}
-      />
+      <Upload accept={['image/*']} onChange={handleChange}>
+        <Button type="primary" block className={cls('setting-row')}>
+          替换图片
+        </Button>
+      </Upload>
 
       <div className={Style.feature_wrapper}>
         <div>
