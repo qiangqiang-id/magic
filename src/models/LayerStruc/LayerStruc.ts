@@ -381,54 +381,54 @@ export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
   }
 
   /**
-   * 下一级
-   *  */
-  public toDown(targetLayer?: LayerStrucType) {
+   * 移动位置
+   */
+  public onMove(currentIndex: number, targetIndex: number) {
     const { scene } = this;
-    if (!scene || this.isFirstLayer) return;
-    const currentIndex = this.getIndex();
-    const targetIndex = targetLayer?.getIndex() || currentIndex - 1;
-    const layers = [...(scene?.layers || [])];
+    if (!scene) return;
+    const layers = [...(scene.layers || [])];
     layers.splice(targetIndex, 0, ...layers.splice(currentIndex, 1));
     scene.update({ layers });
+  }
+
+  /**
+   * 下一级
+   *  */
+  public toDown() {
+    if (this.isFirstLayer) return;
+    const currentIndex = this.getIndex();
+    const targetIndex = currentIndex - 1;
+    this.onMove(targetIndex, currentIndex);
   }
 
   /**
    * 置底
    *  */
   public toBottom() {
-    const { scene } = this;
-    if (!scene || this.isFirstLayer) return;
+    if (this.isFirstLayer) return;
     const currentIndex = this.getIndex();
-    const layers = [...(scene?.layers || [])];
-    layers.splice(1, 0, ...layers.splice(currentIndex, 1));
-    scene.update({ layers });
+    this.onMove(1, currentIndex);
   }
 
   /**
    * 上一级
    *  */
-  public toUp(targetLayer?: LayerStrucType) {
-    const { scene } = this;
-    if (!scene || this.isFirstLayer) return;
+  public toUp() {
+    if (this.isFirstLayer) return;
     const currentIndex = this.getIndex();
-    const targetIndex = targetLayer?.getIndex() || currentIndex;
-    const layers = [...(scene?.layers || [])];
     /** 活动图层索引在前，先删除后插入，正好插入目标图层后面，不需要 索引 +1 */
-    layers.splice(targetIndex, 0, ...layers.splice(currentIndex, 1));
-    scene.update({ layers });
+    const targetIndex = currentIndex;
+    this.onMove(targetIndex, currentIndex);
   }
 
   /**
    * 置顶
    *  */
   public toTop() {
-    const { scene } = this;
-    if (!scene || this.isFirstLayer) return;
+    if (this.isFirstLayer) return;
     const currentIndex = this.getIndex();
-    const layers = [...(scene?.layers || [])];
-    layers.push(...layers.splice(currentIndex, 1));
-    scene.update({ layers });
+    const targetIndex = Math.max((this.scene?.layers || []).length - 1, 0);
+    this.onMove(targetIndex, currentIndex);
   }
 
   /**

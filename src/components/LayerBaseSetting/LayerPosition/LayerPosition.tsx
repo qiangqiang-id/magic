@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { Popover, Slider, Tooltip } from 'antd';
 import {
@@ -12,8 +12,8 @@ import cls from 'classnames';
 import { SliderMarks } from 'antd/es/slider';
 import { LayerStrucType } from '@/types/model';
 import { magic } from '@/store';
-import Style from './LayerPosition.module.less';
 import { getOverlayLayers } from '@/utils/layers';
+import Style from './LayerPosition.module.less';
 
 interface LayerLevelProps {
   model: LayerStrucType;
@@ -40,14 +40,27 @@ function LayerPosition(props: LayerLevelProps) {
   const layers = activedScene?.layers || [];
 
   const [levelPopoverOpen, setLevelPopoverOpen] = useState(false);
-  const [maxMark, setMaxMark] = useState(MIN_MARK);
   const [marks, setMarks] = useState<SliderMarks>({});
-  const [activeMark, setActiveMark] = useState(MIN_MARK);
+  /** 覆盖层 */
+  const [overlayLayers, setOverlayLayers] = useState<LayerStrucType[]>([]);
+  /** 活动图层索引 */
+  const [activeMarkIndex, setActiveMarkIndex] = useState(MIN_MARK);
 
-  const disableMoveUp = activeMark >= maxMark;
-  const disableMoveDown = activeMark <= MIN_MARK;
+  /** 最大标记 */
+  const maxMark = useMemo(
+    () => Math.max(MIN_MARK, overlayLayers.length - 1),
+    [overlayLayers]
+  );
 
-  const overlayLayersRef = useRef<LayerStrucType[]>([]);
+  const disableMoveUp = useMemo(
+    () => activeMarkIndex >= maxMark,
+    [activeMarkIndex, maxMark]
+  );
+
+  const disableMoveDown = useMemo(
+    () => activeMarkIndex <= MIN_MARK,
+    [activeMarkIndex]
+  );
 
   const closePopover = () => {
     setLevelPopoverOpen(false);
@@ -59,6 +72,10 @@ function LayerPosition(props: LayerLevelProps) {
     setLevelPopoverOpen(value);
   };
 
+  useEffect(() => {
+    initMarks();
+  }, [layers, model.x, model.y, model.width, model.height]);
+
   const initMarks = () => {
     const list = getOverlayLayers(model, layers);
     const sliderMarks = list.reduce(
@@ -68,91 +85,71 @@ function LayerPosition(props: LayerLevelProps) {
       },
       {}
     );
+    setOverlayLayers(list);
     setMarks(sliderMarks);
-    setMaxMark(list.length - 1);
-    const defaualActiveMark = list.findIndex(item => item.id === model.id);
-    setActiveMark(defaualActiveMark);
-    overlayLayersRef.current = list;
+    const defaultActiveMark = list.findIndex(item => item.id === model.id);
+    setActiveMarkIndex(defaultActiveMark);
   };
 
-  const changeMark = (mark: number) => {
-    changeLayers(overlayLayersRef.current[mark].id);
-    setActiveMark(mark);
+  const changeMark = (markIndex: number) => {
+    changeLayers(markIndex);
+    setActiveMarkIndex(markIndex);
   };
 
   /**
    *  调整层级
    * @param targetLayerId 活动图层调整位置的目标图层
-   * @returns
    */
-  const changeLayers = (targetLayerId: string) => {
-    const activeLayerId = model.id;
-    if (!activeLayerId || !targetLayerId || activeLayerId === targetLayerId)
-      return;
-
+  const changeLayers = (markIndex: number) => {
+    const target = overlayLayers[markIndex];
+    if (!target) return;
+    const targetIndex = target.getIndex();
+    const currentIndex = model.getIndex();
+    model.onMove(targetIndex, currentIndex);
     /** 调换layer位置 */
-    const activeLayerByLayers = layers.find(item => item.id === activeLayerId);
-    const targetLayerByLayers = layers.find(item => item.id === targetLayerId);
-    if (activeLayerByLayers && targetLayerByLayers) {
-      /**
-       * 如果活动图层的位置大于 目标图层的位置，说明为向下调整，小于则取反。
-       */
-      if (activeLayerByLayers.getIndex() > targetLayerByLayers.getIndex()) {
-        model.toDown(targetLayerByLayers);
-      } else {
-        model.toUp(targetLayerByLayers);
-      }
-    }
-    overlayLayersRef.current = getOverlayLayers(model, layers);
+    setOverlayLayers(getOverlayLayers(model, layers));
   };
 
   const moveUp = () => {
     if (disableMoveUp) return;
-    const mark = activeMark + 1;
-    changeLayers(overlayLayersRef.current[mark].id);
-    setActiveMark(mark);
+    const markIndex = activeMarkIndex + 1;
+    changeLayers(markIndex);
+    setActiveMarkIndex(markIndex);
   };
 
   const moveDown = () => {
     if (disableMoveDown) return;
-    const mark = activeMark - 1;
-    changeLayers(overlayLayersRef.current[mark].id);
-    setActiveMark(mark);
+    const markIndex = activeMarkIndex - 1;
+    changeLayers(markIndex);
+    setActiveMarkIndex(markIndex);
   };
 
   const toTop = () => {
     model.toTopInCanvas();
-    initMarks();
   };
 
   const toLeft = () => {
     model.toLeftInCanvas();
-    initMarks();
   };
 
   const toBottom = () => {
     model.toBottomInCanvas();
-    initMarks();
   };
 
   const toRight = () => {
     model.toRightInCanvas();
-    initMarks();
   };
 
   const toVerticalCenterAlign = () => {
     model.toVerticalCenterAlignInCanvas();
-    initMarks();
   };
 
   const toHorizontalCenterAlign = () => {
     model.toHorizontalCenterAlignInCanvas();
-    initMarks();
   };
 
   const toCenterAlign = () => {
     model.toCenterAlignInCanvas();
-    initMarks();
   };
 
   const popoverContent = (
@@ -222,7 +219,7 @@ function LayerPosition(props: LayerLevelProps) {
           </Tooltip>
 
           <Slider
-            value={activeMark}
+            value={activeMarkIndex}
             onChange={changeMark}
             tooltip={{ open: false }}
             className={Style.slider}
