@@ -1,0 +1,30 @@
+.menuItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+  user-select: none;
+
+  &.disabled {
+    color: #9ca3af; // text-gray-400
+    cursor: not-allowed;
+  }
+
+  &:not(.disabled) {
+    color: #374151; // text-gray-700
+    cursor: pointer;
+
+    &:hover {
+      background-color: #eff6ff; // hover:bg-blue-50
+    }
+  }
+}
+
+.divider {
+  height: 1px;
+  margin: 0.25rem 0;
+  background-color: #e5e7eb; // bg-gray-200
+}

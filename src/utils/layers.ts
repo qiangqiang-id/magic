@@ -36,16 +36,16 @@ export function getLayersByPoint(
 
 /**
  * 获取重叠层
- * @param targerLayer  目标图层，与目标图层有重叠的即满足条件
+ * @param targetLayer  目标图层，与目标图层有重叠的即满足条件
  * @param layers 对比的图层列表
  * @returns {LayerStruc[]} 重叠图层
  */
 export function getOverlayLayers(
-  targerLayer: LayerStrucType,
+  targetLayer: LayerStrucType,
   layers: LayerStrucType[]
 ) {
-  const { x, y, width, height, rotate } = targerLayer.getRectData();
-  const targerLayerObb = new OBB(
+  const { x, y, width, height, rotate } = targetLayer.getRectData();
+  const targetLayerObb = new OBB(
     new Vector2d(x + width / 2, y + height / 2),
     width,
     height,
@@ -62,7 +62,7 @@ export function getOverlayLayers(
       height,
       rotate
     );
-    const collision = isCollision(targerLayerObb, layerObb);
+    const collision = isCollision(targetLayerObb, layerObb);
     if (collision) layerList.push(layer);
     return layerList;
   }, []);

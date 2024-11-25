@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import Layout from './layout';
 import KeyboardManager from './core/Manager/Keyboard';
 import HistoryManager from './core/Manager/History';
+import ContextMenuManager from './core/Manager/ContextMenuManager';
 import {
   registerAppActions,
   registerOSSActions,
@@ -31,6 +32,7 @@ function App() {
     <>
       <Layout />
       <KeyboardManager />
+      <ContextMenuManager />
     </>
   );
 }

@@ -1,0 +1,24 @@
+.menu {
+  position: fixed;
+  position: 'fixed';
+  z-index: 50;
+  min-width: 200px;
+  padding: 0.25rem 0;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  animation: scale-in 0.15s ease-out;
+}
+
+@keyframes scale-in {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

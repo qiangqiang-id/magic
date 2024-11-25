@@ -19,7 +19,7 @@ export function fetchDataUrl(url: string): Promise<string> {
 }
 
 /**
- * 加载 ArrayByffer
+ * 加载 ArrayBuffer
  * @param {string} url
  * @return {*}  {Promise<ArrayBuffer>}
  */

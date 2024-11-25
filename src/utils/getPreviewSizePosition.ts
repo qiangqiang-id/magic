@@ -28,24 +28,24 @@ export function getPreviewSizePosition(
   };
 
   /** canvas 与 canvas wrap 横轴、纵轴 位置的偏移量 */
-  const horizontaOffet = canvasRectInfo.x - canvasWrapRectInfo.x;
-  const verticalOffet = canvasRectInfo.y - canvasWrapRectInfo.y;
+  const horizontalOffset = canvasRectInfo.x - canvasWrapRectInfo.x;
+  const verticalOffset = canvasRectInfo.y - canvasWrapRectInfo.y;
 
   // =============== 判断是否超出了四个方向 ===============
   /** left */
   if (point.x + PREVIEW_SIZE_OFFSET_X < canvasWrapRectInfo.x) {
-    result.x = -horizontaOffet;
+    result.x = -horizontalOffset;
   }
 
   /** right */
   const previewDomWidth = previewSizeDom.offsetWidth;
   if (point.x + previewDomWidth > canvasWrapRectInfo.right) {
-    result.x = canvasRectInfo.width + horizontaOffet - previewDomWidth;
+    result.x = canvasRectInfo.width + horizontalOffset - previewDomWidth;
   }
 
   /** top */
   if (point.y + PREVIEW_SIZE_OFFSET_Y < canvasWrapRectInfo.y) {
-    result.y = -verticalOffet;
+    result.y = -verticalOffset;
   }
 
   /** bottom */
@@ -54,7 +54,7 @@ export function getPreviewSizePosition(
     point.y + previewDomHeight + PREVIEW_SIZE_OFFSET_Y >
     canvasWrapRectInfo.bottom
   ) {
-    result.y = canvasRectInfo.height + verticalOffet - previewDomHeight;
+    result.y = canvasRectInfo.height + verticalOffset - previewDomHeight;
   }
 
   return result;
