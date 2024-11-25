@@ -1,66 +1,75 @@
 import { ContextMenuProps } from '@/components/ContextMenu';
+import { MenuItem } from '@/components/ContextMenu/ContextMenuContent';
 import { Stores } from '@/store';
 
-const menuItems = [
+const menuItems: MenuItem[] = [
   {
-    id: '1',
-    label: 'New File',
-    shortcut: '⌘N',
-    onClick: () => console.log('New File clicked'),
-  },
-  {
-    id: '2',
-    label: 'Open',
-    shortcut: '⌘O',
-    submenu: [
+    label: 'File',
+    children: [
       {
-        id: '2-1',
-        label: 'Recent Files',
-        submenu: [
-          {
-            id: '2-1-1',
-            label: 'Document 1.txt',
-            onClick: () => console.log('Document 1 clicked'),
-          },
-          {
-            id: '2-1-2',
-            label: 'Document 2.txt',
-            onClick: () => console.log('Document 2 clicked'),
-          },
-        ],
+        label: 'New',
+        onClick: () => console.log('New file'),
+        shortcut: 'Ctrl+N',
       },
       {
-        id: '2-2',
-        label: 'Browse...',
-        onClick: () => console.log('Browse clicked'),
+        label: 'Open',
+        onClick: () => console.log('Open file'),
+        shortcut: 'Ctrl+O',
+      },
+      {
+        label: 'Save',
+        onClick: () => console.log('Save file'),
+        shortcut: 'Ctrl+S',
+      },
+      { label: '-' },
+      { label: 'Exit', onClick: () => console.log('Exit'), shortcut: 'Alt+F4' },
+    ],
+  },
+  {
+    label: 'Edit',
+    children: [
+      { label: 'Undo', onClick: () => console.log('Undo'), shortcut: 'Ctrl+Z' },
+      { label: 'Redo', onClick: () => console.log('Redo'), shortcut: 'Ctrl+Y' },
+      { label: '-' },
+      { label: 'Cut', onClick: () => console.log('Cut'), shortcut: 'Ctrl+X' },
+      { label: 'Copy', onClick: () => console.log('Copy'), shortcut: 'Ctrl+C' },
+      {
+        label: 'Paste',
+        onClick: () => console.log('Paste'),
+        shortcut: 'Ctrl+V',
+        children: [
+          {
+            label: 'Reset Zoom1',
+            onClick: () => console.log('Reset zoom1'),
+            shortcut: 'Ctrl+0',
+          },
+        ],
       },
     ],
   },
   {
-    id: '3',
-    divider: true,
+    label: 'View',
+    children: [
+      {
+        label: 'Zoom In',
+        onClick: () => console.log('Zoom in'),
+        shortcut: 'Ctrl++',
+      },
+      {
+        label: 'Zoom Out',
+        onClick: () => console.log('Zoom out'),
+        shortcut: 'Ctrl+-',
+      },
+      {
+        label: 'Reset Zoom',
+        onClick: () => console.log('Reset zoom'),
+        shortcut: 'Ctrl+0',
+      },
+    ],
   },
-  {
-    id: '4',
-    label: 'Save',
-    shortcut: '⌘S',
-    onClick: () => console.log('Save clicked'),
-  },
-  {
-    id: '5',
-    label: 'Save As...',
-    shortcut: '⌘⇧S',
-    disabled: true,
-  },
-  {
-    id: '6',
-    divider: true,
-  },
-  {
-    id: '7',
-    label: 'Exit',
-    onClick: () => console.log('Exit clicked'),
-  },
+  { label: '-' },
+  { label: 'Help', onClick: () => console.log('Help') },
+  { label: 'About', onClick: () => console.log('About'), disabled: true },
 ];
 
 export function getStageContextMenuProps(

@@ -1,118 +1,78 @@
-import { useRef, useState, Fragment, MouseEvent } from 'react';
-import cls from 'classnames';
-import MenuItem from './MenuItem';
-import { useMenuPosition, useGlobalClick, useEscapeClose } from '@/hooks';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   createContainerById,
   removeContainerById,
   render,
 } from '@/utils/portalRender';
-import { ComponentProps } from '@/types/componentProps';
+import ContextMenuContent from './ContextMenuContent';
 
-import Style from './ContextMenu.module.less';
-
-import { MenuItemType } from './props';
-
-export interface ContextMenuProps extends ComponentProps {
-  items: MenuItemType[];
-  x: number;
-  y: number;
-  isSubmenu?: boolean;
-  parentRect?: DOMRect | null;
-  escapeClosable?: boolean;
+export interface MenuItem {
+  label: string;
+  onClick?: () => void;
+  shortcut?: string;
+  disabled?: boolean;
+  children?: MenuItem[];
 }
 
-function ContextMenu(props: ContextMenuProps) {
-  const {
-    items,
-    x: initialX,
-    y: initialY,
-    isSubmenu = false,
-    parentRect = null,
-    style,
-    className,
-    escapeClosable = true,
-  } = props;
-
+interface ContextMenuProps {
+  items: MenuItem[];
+}
+export default function ContextMenu({ items }: ContextMenuProps) {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const handleClose = () => {
-    ContextMenu.hide();
-  };
+  const handleContextMenu = useCallback((event: MouseEvent) => {
+    event.preventDefault();
+    setPosition({ x: event.clientX, y: event.clientY });
+  }, []);
 
-  const [activeSubmenu, setActiveSubmenu] = useState<{
-    id: string;
-    rect: DOMRect;
-  } | null>(null);
+  useEffect(() => {
+    document.addEventListener('contextmenu', handleContextMenu);
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+    };
+  }, [handleContextMenu]);
 
-  const position = useMenuPosition(
-    menuRef,
-    initialX,
-    initialY,
-    isSubmenu,
-    parentRect
-  );
+  useEffect(() => {
+    if (menuRef.current) {
+      const rect = menuRef.current.getBoundingClientRect();
+      const newPosition = { ...position };
 
-  useGlobalClick(handleClose, true, menuRef);
-  useEscapeClose(handleClose, escapeClosable, true);
+      if (rect.right > window.innerWidth) {
+        newPosition.x = window.innerWidth - rect.width;
+      }
+      if (rect.bottom > window.innerHeight) {
+        newPosition.y = window.innerHeight - rect.height;
+      }
 
-  const handleSubmenuEnter = (item: MenuItemType, event: MouseEvent) => {
-    if (item.submenu && !item.disabled) {
-      const element = event.currentTarget as HTMLElement;
-      const rect = element.getBoundingClientRect();
-      setActiveSubmenu({
-        id: item.id,
-        rect,
-      });
+      if (newPosition.x < 0) newPosition.x = 0;
+      if (newPosition.y < 0) newPosition.y = 0;
+
+      if (newPosition.x !== position.x || newPosition.y !== position.y) {
+        setPosition(newPosition);
+      }
     }
-  };
-
-  const handleSubmenuLeave = (e: MouseEvent) => {
-    const relatedTarget = e.relatedTarget as HTMLElement;
-    if (!relatedTarget?.closest('.context-submenu')) {
-      setActiveSubmenu(null);
-    }
-  };
+  }, [position]);
 
   return (
     <div
-      ref={menuRef}
-      className={cls(
-        Style.menu,
-        `${isSubmenu ? 'context-submenu' : ''}`,
-        className
-      )}
       style={{
-        left: position.x,
+        position: 'fixed',
         top: position.y,
-        transformOrigin: position.transformOrigin,
-        ...style,
+        left: position.x,
+        backgroundColor: 'white',
+        boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+        borderRadius: '4px',
+        padding: '8px 0',
+        zIndex: 1000,
       }}
     >
-      {items.map(item => (
-        <Fragment key={item.id}>
-          <MenuItem
-            item={item}
-            onMouseEnter={handleSubmenuEnter}
-            onMouseLeave={handleSubmenuLeave}
-            onClose={handleClose}
-          />
-          {activeSubmenu?.id === item.id && item.submenu && (
-            <ContextMenu
-              items={item.submenu}
-              x={activeSubmenu.rect.right}
-              y={activeSubmenu.rect.top}
-              isSubmenu
-              parentRect={activeSubmenu.rect}
-            />
-          )}
-        </Fragment>
-      ))}
+      <div ref={menuRef}>
+        <ContextMenuContent items={items} depth={0} />
+      </div>
     </div>
   );
 }
-
-export default ContextMenu;
 
 const CONTEXT_MENU_ID = 'magic-context-menu';
 
