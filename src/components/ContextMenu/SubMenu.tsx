@@ -14,7 +14,7 @@ export default function SubMenu(props: SubMenuProps) {
   const subMenuRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ left: '100%', top: '0' });
 
-  useEffect(() => {
+  const getPosition = () => {
     if (subMenuRef.current && parentRef.current) {
       const subMenuRect = subMenuRef.current.getBoundingClientRect();
       const parentRect = parentRef.current.getBoundingClientRect();
@@ -29,6 +29,10 @@ export default function SubMenu(props: SubMenuProps) {
       }
       setPosition({ left, top });
     }
+  };
+
+  useEffect(() => {
+    getPosition();
   }, []);
 
   return (

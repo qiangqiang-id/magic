@@ -4,6 +4,7 @@ import {
   removeContainerById,
   render,
 } from '@/utils/portalRender';
+import { useEscapeClose, useGlobalClick } from '@/hooks';
 import ContextMenuContent from './ContextMenuContent';
 import Style from './ContextMenu.module.less';
 import { MenuItem } from './props';
@@ -19,6 +20,14 @@ export default function ContextMenu(props: ContextMenuProps) {
 
   const [position, setPosition] = useState({ x, y });
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const handleClose = () => {
+    ContextMenu.hide();
+  };
+
+  useEscapeClose(handleClose, true, true);
+  useGlobalClick(handleClose, true, menuRef);
+
   const getPosition = () => {
     if (menuRef.current) {
       /** 边界处理 */
