@@ -1,42 +1,29 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   createContainerById,
   removeContainerById,
   render,
 } from '@/utils/portalRender';
 import ContextMenuContent from './ContextMenuContent';
-
-export interface MenuItem {
-  label: string;
-  onClick?: () => void;
-  shortcut?: string;
-  disabled?: boolean;
-  children?: MenuItem[];
-}
+import Style from './ContextMenu.module.less';
+import { MenuItem } from './props';
 
 interface ContextMenuProps {
   items: MenuItem[];
+  x: number;
+  y: number;
 }
-export default function ContextMenu({ items }: ContextMenuProps) {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+export default function ContextMenu(props: ContextMenuProps) {
+  const { items, x, y } = props;
+
+  const [position, setPosition] = useState({ x, y });
   const menuRef = useRef<HTMLDivElement>(null);
-
-  const handleContextMenu = useCallback((event: MouseEvent) => {
-    event.preventDefault();
-    setPosition({ x: event.clientX, y: event.clientY });
-  }, []);
-
-  useEffect(() => {
-    document.addEventListener('contextmenu', handleContextMenu);
-    return () => {
-      document.removeEventListener('contextmenu', handleContextMenu);
-    };
-  }, [handleContextMenu]);
-
-  useEffect(() => {
+  const getPosition = () => {
     if (menuRef.current) {
+      /** 边界处理 */
       const rect = menuRef.current.getBoundingClientRect();
-      const newPosition = { ...position };
+      const newPosition = { x, y };
 
       if (rect.right > window.innerWidth) {
         newPosition.x = window.innerWidth - rect.width;
@@ -44,31 +31,26 @@ export default function ContextMenu({ items }: ContextMenuProps) {
       if (rect.bottom > window.innerHeight) {
         newPosition.y = window.innerHeight - rect.height;
       }
-
-      if (newPosition.x < 0) newPosition.x = 0;
-      if (newPosition.y < 0) newPosition.y = 0;
-
-      if (newPosition.x !== position.x || newPosition.y !== position.y) {
-        setPosition(newPosition);
-      }
+      newPosition.x = Math.max(0, newPosition.x);
+      newPosition.y = Math.max(0, newPosition.y);
+      setPosition(newPosition);
     }
-  }, [position]);
+  };
+
+  useEffect(() => {
+    getPosition();
+  }, [x, y]);
 
   return (
     <div
+      className={Style.menu}
       style={{
-        position: 'fixed',
         top: position.y,
         left: position.x,
-        backgroundColor: 'white',
-        boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-        borderRadius: '4px',
-        padding: '8px 0',
-        zIndex: 1000,
       }}
     >
       <div ref={menuRef}>
-        <ContextMenuContent items={items} depth={0} />
+        <ContextMenuContent items={items} />
       </div>
     </div>
   );

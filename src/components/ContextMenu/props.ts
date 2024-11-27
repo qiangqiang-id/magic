@@ -1,15 +1,10 @@
-export interface MenuItemType {
-  id: string;
-  label: string;
-  shortcut?: string;
-  disabled?: boolean;
-  onClick?: () => void;
-  submenu?: MenuItemType[];
-  divider?: boolean;
-}
+import { ReactNode } from 'react';
 
-export interface MenuPositionType {
-  x: number;
-  y: number;
-  transformOrigin: string;
+export interface MenuItem {
+  label: string;
+  onClick?: () => void;
+  shortcut?: string;
+  icon?: ReactNode;
+  disabled?: boolean;
+  children?: MenuItem[];
 }

@@ -1,23 +1,67 @@
 .menu {
   position: fixed;
   z-index: 50;
+  z-index: 1000;
   min-width: 200px;
   padding: 4px;
   background-color: white;
   border: 1px solid #e5e7eb;
   border-radius: 4px;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-  animation: scale-in 0.15s ease-out;
 }
 
-@keyframes scale-in {
-  from {
-    transform: scale(0.95);
-    opacity: 0;
-  }
+.sub-menu {
+  position: absolute;
+  z-index: 1001;
+  padding: 4px;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
 
-  to {
-    transform: scale(1);
-    opacity: 1;
+.menu-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 200px;
+  height: 40px;
+  padding: 0 8px;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:not(.menu-item-disabled):hover {
+    background-color: #eff6ff;
   }
+}
+
+.menu-item-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-item-label {
+  font-size: 14px;
+}
+
+.menu-item-shortcut {
+  margin-left: 8px;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.menu-item-active {
+  background-color: #eff6ff;
+}
+
+.menu-item-disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.divider {
+  height: 1px;
+  margin: 4px 0;
+  background-color: #e5e7eb;
 }

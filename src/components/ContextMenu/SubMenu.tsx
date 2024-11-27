@@ -1,17 +1,18 @@
-import { useEffect, useRef } from 'react';
-import { MenuItem } from './ContextMenu';
+import { useEffect, useRef, useState, RefObject } from 'react';
 import ContextMenuContent from './ContextMenuContent';
+import { MenuItem } from './props';
+import Style from './ContextMenu.module.less';
 
-export default function SubMenu({
-  items,
-  depth,
-  parentRef,
-}: {
+interface SubMenuProps {
   items: MenuItem[];
-  depth: number;
-  parentRef: React.RefObject<HTMLDivElement>;
-}) {
+  parentRef: RefObject<HTMLDivElement>;
+}
+
+export default function SubMenu(props: SubMenuProps) {
+  const { items, parentRef } = props;
+
   const subMenuRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ left: '100%', top: '0' });
 
   useEffect(() => {
     if (subMenuRef.current && parentRef.current) {
@@ -20,33 +21,25 @@ export default function SubMenu({
 
       let left = '100%';
       let top = '0';
-
       if (parentRect.right + subMenuRect.width > window.innerWidth) {
         left = `-${subMenuRect.width}px`;
       }
-
       if (parentRect.bottom + subMenuRect.height > window.innerHeight) {
         top = `${parentRect.height - subMenuRect.height}px`;
       }
-
-      subMenuRef.current.style.left = left;
-      subMenuRef.current.style.top = top;
+      setPosition({ left, top });
     }
-  }, [parentRef]);
+  }, []);
 
   return (
     <div
       ref={subMenuRef}
+      className={Style['sub-menu']}
       style={{
-        position: 'absolute',
-        backgroundColor: 'white',
-        boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-        borderRadius: '4px',
-        padding: '8px 0',
-        zIndex: 1001,
+        ...position,
       }}
     >
-      <ContextMenuContent items={items} depth={depth} />
+      <ContextMenuContent items={items} />
     </div>
   );
 }

@@ -35,7 +35,7 @@ const menuItems: MenuItem[] = [
       { label: 'Copy', onClick: () => console.log('Copy'), shortcut: 'Ctrl+C' },
       {
         label: 'Paste',
-        onClick: () => console.log('Paste'),
+        // onClick: () => console.log('Paste'),
         shortcut: 'Ctrl+V',
         children: [
           {
@@ -82,9 +82,5 @@ export function getStageContextMenuProps(
     items: menuItems,
     x: e.pageX,
     y: e.pageY,
-    // style: { width: 180, left: e.pageX, top: e.pageY },
-    // onChange: () => {
-    //   console.log('触发');
-    // },
   };
 }

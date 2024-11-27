@@ -1,14 +1,17 @@
 import { useCallback, useRef, useState } from 'react';
-import { MenuItem } from './ContextMenu';
+import { ChevronRight } from 'lucide-react';
+import cls from 'classnames';
 import SubMenu from './SubMenu';
+import { MenuItem } from './props';
+import Style from './ContextMenu.module.less';
 
-export default function MenuItemComponent({
-  item,
-  depth,
-}: {
+interface MenuItemComponentProps {
   item: MenuItem;
-  depth: number;
-}) {
+}
+
+export default function MenuItemComponent(props: MenuItemComponentProps) {
+  const { item } = props;
+
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
   const itemRef = useRef<HTMLDivElement>(null);
 
@@ -29,32 +32,27 @@ export default function MenuItemComponent({
       ref={itemRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      style={{
-        padding: '8px 16px',
-        cursor: item.disabled ? 'default' : 'pointer',
-        opacity: item.disabled ? 0.5 : 1,
-        position: 'relative',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}
-      onClick={() => !item.disabled && item.onClick && item.onClick()}
+      className={cls(Style['menu-item'], {
+        [Style['menu-item-disabled']]: item.disabled,
+        [Style['menu-item-active']]: isSubMenuOpen,
+      })}
+      onClick={() => !item.disabled && item.onClick?.()}
     >
-      <span>{item.label}</span>
+      <div className={Style['menu-item-info']}>
+        {item.icon}
+        <span className={Style['menu-item-label']}>{item.label}</span>
+      </div>
+
       {item.shortcut && (
-        <span style={{ marginLeft: '20px', fontSize: '0.8em', color: '#666' }}>
-          {item.shortcut}
-        </span>
+        <span className={Style['menu-item-shortcut']}>{item.shortcut}</span>
       )}
       {item.children && (
         <>
-          <span style={{ marginLeft: '10px' }}>▶</span>
+          <span style={{ marginLeft: '10px' }}>
+            <ChevronRight />
+          </span>
           {isSubMenuOpen && (
-            <SubMenu
-              items={item.children}
-              depth={depth + 1}
-              parentRef={itemRef}
-            />
+            <SubMenu items={item.children} parentRef={itemRef} />
           )}
         </>
       )}
