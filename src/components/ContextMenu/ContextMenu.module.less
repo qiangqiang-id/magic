@@ -25,6 +25,7 @@
   align-items: center;
   justify-content: space-between;
   min-width: 200px;
+  max-width: 80%;
   height: 40px;
   padding: 0 8px;
   border-radius: 4px;
@@ -40,11 +41,15 @@
   display: flex;
   gap: 4px;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
 }
 
 .menu-item-label {
+  max-width: 160px;
+  overflow: hidden;
   font-size: 14px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .menu-item-shortcut {

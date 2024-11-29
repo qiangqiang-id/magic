@@ -50,6 +50,12 @@ function Layer<M extends LayerStrucType = LayerStrucType>(
   const handleMouseDown = (e: React.MouseEvent) => {
     // 0 左键 2 右键
     if (![0, 2].includes(e.button) || model.actived) return;
+
+    /** 如果是右键，并且已经存在活动组件，不做选择行为 */
+    if (e.button === 2 && magic.activedLayers.length) {
+      return;
+    }
+
     magic.activeLayer(model, e.shiftKey);
 
     if (model.isLock) return;

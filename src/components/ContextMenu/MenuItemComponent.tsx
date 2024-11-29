@@ -51,7 +51,9 @@ export default function MenuItemComponent(props: MenuItemComponentProps) {
       </div>
 
       {item.shortcut && (
-        <span className={Style['menu-item-shortcut']}>{item.shortcut}</span>
+        <span className={cls(Style['menu-item-shortcut'])}>
+          {item.shortcut}
+        </span>
       )}
       {item.children && (
         <>

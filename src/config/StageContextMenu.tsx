@@ -15,7 +15,9 @@ import {
   ArrowUpToLine,
   ArrowLeftToLine,
   ArrowRightToLine,
+  TypeOutline,
 } from 'lucide-react';
+import { Image } from 'antd';
 import { ContextMenuProps } from '@/components/ContextMenu';
 import { MenuItem } from '@/components/ContextMenu/props';
 import CmdManager from '@/core/Manager/Cmd';
@@ -24,6 +26,13 @@ import { getHotKeyByCmd, getHotKeyCmdOfOS } from '@/helpers/HotKey';
 import CmdEnum from '@/constants/CmdEnum';
 import { HotKey } from './HotKeys';
 import { LayerStrucType } from '@/types/model';
+import { toCanvasPoint } from '@/helpers/Node';
+import { getLayersByPoint } from '@/utils/layers';
+import { LayerTypeEnum } from '@/constants/LayerTypeEnum';
+
+import Shape from '@/components/Renderer/Layer/Shape';
+
+const SIZE = 20;
 
 /**
  * 复制
@@ -56,19 +65,19 @@ function getBaseMenuItems(): MenuItem[] {
   return [
     {
       label: copyHotKey?.label || '',
-      icon: <Copy width={20} height={20} />,
+      icon: <Copy width={SIZE} height={SIZE} />,
       shortcut: getHotKeyCmdOfOS(copyHotKey),
       onClick: () => pressHotKey(copyHotKey),
     },
     {
       label: pasteHotKey?.label || '',
-      icon: <ClipboardPaste width={20} height={20} />,
+      icon: <ClipboardPaste width={SIZE} height={SIZE} />,
       shortcut: getHotKeyCmdOfOS(pasteHotKey),
       onClick: () => pressHotKey(pasteHotKey),
     },
     {
       label: cutHotKey?.label || '',
-      icon: <Scissors width={20} height={20} />,
+      icon: <Scissors width={SIZE} height={SIZE} />,
       shortcut: getHotKeyCmdOfOS(cutHotKey),
       onClick: () => pressHotKey(cutHotKey),
     },
@@ -79,7 +88,7 @@ function getLayerOrderMenuItems(model?: LayerStrucType): MenuItem[] {
   return [
     {
       label: '图层顺序',
-      icon: <Layers width={20} height={20} />,
+      icon: <Layers width={SIZE} height={SIZE} />,
       children: [
         {
           label: '移到顶层',
@@ -106,41 +115,41 @@ function getLayerPositionMenuItems(model?: LayerStrucType): MenuItem[] {
   return [
     {
       label: '图层位置',
-      icon: <BookUp width={20} height={20} />,
+      icon: <BookUp width={SIZE} height={SIZE} />,
       children: [
         {
           label: '水平居中',
-          icon: <FoldHorizontal width={20} height={20} />,
+          icon: <FoldHorizontal width={SIZE} height={SIZE} />,
           onClick: () => model?.toHorizontalCenterAlignInCanvas(),
         },
         {
           label: '垂直居中',
-          icon: <FoldVertical width={20} height={20} />,
+          icon: <FoldVertical width={SIZE} height={SIZE} />,
           onClick: () => model?.toVerticalCenterAlignInCanvas(),
         },
         {
           label: '贴顶部',
-          icon: <ArrowUpToLine width={20} height={20} />,
+          icon: <ArrowUpToLine width={SIZE} height={SIZE} />,
           onClick: () => model?.toTopInCanvas(),
         },
         {
           label: '贴底部',
-          icon: <ArrowDownToLine width={20} height={20} />,
+          icon: <ArrowDownToLine width={SIZE} height={SIZE} />,
           onClick: () => model?.toBottomInCanvas(),
         },
         {
           label: '画布中心',
-          icon: <SquareSquare width={20} height={20} />,
+          icon: <SquareSquare width={SIZE} height={SIZE} />,
           onClick: () => model?.toCenterAlignInCanvas(),
         },
         {
           label: '贴右侧',
-          icon: <ArrowRightToLine width={20} height={20} />,
+          icon: <ArrowRightToLine width={SIZE} height={SIZE} />,
           onClick: () => model?.toRightInCanvas(),
         },
         {
           label: '贴左侧',
-          icon: <ArrowLeftToLine width={20} height={20} />,
+          icon: <ArrowLeftToLine width={SIZE} height={SIZE} />,
           onClick: () => model?.toLeftInCanvas(),
         },
       ],
@@ -148,23 +157,81 @@ function getLayerPositionMenuItems(model?: LayerStrucType): MenuItem[] {
   ];
 }
 
-function getOverlapMenuItems(store: Stores): MenuItem[] {
-  console.log('store', store);
+function getLayerLabel(layer: LayerStrucType) {
+  if (layer.isText()) {
+    return layer.content || '文本';
+  }
+
+  switch (layer.type) {
+    case LayerTypeEnum.GROUP:
+      return '组';
+    case LayerTypeEnum.IMAGE:
+      return '图片';
+    case LayerTypeEnum.SHAPE:
+      return '形状';
+    default:
+      return layer.name || '未知';
+  }
+}
+function getLayerIcon(layer: LayerStrucType) {
+  if (layer.isImage()) {
+    return <Image src={layer.url} width={SIZE} height={SIZE} preview={false} />;
+  }
+
+  if (layer.isShape()) {
+    const { width, height } = layer.getSafetyModalData();
+    const scale = Math.min(SIZE / width, SIZE / height);
+    return (
+      <div
+        style={{
+          width: SIZE,
+          height: SIZE,
+        }}
+      >
+        <div
+          style={{
+            transformOrigin: 'top left',
+            transform: `scale(${scale})`,
+          }}
+        >
+          <Shape model={layer} />
+        </div>
+      </div>
+    );
+  }
+
+  if (layer.isText()) {
+    return <TypeOutline width={SIZE} height={SIZE} />;
+  }
+
+  if (layer.isGroup()) {
+    // todo
+  }
+
+  return <div>icon</div>;
+}
+
+function getOverlapMenuItems(store: Stores, point: Point): MenuItem[] {
+  const { magic, OS } = store;
+
+  const { activedScene } = magic;
+  const { x, y } = toCanvasPoint(point);
+
+  const layers = getLayersByPoint(activedScene?.layers || [], {
+    x: x / OS.zoomLevel,
+    y: y / OS.zoomLevel,
+  });
+
+  const children: MenuItem[] = layers.map(layer => ({
+    icon: getLayerIcon(layer),
+    label: getLayerLabel(layer),
+    onClick: () => magic.activeLayer(layer),
+  }));
   return [
     {
       label: '选择重叠的图层',
-      icon: <Blend width={20} height={20} />,
-      children: [
-        {
-          label: '相交',
-        },
-        {
-          label: '并集',
-        },
-        {
-          label: '差集',
-        },
-      ],
+      icon: <Blend width={SIZE} height={SIZE} />,
+      children,
     },
   ];
 }
@@ -177,16 +244,16 @@ function getBottomBaseMenuItems(model?: LayerStrucType): MenuItem[] {
   return [
     {
       label: deleteHotKey?.label || '',
-      icon: <Trash2 width={20} height={20} />,
+      icon: <Trash2 width={SIZE} height={SIZE} />,
       shortcut: getHotKeyCmdOfOS(deleteHotKey),
       onClick: () => pressHotKey(deleteHotKey),
     },
     {
       label: model?.isLock ? '解锁' : '锁定',
       icon: model?.isLock ? (
-        <LockKeyhole width={20} height={20} />
+        <LockKeyhole width={SIZE} height={SIZE} />
       ) : (
-        <LockKeyholeOpen width={20} height={20} />
+        <LockKeyholeOpen width={SIZE} height={SIZE} />
       ),
       onClick: handleLock,
     },
@@ -210,7 +277,7 @@ export function getStageContextMenuProps(
     { label: '-' },
     ...getLayerOrderMenuItems(model),
     ...getLayerPositionMenuItems(model),
-    ...getOverlapMenuItems(store),
+    ...getOverlapMenuItems(store, { x, y }),
     { label: '-' },
     ...getBottomBaseMenuItems(model),
   ];
