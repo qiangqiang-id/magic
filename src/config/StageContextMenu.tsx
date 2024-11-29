@@ -58,28 +58,34 @@ const deleteHotKey = getHotKeyByCmd(CmdEnum.DELETE);
  * 执行快捷键命令
  */
 const pressHotKey = (hotKey?: HotKey) => {
-  hotKey?.name && CmdManager.execute(hotKey.name);
+  if (hotKey?.name !== undefined) {
+    CmdManager.execute(hotKey.name);
+  }
 };
 
-function getBaseMenuItems(): MenuItem[] {
+function getBaseMenuItems(store: Stores, layer?: LayerStrucType): MenuItem[] {
+  const disabled = !layer || layer.isBack();
   return [
     {
       label: copyHotKey?.label || '',
       icon: <Copy width={SIZE} height={SIZE} />,
       shortcut: getHotKeyCmdOfOS(copyHotKey),
       onClick: () => pressHotKey(copyHotKey),
+      disabled,
     },
     {
       label: pasteHotKey?.label || '',
       icon: <ClipboardPaste width={SIZE} height={SIZE} />,
       shortcut: getHotKeyCmdOfOS(pasteHotKey),
       onClick: () => pressHotKey(pasteHotKey),
+      disabled: !store.magic.clipboard?.length,
     },
     {
       label: cutHotKey?.label || '',
       icon: <Scissors width={SIZE} height={SIZE} />,
       shortcut: getHotKeyCmdOfOS(cutHotKey),
       onClick: () => pressHotKey(cutHotKey),
+      disabled,
     },
   ];
 }
@@ -93,18 +99,22 @@ function getLayerOrderMenuItems(model?: LayerStrucType): MenuItem[] {
         {
           label: '移到顶层',
           onClick: () => model?.toTop(),
+          disabled: model?.isLastLayer,
         },
         {
           label: '上移一层',
           onClick: () => model?.toUp(),
+          disabled: model?.isLastLayer,
         },
         {
           label: '下移一层',
           onClick: () => model?.toDown(),
+          disabled: model?.isFirstLayer,
         },
         {
           label: '置于底层',
           onClick: () => model?.toBottom(),
+          disabled: model?.isFirstLayer,
         },
       ],
     },
@@ -232,13 +242,15 @@ function getOverlapMenuItems(store: Stores, point: Point): MenuItem[] {
       label: '选择重叠的图层',
       icon: <Blend width={SIZE} height={SIZE} />,
       children,
+      disabled: !children.length,
     },
   ];
 }
 
-function getBottomBaseMenuItems(model?: LayerStrucType): MenuItem[] {
+function getBottomBaseMenuItems(layer?: LayerStrucType): MenuItem[] {
+  const disabled = !layer || layer.isBack();
   const handleLock = () => {
-    model?.switchLock();
+    layer?.switchLock();
   };
 
   return [
@@ -247,15 +259,17 @@ function getBottomBaseMenuItems(model?: LayerStrucType): MenuItem[] {
       icon: <Trash2 width={SIZE} height={SIZE} />,
       shortcut: getHotKeyCmdOfOS(deleteHotKey),
       onClick: () => pressHotKey(deleteHotKey),
+      disabled,
     },
     {
-      label: model?.isLock ? '解锁' : '锁定',
-      icon: model?.isLock ? (
+      label: layer?.isLock ? '解锁' : '锁定',
+      icon: layer?.isLock ? (
         <LockKeyhole width={SIZE} height={SIZE} />
       ) : (
         <LockKeyholeOpen width={SIZE} height={SIZE} />
       ),
       onClick: handleLock,
+      disabled,
     },
   ];
 }
@@ -273,7 +287,7 @@ export function getStageContextMenuProps(
   const model = activedLayers[0];
 
   const menuItems: MenuItem[] = [
-    ...getBaseMenuItems(),
+    ...getBaseMenuItems(store, model),
     { label: '-' },
     ...getLayerOrderMenuItems(model),
     ...getLayerPositionMenuItems(model),

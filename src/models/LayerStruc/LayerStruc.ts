@@ -406,7 +406,7 @@ export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
    * 上一级
    *  */
   public toUp() {
-    if (this.isFirstLayer) return;
+    if (this.isLastLayer) return;
     const targetIndex = this.getIndex() + 1;
     this.onMove(targetIndex);
   }
@@ -415,7 +415,7 @@ export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
    * 置顶
    *  */
   public toTop() {
-    if (this.isFirstLayer) return;
+    if (this.isLastLayer) return;
     const targetIndex = Math.max((this.scene?.layers || []).length - 1, 0);
     this.onMove(targetIndex);
   }
@@ -535,7 +535,8 @@ export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
   get isFirstLayer() {
     const index = this.getIndex();
     /** 背景应该是在最下面，背景的索引永远是0 */
-    return index < 1;
+    const firstIndex = this.isBack() ? 0 : 1;
+    return index === firstIndex;
   }
 
   /**
