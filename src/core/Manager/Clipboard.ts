@@ -1,11 +1,13 @@
 import { MAGIC_PREFIX } from '@/constants/CacheKeys';
 import CreateLayerStruc from '@/models/FactoryStruc/LayerFactory';
 import MagicStore from '@/store/Magic';
-import { LayerStrucType } from '@/types/model';
-import copyText from '@/utils/copyText';
+
+const CLIPBOARD_CHANNEL_KEY = 'clipboard_channel_key';
 
 export default class ClipboardManager {
   private static magic: MagicStore;
+
+  private static channel: BroadcastChannel;
 
   /**
    * 注册剪切板并监听粘贴事件
@@ -13,21 +15,23 @@ export default class ClipboardManager {
    */
   static register(magic: MagicStore) {
     this.magic = magic;
-
-    const handlePaste = (e: ClipboardEvent) => {
-      const data = e.clipboardData?.getData('text/plain');
-      data && this.parseLayersFromText(data);
+    this.channel = new BroadcastChannel(CLIPBOARD_CHANNEL_KEY);
+    this.channel.onmessage = (e: MessageEvent<string>) => {
+      const data = e.data;
+      if (data && typeof data === 'string') {
+        this.parseLayersFromText(data);
+      }
     };
-    document.addEventListener('paste', handlePaste, false);
   }
 
   /**
    * 复制到剪切板
    */
-  static copyToClipboard(layers: LayerStrucType[]) {
+  static copyToClipboard() {
+    const layers = this.magic.clipboard;
     if (!layers || !layers.length) return;
     const text = JSON.stringify(layers.map(layer => layer.model()));
-    copyText(this.formatText(text));
+    this.channel.postMessage(this.formatText(text));
   }
 
   /**
@@ -47,7 +51,7 @@ export default class ClipboardManager {
     const { models = [] } = this.parseText(text) || {};
     if (!models.length) return;
     const layers = models.map(model => CreateLayerStruc(model.type, model));
-    this.magic.pasteLayers(layers);
+    this.magic.copyLayers(layers);
   }
 
   /**

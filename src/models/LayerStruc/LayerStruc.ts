@@ -213,13 +213,6 @@ export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
   }
 
   /**
-   * 锁
-   *  */
-  public lock() {
-    this.update({ isLock: true });
-  }
-
-  /**
    * 位置贴顶部
    */
   public toTopInCanvas() {
@@ -308,10 +301,10 @@ export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
   }
 
   /**
-   * 解锁
+   * 切换锁状态
    *  */
-  public unlock() {
-    this.update({ isLock: false });
+  public switchLock() {
+    this.update({ isLock: !this.isLock });
   }
 
   /**
@@ -344,7 +337,7 @@ export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
   /**
    * 解除父级所属
    */
-  resetParnth() {
+  resetParent() {
     this.scene = null;
     this.group = null;
   }
@@ -414,8 +407,7 @@ export default class LayerStruc<T extends LayerModel.Base = LayerModel.Base>
    *  */
   public toUp() {
     if (this.isFirstLayer) return;
-    /** 活动图层索引在前，先删除后插入，正好插入目标图层后面，不需要 索引 +1 */
-    const targetIndex = this.getIndex();
+    const targetIndex = this.getIndex() + 1;
     this.onMove(targetIndex);
   }
 

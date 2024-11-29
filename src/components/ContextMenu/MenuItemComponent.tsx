@@ -7,10 +7,11 @@ import Style from './ContextMenu.module.less';
 
 interface MenuItemComponentProps {
   item: MenuItem;
+  onClose: () => void;
 }
 
 export default function MenuItemComponent(props: MenuItemComponentProps) {
-  const { item } = props;
+  const { item, onClose } = props;
 
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
   const itemRef = useRef<HTMLDivElement>(null);
@@ -27,6 +28,12 @@ export default function MenuItemComponent(props: MenuItemComponentProps) {
     }
   }, [item.children]);
 
+  const handleClick = () => {
+    if (item.disabled || item.children) return;
+    item.onClick?.();
+    onClose?.();
+  };
+
   return (
     <div
       ref={itemRef}
@@ -36,7 +43,7 @@ export default function MenuItemComponent(props: MenuItemComponentProps) {
         [Style['menu-item-disabled']]: item.disabled,
         [Style['menu-item-active']]: isSubMenuOpen,
       })}
-      onClick={() => !item.disabled && item.onClick?.()}
+      onClick={handleClick}
     >
       <div className={Style['menu-item-info']}>
         {item.icon}
@@ -52,7 +59,11 @@ export default function MenuItemComponent(props: MenuItemComponentProps) {
             <ChevronRight />
           </span>
           {isSubMenuOpen && (
-            <SubMenu items={item.children} parentRef={itemRef} />
+            <SubMenu
+              items={item.children}
+              parentRef={itemRef}
+              onClose={onClose}
+            />
           )}
         </>
       )}

@@ -59,7 +59,7 @@ export default function ContextMenu(props: ContextMenuProps) {
       }}
     >
       <div ref={menuRef}>
-        <ContextMenuContent items={items} />
+        <ContextMenuContent items={items} onClose={handleClose} />
       </div>
     </div>
   );

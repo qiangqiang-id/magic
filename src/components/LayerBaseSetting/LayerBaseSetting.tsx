@@ -26,7 +26,7 @@ function LayerBaseSetting(props: LayerBaseSettingProps) {
   };
 
   const handleLock = () => {
-    isLock ? model.unlock() : model.lock();
+    model.switchLock();
   };
 
   const handleChange = (val: number) => {

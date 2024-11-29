@@ -1,4 +1,3 @@
-/** 位置 */
 interface Position {
   /** x轴 */
   x: number;
@@ -181,4 +180,6 @@ declare interface MagicModel {
   name: string | null;
   /** 场景 */
   scenes: SceneModel[];
+
+  clipboard?: LayerModel.Layer[];
 }

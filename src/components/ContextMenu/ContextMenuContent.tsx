@@ -5,10 +5,11 @@ import Style from './ContextMenu.module.less';
 
 interface ContextMenuContentProps {
   items: MenuItem[];
+  onClose: () => void;
 }
 
 export default function ContextMenuContent(props: ContextMenuContentProps) {
-  const { items } = props;
+  const { items, onClose } = props;
 
   return (
     <>
@@ -17,7 +18,7 @@ export default function ContextMenuContent(props: ContextMenuContentProps) {
           {item.label === '-' ? (
             <div className={Style.divider} />
           ) : (
-            <MenuItemComponent item={item} />
+            <MenuItemComponent item={item} onClose={onClose} />
           )}
         </Fragment>
       ))}

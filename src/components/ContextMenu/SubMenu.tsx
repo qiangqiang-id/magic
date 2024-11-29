@@ -6,10 +6,11 @@ import Style from './ContextMenu.module.less';
 interface SubMenuProps {
   items: MenuItem[];
   parentRef: RefObject<HTMLDivElement>;
+  onClose: () => void;
 }
 
 export default function SubMenu(props: SubMenuProps) {
-  const { items, parentRef } = props;
+  const { items, onClose, parentRef } = props;
 
   const subMenuRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ left: '100%', top: '0' });
@@ -43,7 +44,7 @@ export default function SubMenu(props: SubMenuProps) {
         ...position,
       }}
     >
-      <ContextMenuContent items={items} />
+      <ContextMenuContent items={items} onClose={onClose} />
     </div>
   );
 }

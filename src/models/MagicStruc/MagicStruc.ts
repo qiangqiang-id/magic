@@ -5,7 +5,6 @@ import { createSceneData } from '@/core/FormatData/Scene';
 import { CreateScene } from '../FactoryStruc/SceneFactory';
 import LayerStruc, { GroupStruc } from '../LayerStruc';
 import { Axis } from '@/types/canvas';
-import ClipboardManager from '@/core/Manager/Clipboard';
 
 export default class MagicStruc implements MagicModel {
   id!: string | null;
@@ -27,6 +26,9 @@ export default class MagicStruc implements MagicModel {
   /** 是否打开图像裁剪 */
   isOpenImageCrop = false;
 
+  /** 粘贴板 */
+  clipboard?: LayerStrucType[] = [];
+
   constructor() {
     makeObservable<this, 'handleRemoveLayer' | 'handleAddLayer'>(this, {
       name: observable,
@@ -35,6 +37,7 @@ export default class MagicStruc implements MagicModel {
       activedLayers: observable,
       hoveredLayer: observable,
       isOpenImageCrop: observable,
+      clipboard: observable,
 
       isMultiple: computed,
 
@@ -250,31 +253,27 @@ export default class MagicStruc implements MagicModel {
   /**
    * 复制组件，通过剪贴板实现跨作品复制
    */
-  public copyLayers() {
-    const layers = this.activedLayers.reduce(
+  public copyLayers(layers?: LayerStrucType[]) {
+    const list = layers || this.activedLayers;
+
+    this.clipboard = list.reduce(
       (list: LayerStrucType[], layer: LayerStrucType) => {
         if (!layer.isCanCopy) return list;
         const newLayer = layer.clone();
-        newLayer.resetParnth();
+        newLayer.resetParent();
         newLayer.isLock = false;
         return [...list, newLayer];
       },
       []
     );
-
-    ClipboardManager.copyToClipboard(layers);
   }
 
   /**
    * 粘贴组件，通过剪贴板实现跨作品复制
    */
-  public pasteLayers(layers?: LayerStrucType[]) {
-    if (!layers?.length) return;
-    const newLayers = layers.map(layer => layer.clone());
-    const activedLayer =
-      this.activedLayers.length === 1 ? this.activedLayers[0] : null;
-    const parent = activedLayer?.isGroup() ? activedLayer : null;
-    this.addLayer(newLayers, parent);
+  public pasteLayers() {
+    if (!this.clipboard || !this.clipboard.length) return;
+    this.handlePasteLayers(this.clipboard);
   }
 
   /**

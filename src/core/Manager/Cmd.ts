@@ -2,6 +2,7 @@ import CmdEnum from '@/constants/CmdEnum';
 import MagicStore from '@/store/Magic';
 import OSStore from '@/store/OS';
 import HistoryManager from './History';
+import ClipboardManager from './Clipboard';
 
 export type CmdHandler = (data?: any) => void;
 
@@ -60,9 +61,11 @@ export function registerAppActions(magic: MagicStore) {
     },
     [CmdEnum.COPY]() {
       magic.copyLayers();
+      ClipboardManager.copyToClipboard();
     },
     [CmdEnum.CUT]() {
       magic.cutLayers();
+      ClipboardManager.copyToClipboard();
     },
     [CmdEnum.PASTE]() {
       magic.pasteLayers();
