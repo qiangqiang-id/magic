@@ -9,7 +9,7 @@ import ContextMenuContent from './ContextMenuContent';
 import Style from './ContextMenu.module.less';
 import { MenuItem } from './props';
 
-interface ContextMenuProps {
+export interface ContextMenuProps {
   items: MenuItem[];
   x: number;
   y: number;
