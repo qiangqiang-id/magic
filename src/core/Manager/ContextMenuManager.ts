@@ -1,9 +1,8 @@
 import { RefObject, useEffect } from 'react';
 import { Stores, useStores } from '@/store';
 import { CANVAS_WRAPPER } from '@/constants/Refs';
-import ContextMenu from '@/components/ContextMenu';
+import ContextMenu, { ContextMenuProps } from '@/components/ContextMenu';
 import { getStageContextMenuProps } from '@/config/StageContextMenu';
-import { ContextMenuProps } from '@/components/ContextMenu/props';
 
 type ContextSourceKeys = RefObject<HTMLElement>;
 type ContextSourceValues = (store: Stores, e: MouseEvent) => ContextMenuProps;
