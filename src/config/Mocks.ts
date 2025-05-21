@@ -47,7 +47,7 @@ const layer3: LayerModel.Image = {
   x: 216,
   y: 794,
   rotate: 0,
-  url: 'https://img.shanjian.tv/video/sticker/2024/11/11/16/1218x1254/e66c6dd1dc1099dea1758ffdda036d93.png',
+  url: 'https://img.shanjian.tv/video/document/2025/05/21/17/1196x1280/3b76534d8cb09c15eacc42494c3cfd68.png',
   mimeType: MIME_TYPES.png,
   mask: {
     x: 0,
