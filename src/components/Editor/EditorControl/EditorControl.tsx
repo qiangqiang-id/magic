@@ -6,13 +6,13 @@ import { LayerStrucType } from '@/types/model';
 import { moveHandle } from '@/utils/move';
 import { useStores } from '@/store';
 import { ALL_POINTS, TEXT_POINTS } from '@/constants/PointList';
-
-import Style from './EditorControl.module.less';
 import { getPreviewSizePosition } from '@/utils/getPreviewSizePosition';
 import { MAX_FONT_SIZE, MIN_FONT_SIZE } from '@/constants/FontSize';
 import { toCanvasPoint } from '@/helpers/Node';
 import { getLayersByPoint } from '@/utils/layers';
 import { getPenetrationLayer } from '@/utils/penetration';
+
+import Style from './EditorControl.module.less';
 
 export interface EditorControlProps {
   zoomLevel?: number;

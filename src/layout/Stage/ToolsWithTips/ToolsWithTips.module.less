@@ -1,0 +1,88 @@
+.tools-with-tips {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1;
+  display: flex;
+}
+
+.zoom-level-box {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: flex-end;
+  height: 32px;
+  margin-right: 4px;
+  padding: 0 4px;
+  overflow: hidden;
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.08), 0 4px 12px 0 rgba(0, 0, 0, 0.04);
+
+  &:hover,
+  &:focus-within {
+    .zoom-level-icon {
+      width: 56px;
+    }
+  }
+}
+
+.zoom-level-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 0;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:not(:disabled):hover {
+    background-color: #f6f7f9;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+  }
+}
+
+.zoom-level-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 24px;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+  text-align: center;
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f6f7f9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zoom-level-icon {
+    transition: none;
+  }
+}

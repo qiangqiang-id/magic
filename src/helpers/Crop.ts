@@ -91,11 +91,7 @@ export function calcMaxWidthAndMaxHeight(
   point: POINT_TYPE
 ) {
   const { width: maskW, height: maskH, x: maskX, y: maskY } = maskData;
-  const { width: rectW, height: rectH } = rectData;
-  const { x: rectX, y: rectY } = clacRectPositionByMaskAnchor(
-    rectData,
-    maskData
-  );
+  const { width: rectW, height: rectH, x: rectX, y: rectY } = rectData;
 
   /** mask 基于rect的位置 */
   const maskInRectX = maskX - rectX;
@@ -215,4 +211,57 @@ export function calcCropRectData(
     ...newRectPoint,
     anchor: newAnchor,
   };
+}
+
+/**
+ * 计算裁剪时的最大宽高
+ * @param canvasSize 画布大小
+ * @param rectData rect 位置信息，基于画布定位
+ * @param point  当前拉伸的点
+ * @returns 最大宽高
+ */
+export function acalcMaxWidthAndMaxHeight(
+  canvasSize: Size,
+  rectData: BaseRectData,
+  point: POINT_TYPE
+) {
+  const { width: rectW, height: rectH, x: rectX, y: rectY } = rectData;
+  const { width: canvasW, height: canvasH } = canvasSize;
+
+  const valuesMap = {
+    [POINT_TYPE.LEFT_CENTER]: {
+      width: canvasW - (canvasW - (rectX + rectW)),
+      height: rectH,
+    },
+    [POINT_TYPE.LEFT_TOP]: {
+      width: canvasW - (canvasW - (rectX + rectW)),
+      height: canvasH - (canvasH - (rectY + rectH)),
+    },
+    [POINT_TYPE.LEFT_BOTTOM]: {
+      width: canvasW - (canvasW - (rectX + rectW)),
+      height: canvasH - rectY,
+    },
+    [POINT_TYPE.TOP_CENTER]: {
+      width: rectW,
+      height: canvasH - (canvasH - (rectY + rectH)),
+    },
+    [POINT_TYPE.RIGHT_TOP]: {
+      width: canvasW - rectX,
+      height: canvasH - (canvasH - (rectY + rectH)),
+    },
+    [POINT_TYPE.RIGHT_CENTER]: {
+      width: canvasW - rectX,
+      height: rectH,
+    },
+    [POINT_TYPE.RIGHT_BOTTOM]: {
+      width: canvasW - rectX,
+      height: canvasH - rectY,
+    },
+    [POINT_TYPE.BOTTOM_CENTER]: {
+      width: rectW,
+      height: canvasH - rectY,
+    },
+  };
+
+  return valuesMap[point];
 }

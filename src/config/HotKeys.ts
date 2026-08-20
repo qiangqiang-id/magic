@@ -129,15 +129,21 @@ const hotKeyMaps: HotKey[] = [
     ...cmdMaps[CmdEnum['ZOOM IN']],
     scope: HotKeyScope.CANVAS,
     combination: '⌘+/CTRL++',
-
+    keyCode: [KeyCodeMap['=+'], KeyCodeMap['+']],
+    ctrlKey: true,
+  },
+  {
+    ...cmdMaps[CmdEnum['ZOOM IN']],
+    scope: HotKeyScope.CANVAS,
     keyCode: KeyCodeMap['=+'],
+    shiftKey: true,
     ctrlKey: true,
   },
   {
     ...cmdMaps[CmdEnum['ZOOM OUT']],
     scope: HotKeyScope.CANVAS,
     combination: '⌘-/CTRL+-',
-    keyCode: KeyCodeMap['-_'],
+    keyCode: [KeyCodeMap['-_'], KeyCodeMap['-']],
     ctrlKey: true,
   },
 ];

@@ -89,12 +89,15 @@ export default class OSStore {
   }
 
   protected handleSetZoomLevel(level: number) {
-    level = +level.toFixed(2);
-    this.zoomLevel = Math.max(
+    const normalizedLevel = +level.toFixed(2);
+    const zoomLevel = Math.max(
       CANVAS_MIN_ZOOM_LEVEL,
-      Math.min(CANVAS_MAX_ZOOM_LEVEL, level)
+      Math.min(CANVAS_MAX_ZOOM_LEVEL, normalizedLevel)
     );
-    LocalCache.set(CANVAS_ZOOM_LEVEL, this.zoomLevel);
+    if (zoomLevel !== this.zoomLevel) {
+      this.zoomLevel = zoomLevel;
+      LocalCache.set(CANVAS_ZOOM_LEVEL, zoomLevel);
+    }
   }
 
   /**

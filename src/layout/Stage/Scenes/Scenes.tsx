@@ -60,6 +60,7 @@ function Scenes() {
 
   const handleDragStart = (event: DragStartEvent) => {
     const scene = scenes.find(({ id }) => id === event.active.id);
+
     scene && setDragScene(scene);
   };
 
@@ -70,6 +71,7 @@ function Scenes() {
       const oldIndex = magic.getSceneIndex(active.id as string);
       const newIndex = magic.getSceneIndex(over.id as string);
       const newScenes = arrayMove(scenes, oldIndex, newIndex);
+
       magic.update({
         scenes: newScenes,
       });

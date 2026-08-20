@@ -13,7 +13,7 @@ interface CanvasProps {
   style?: CSSProperties;
 }
 
-function Canvas(props: CanvasProps, ref: Ref<HTMLDivElement>) {
+function Canvas(props: CanvasProps, ref: Ref<HTMLElement>) {
   const { canvasWidth, canvasHeight, style } = props;
 
   const { OS, magic } = useStores();
